@@ -1241,6 +1241,13 @@
         <span id="annualLabel" style="font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: color 0.2s;">Annual <span style="display: inline-block; padding: 2px 8px; background: var(--gradient); color: white; font-size: 11px; border-radius: 100px; margin-left: 6px; font-weight: 700;">Save 20%</span></span>
       </div>
 
+      <!-- Key Difference Callout -->
+      <div class="fade-in" style="max-width: 800px; margin: 0 auto 32px; padding: 20px 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center;">
+        <p style="font-size: 15px; color: var(--text-secondary); margin: 0;">
+          <strong style="color: var(--text-primary);">Key difference:</strong> Free version limited to 5 summaries/day. Pro removes the daily limit for unlimited use. Both require your own Anthropic API key and pay the same low API costs (~$0.001 per summary).
+        </p>
+      </div>
+
       <div class="pricing-grid">
         <div class="pricing-card fade-in">
           <div class="pricing-name">Free Extension</div>
@@ -1263,18 +1270,19 @@
         <div class="pricing-card featured fade-in">
           <div class="pricing-badge">Most Popular</div>
           <div class="pricing-name">Pro</div>
-          <div class="pricing-desc" id="proDesc">Unlimited summaries. Monthly or annual billing available. You still pay API usage (~$0.001/summary).</div>
+          <div class="pricing-desc" id="proDesc">For power users. No daily limits. Summarize as much as you need.</div>
           <div class="pricing-price">
             <span class="pricing-amount" id="proPrice">$4<span style="font-size: 28px;">.99</span></span>
             <span class="pricing-period" id="proPeriod">/ month</span>
           </div>
           <ul class="pricing-features">
-            <li>Unlimited summaries</li>
+            <li><strong>Unlimited summaries (no daily limit)</strong></li>
             <li>All summary formats</li>
             <li>Key points + action items</li>
             <li>Configurable length</li>
             <li>Requires Anthropic API key</li>
             <li>Priority support</li>
+            <li>Pay only API costs (~$0.001/summary)</li>
           </ul>
           <a href="https://github.com/Wittlesus/pagebrain-extension" class="pricing-btn pricing-btn-primary">View on GitHub</a>
         </div>
@@ -1345,6 +1353,20 @@
           <div class="faq-answer">
             <div class="faq-answer-inner">
               PageBrain uses Claude Sonnet, which is very affordable. A typical page summary costs fractions of a cent. Most casual users will spend less than $1 per month on API costs. You can monitor your usage at <a href="https://console.anthropic.com" style="color: var(--accent-purple);">console.anthropic.com</a>.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            What's the difference between Free and Pro?
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              The Free version limits you to 5 summaries per day, which is perfect for casual users. Pro removes this daily limit entirely, allowing unlimited summaries for power users who summarize dozens of pages daily. Both versions use your own Anthropic API key and pay the same minimal API costs (~$0.001 per summary). The $4.99/month Pro fee is for removing the daily limit, not for API access.
             </div>
           </div>
         </div>
