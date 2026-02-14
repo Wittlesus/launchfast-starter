@@ -1230,6 +1230,17 @@
         <p class="section-subtitle">Extension is free. You provide your Anthropic API key and pay only for API usage (fractions of a cent per summary).</p>
       </div>
 
+      <!-- Billing Toggle -->
+      <div class="billing-toggle fade-in" style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 40px;">
+        <span id="monthlyLabel" style="font-size: 15px; font-weight: 600; color: var(--text-primary); transition: color 0.2s;">Monthly</span>
+        <label style="position: relative; display: inline-block; width: 52px; height: 28px; cursor: pointer;">
+          <input type="checkbox" id="billingToggle" style="opacity: 0; width: 0; height: 0;">
+          <span style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--border); border-radius: 100px; transition: 0.3s; display: block;"></span>
+          <span style="position: absolute; top: 4px; left: 4px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: 0.3s; display: block;"></span>
+        </label>
+        <span id="annualLabel" style="font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: color 0.2s;">Annual <span style="display: inline-block; padding: 2px 8px; background: var(--gradient); color: white; font-size: 11px; border-radius: 100px; margin-left: 6px; font-weight: 700;">Save 20%</span></span>
+      </div>
+
       <div class="pricing-grid">
         <div class="pricing-card fade-in">
           <div class="pricing-name">Free Extension</div>
@@ -1251,10 +1262,10 @@
         <div class="pricing-card featured fade-in">
           <div class="pricing-badge">Most Popular</div>
           <div class="pricing-name">Pro</div>
-          <div class="pricing-desc">$4.99/mo for unlimited summaries. You still pay API usage (~$0.001/summary).</div>
+          <div class="pricing-desc" id="proDesc">Unlimited summaries. You still pay API usage (~$0.001/summary).</div>
           <div class="pricing-price">
-            <span class="pricing-amount">$4<span style="font-size: 28px;">.99</span></span>
-            <span class="pricing-period">/ month</span>
+            <span class="pricing-amount" id="proPrice">$4<span style="font-size: 28px;">.99</span></span>
+            <span class="pricing-period" id="proPeriod">/ month</span>
           </div>
           <ul class="pricing-features">
             <li>Unlimited summaries</li>
@@ -1473,6 +1484,43 @@
       }
 
       initFadeAnimations();
+
+      // --- Billing toggle for pricing ---
+      const billingToggle = document.getElementById('billingToggle');
+      const monthlyLabel = document.getElementById('monthlyLabel');
+      const annualLabel = document.getElementById('annualLabel');
+      const proPrice = document.getElementById('proPrice');
+      const proPeriod = document.getElementById('proPeriod');
+
+      if (billingToggle) {
+        billingToggle.addEventListener('change', function() {
+          const isAnnual = this.checked;
+
+          // Update toggle visual state
+          const toggleBg = this.nextElementSibling;
+          const toggleCircle = toggleBg.nextElementSibling;
+
+          if (isAnnual) {
+            toggleBg.style.background = 'var(--gradient)';
+            toggleCircle.style.transform = 'translateX(24px)';
+            monthlyLabel.style.color = 'var(--text-secondary)';
+            annualLabel.style.color = 'var(--text-primary)';
+
+            // Update pricing
+            proPrice.innerHTML = '$47<span style="font-size: 28px;">.99</span>';
+            proPeriod.textContent = '/ year';
+          } else {
+            toggleBg.style.background = 'var(--border)';
+            toggleCircle.style.transform = 'translateX(0)';
+            monthlyLabel.style.color = 'var(--text-primary)';
+            annualLabel.style.color = 'var(--text-secondary)';
+
+            // Update pricing
+            proPrice.innerHTML = '$4<span style="font-size: 28px;">.99</span>';
+            proPeriod.textContent = '/ month';
+          }
+        });
+      }
 
       // --- Smooth scroll for anchor links ---
       document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
