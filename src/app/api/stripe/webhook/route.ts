@@ -105,13 +105,28 @@ export async function POST(req: Request) {
         // For one-time payments only (this boilerplate doesn't use subscriptions)
         if (session.mode === "payment") {
           try {
+            // Extract customer ID safely - Stripe can return string or object
+            const customerId = typeof session.customer === "string"
+              ? session.customer
+              : session.customer?.id;
+
+            if (!customerId) {
+              console.error(
+                "Webhook error: Missing customer ID in checkout session"
+              );
+              return NextResponse.json(
+                { error: "Missing customer data" },
+                { status: 400 }
+              );
+            }
+
             // Use Prisma transaction for atomic operation
             await prisma.$transaction(async (tx) => {
               // Update user with customer ID
               await tx.user.update({
                 where: { id: userId },
                 data: {
-                  stripeCustomerId: session.customer as string,
+                  stripeCustomerId: customerId,
                   // For one-time payment, user gets lifetime access
                   // Payment details are stored in Stripe, not our DB
                 },
