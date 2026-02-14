@@ -329,6 +329,75 @@ input[type="range"]::-moz-range-thumb {
 .site-footer a { color: var(--text-secondary); }
 .footer-links { display: flex; justify-content: center; gap: 24px; margin-top: 12px; }
 
+/* Email Capture Banner */
+#emailCaptureBanner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 24px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#emailCaptureBanner.show { transform: translateY(0); }
+.email-banner-content {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.email-banner-text {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.email-banner-title {
+  font-size: 16px; font-weight: 700; color: #fff;
+}
+.email-banner-desc {
+  font-size: 13px; color: rgba(255, 255, 255, 0.85);
+}
+.email-banner-form {
+  display: flex; align-items: center; gap: 8px;
+}
+.email-banner-input {
+  padding: 10px 16px; border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff; font-size: 14px;
+  min-width: 260px;
+  backdrop-filter: blur(10px);
+}
+.email-banner-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.email-banner-input:focus {
+  outline: none; border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+}
+.email-banner-submit {
+  padding: 10px 24px; border-radius: 8px;
+  background: #fff; color: #4f46e5;
+  font-size: 14px; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.email-banner-submit:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+.email-banner-close {
+  background: none; border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer; padding: 4px 8px;
+  font-size: 24px; line-height: 1;
+  transition: color 0.2s;
+}
+.email-banner-close:hover {
+  color: #fff;
+}
+.email-banner-success {
+  display: none; color: #fff; font-size: 14px; font-weight: 600;
+}
+
 /* Mobile */
 @media (max-width: 860px) {
   .calc-layout { grid-template-columns: 1fr; }
@@ -336,6 +405,10 @@ input[type="range"]::-moz-range-thumb {
   .header-nav { display: none; }
   .options-grid { grid-template-columns: 1fr 1fr; }
   .promo-grid { grid-template-columns: 1fr; max-width: 340px; }
+  .email-banner-content { flex-direction: column; align-items: stretch; }
+  .email-banner-form { flex-direction: column; width: 100%; }
+  .email-banner-input { min-width: auto; width: 100%; }
+  .email-banner-submit { width: 100%; }
 }
 @media (max-width: 520px) {
   .hero h1 { font-size: 28px; }
@@ -345,6 +418,9 @@ input[type="range"]::-moz-range-thumb {
   .calc-section { padding: 18px; }
   .results-card { padding: 18px; }
   .comparison-card { padding: 18px; }
+  #emailCaptureBanner { padding: 12px 16px; }
+  .email-banner-title { font-size: 15px; }
+  .email-banner-desc { font-size: 12px; }
 }
 </style>
 </head>
@@ -910,6 +986,110 @@ input[type="range"]::-moz-range-thumb {
   bindOptions();
   bindSlider();
   recalculate();
+})();
+</script>
+
+<!-- Email Capture Banner -->
+<div id="emailCaptureBanner">
+  <div class="email-banner-content">
+    <div class="email-banner-text">
+      <div class="email-banner-title">🚀 Get our free SaaS Launch Checklist (47 steps)</div>
+      <div class="email-banner-desc">Everything you need to launch your SaaS — from idea to first customer</div>
+    </div>
+    <form class="email-banner-form" id="emailCaptureForm">
+      <input type="email" name="email" class="email-banner-input" placeholder="your@email.com" required>
+      <button type="submit" class="email-banner-submit">Get Checklist</button>
+    </form>
+    <div class="email-banner-success" id="emailSuccess">✓ Check your email!</div>
+    <button class="email-banner-close" id="closeBanner" aria-label="Close">&times;</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var STORAGE_KEY = 'emailBannerDismissed';
+  var FORMSPREE_URL = 'https://formspree.io/f/PLACEHOLDER';
+  var SCROLL_THRESHOLD = 0.5; // 50% scroll
+  var TIME_DELAY = 30000; // 30 seconds
+
+  var banner = document.getElementById('emailCaptureBanner');
+  var form = document.getElementById('emailCaptureForm');
+  var closeBtn = document.getElementById('closeBanner');
+  var successMsg = document.getElementById('emailSuccess');
+
+  var shown = false;
+  var dismissed = false;
+  var timeoutId = null;
+
+  // Check if already dismissed
+  if (localStorage.getItem(STORAGE_KEY)) {
+    return; // Don't show banner
+  }
+
+  function showBanner() {
+    if (shown || dismissed) return;
+    shown = true;
+    banner.classList.add('show');
+  }
+
+  function hideBanner() {
+    banner.classList.remove('show');
+    dismissed = true;
+    localStorage.setItem(STORAGE_KEY, 'true');
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+
+  // Time-based trigger (30 seconds)
+  timeoutId = setTimeout(function() {
+    showBanner();
+  }, TIME_DELAY);
+
+  // Scroll-based trigger (50% of page)
+  function checkScroll() {
+    if (shown || dismissed) return;
+    var scrollPercent = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+    if (scrollPercent >= SCROLL_THRESHOLD) {
+      showBanner();
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }
+
+  window.addEventListener('scroll', checkScroll, { passive: true });
+
+  // Close button
+  closeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    hideBanner();
+  });
+
+  // Form submission
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var formData = new FormData(form);
+
+    fetch(FORMSPREE_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(response) {
+      if (response.ok) {
+        form.style.display = 'none';
+        successMsg.style.display = 'block';
+        setTimeout(function() {
+          hideBanner();
+        }, 3000);
+      } else {
+        alert('Oops! There was a problem. Please try again.');
+      }
+    })
+    .catch(function() {
+      alert('Oops! There was a problem. Please try again.');
+    });
+  });
 })();
 </script>
 </body>
