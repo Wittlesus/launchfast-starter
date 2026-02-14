@@ -17,14 +17,19 @@ export async function POST(req: Request) {
     );
   }
 
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error("Webhook error: STRIPE_WEBHOOK_SECRET not configured");
+    return NextResponse.json(
+      { error: "Webhook not configured" },
+      { status: 500 }
+    );
+  }
+
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error(
       "Webhook signature verification failed:",
@@ -39,11 +44,23 @@ export async function POST(req: Request) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
 
+        // Validate required metadata
+        const userId = session.metadata?.userId;
+        if (!userId) {
+          console.error(
+            "Webhook error: Missing userId in checkout session metadata"
+          );
+          return NextResponse.json(
+            { error: "Missing user metadata" },
+            { status: 400 }
+          );
+        }
+
         // For one-time payments (mode: 'payment'), not subscriptions
         if (session.mode === "payment") {
           try {
             await prisma.user.update({
-              where: { id: session.metadata?.userId },
+              where: { id: userId },
               data: {
                 stripeCustomerId: session.customer as string,
                 // For one-time payment, grant lifetime access
@@ -51,9 +68,7 @@ export async function POST(req: Request) {
                 stripePaymentIntentId: session.payment_intent as string,
               },
             });
-            console.log(
-              `One-time payment completed for user: ${session.metadata?.userId}`
-            );
+            console.log(`One-time payment completed for user: ${userId}`);
           } catch (dbError) {
             console.error(
               "Database error in checkout.session.completed:",
@@ -74,7 +89,7 @@ export async function POST(req: Request) {
             );
 
             await prisma.user.update({
-              where: { id: session.metadata?.userId },
+              where: { id: userId },
               data: {
                 stripeCustomerId: session.customer as string,
                 stripeSubscriptionId: subscription.id,
@@ -84,9 +99,7 @@ export async function POST(req: Request) {
                 ),
               },
             });
-            console.log(
-              `Subscription created for user: ${session.metadata?.userId}`
-            );
+            console.log(`Subscription created for user: ${userId}`);
           } catch (error) {
             console.error(
               "Error processing subscription checkout:",
