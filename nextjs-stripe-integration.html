@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Add Stripe to Next.js in 2026 (Complete Guide)</title>
+<meta name="description" content="Complete guide to integrating Stripe with Next.js in 2026. Learn checkout sessions, webhooks, billing portal, and subscription management with real code examples.">
+<meta name="keywords" content="next.js stripe, nextjs stripe integration, stripe next.js 2026, stripe checkout nextjs, stripe webhooks next.js, stripe subscription nextjs, next.js payment integration">
+<link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/nextjs-stripe-integration.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Add Stripe to Next.js in 2026 (Complete Guide)">
+<meta property="og:description" content="Complete guide to integrating Stripe with Next.js. Checkout sessions, webhooks, billing portal, and subscription management with real code examples.">
+<meta property="og:url" content="https://wittlesus.github.io/launchfast-starter/nextjs-stripe-integration.html">
+<meta property="og:site_name" content="LaunchFast">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Add Stripe to Next.js in 2026 (Complete Guide)">
+<meta name="twitter:description" content="Complete guide to integrating Stripe with Next.js. Checkout sessions, webhooks, billing portal, and subscriptions with real code examples.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  pre { tab-size: 2; }
+  code { font-family: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace; }
+  .code-block { background: #0d1117; border: 1px solid #30363d; border-radius: 0.75rem; overflow-x: auto; }
+  .code-block pre { padding: 1.5rem; margin: 0; color: #e6edf3; font-size: 0.875rem; line-height: 1.7; }
+  .code-comment { color: #8b949e; }
+  .code-keyword { color: #ff7b72; }
+  .code-string { color: #a5d6ff; }
+  .code-function { color: #d2a8ff; }
+  .code-const { color: #79c0ff; }
+</style>
+
+<!-- HowTo Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Add Stripe to Next.js in 2026",
+  "description": "A complete guide to integrating Stripe payments with Next.js, covering checkout sessions, webhooks, billing portal, and subscription management.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Install Stripe SDK",
+      "text": "Install the Stripe Node.js SDK and initialize it with your secret key using environment variables."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Create Checkout Sessions",
+      "text": "Build an API route that creates Stripe Checkout Sessions for one-time payments or subscriptions."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Handle Webhooks",
+      "text": "Set up a webhook endpoint to process Stripe events like successful payments, subscription updates, and cancellations."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add Billing Portal",
+      "text": "Integrate Stripe's Customer Portal so users can manage their subscriptions, update payment methods, and view invoices."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Manage Subscriptions",
+      "text": "Implement subscription lifecycle management including upgrades, downgrades, cancellations, and trial periods."
+    }
+  ]
+}
+</script>
+</head>
+<body class="bg-gray-950 text-gray-100 antialiased">
+
+<!-- Header -->
+<header class="fixed top-0 z-50 w-full border-b border-gray-800 bg-gray-950/90 backdrop-blur-sm">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+    <a href="https://wittlesus.github.io/launchfast-starter/" class="text-xl font-bold text-white">LaunchFast</a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="https://wittlesus.github.io/launchfast-starter/" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+      <a href="alternatives.html" class="text-sm text-gray-400 hover:text-white transition-colors">Alternatives</a>
+      <a href="saas-starter-kit.html" class="text-sm text-gray-400 hover:text-white transition-colors">Starter Kits</a>
+      <a href="best-nextjs-boilerplate.html" class="text-sm text-gray-400 hover:text-white transition-colors">Best Boilerplates</a>
+    </nav>
+    <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200 transition-colors">Buy Now - $79</a>
+  </div>
+</header>
+
+<main class="pt-24 pb-20">
+  <!-- Hero -->
+  <section class="mx-auto max-w-4xl px-6 py-16 text-center">
+    <div class="mb-6 inline-flex items-center rounded-full border border-gray-700 px-4 py-1.5 text-sm text-gray-400">
+      Updated February 2026
+    </div>
+    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+      How to Add Stripe to Next.js<br><span class="gradient-text">in 2026 (Complete Guide)</span>
+    </h1>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
+      A step-by-step guide covering checkout sessions, webhooks, the billing portal, and subscription management. Real code you can copy, paste, and ship.
+    </p>
+  </section>
+
+  <!-- Table of Contents -->
+  <section class="mx-auto max-w-4xl px-6 py-8">
+    <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+      <h2 class="text-lg font-bold text-white mb-4">What you'll learn</h2>
+      <ol class="space-y-2 text-gray-400 list-decimal list-inside">
+        <li><a href="#setup" class="text-blue-400 hover:text-blue-300 transition-colors">Project setup and Stripe SDK installation</a></li>
+        <li><a href="#checkout" class="text-blue-400 hover:text-blue-300 transition-colors">Creating Checkout Sessions (one-time and subscriptions)</a></li>
+        <li><a href="#webhooks" class="text-blue-400 hover:text-blue-300 transition-colors">Handling Stripe Webhooks in Next.js API routes</a></li>
+        <li><a href="#billing-portal" class="text-blue-400 hover:text-blue-300 transition-colors">Adding the Stripe Customer Portal</a></li>
+        <li><a href="#subscriptions" class="text-blue-400 hover:text-blue-300 transition-colors">Managing subscriptions (upgrades, cancellations, trials)</a></li>
+        <li><a href="#skip-setup" class="text-blue-400 hover:text-blue-300 transition-colors">Or skip all this and use LaunchFast</a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Step 1: Setup -->
+  <section id="setup" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">1. Project Setup and Stripe SDK</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">First, install the Stripe Node.js SDK in your Next.js project. You will also need the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">stripe</code> package on the server side and optionally <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">@stripe/stripe-js</code> for client-side Stripe Elements.</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">Terminal</span>
+      </div>
+      <pre>npm install stripe @stripe/stripe-js</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Create a Stripe client utility that you can import throughout your app. This avoids initializing Stripe multiple times:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">lib/stripe.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> Stripe <span class="code-keyword">from</span> <span class="code-string">'stripe'</span>;
+
+<span class="code-keyword">export const</span> <span class="code-const">stripe</span> = <span class="code-keyword">new</span> <span class="code-function">Stripe</span>(process.env.<span class="code-const">STRIPE_SECRET_KEY</span>!, {
+  apiVersion: <span class="code-string">'2025-12-18.acacia'</span>,
+  typescript: <span class="code-keyword">true</span>,
+});
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Add your Stripe keys to <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">.env.local</code>. Never commit your secret key to version control:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">.env.local</span>
+      </div>
+      <pre>STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...</pre>
+    </div>
+  </section>
+
+  <!-- Step 2: Checkout Sessions -->
+  <section id="checkout" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">2. Creating Checkout Sessions</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">Stripe Checkout Sessions redirect your users to a Stripe-hosted payment page. This is the fastest way to accept payments because Stripe handles the UI, validation, 3D Secure, and localization for you. Here is how to create one in a Next.js API route:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/api/checkout/route.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { NextRequest, NextResponse } <span class="code-keyword">from</span> <span class="code-string">'next/server'</span>;
+<span class="code-keyword">import</span> { stripe } <span class="code-keyword">from</span> <span class="code-string">'@/lib/stripe'</span>;
+<span class="code-keyword">import</span> { getServerSession } <span class="code-keyword">from</span> <span class="code-string">'next-auth'</span>;
+<span class="code-keyword">import</span> { authOptions } <span class="code-keyword">from</span> <span class="code-string">'@/lib/auth'</span>;
+
+<span class="code-keyword">export async function</span> <span class="code-function">POST</span>(req: NextRequest) {
+  <span class="code-keyword">const</span> session = <span class="code-keyword">await</span> <span class="code-function">getServerSession</span>(authOptions);
+  <span class="code-keyword">if</span> (!session?.user) {
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>(
+      { error: <span class="code-string">'Unauthorized'</span> },
+      { status: <span class="code-const">401</span> }
+    );
+  }
+
+  <span class="code-keyword">const</span> { priceId, mode } = <span class="code-keyword">await</span> req.<span class="code-function">json</span>();
+
+  <span class="code-comment">// mode: 'payment' for one-time, 'subscription' for recurring</span>
+  <span class="code-keyword">const</span> checkoutSession = <span class="code-keyword">await</span> stripe.checkout.sessions.<span class="code-function">create</span>({
+    customer_email: session.user.email!,
+    mode: mode || <span class="code-string">'subscription'</span>,
+    payment_method_types: [<span class="code-string">'card'</span>],
+    line_items: [
+      {
+        price: priceId,
+        quantity: <span class="code-const">1</span>,
+      },
+    ],
+    success_url: <span class="code-string">`${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`</span>,
+    cancel_url: <span class="code-string">`${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`</span>,
+    metadata: {
+      userId: session.user.id,
+    },
+  });
+
+  <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>({ url: checkoutSession.url });
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">On the client side, call this API route and redirect the user to the Stripe checkout page:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">components/PricingButton.tsx</span>
+      </div>
+      <pre><span class="code-string">'use client'</span>;
+
+<span class="code-keyword">export function</span> <span class="code-function">PricingButton</span>({ priceId, mode }: {
+  priceId: <span class="code-const">string</span>;
+  mode: <span class="code-string">'payment'</span> | <span class="code-string">'subscription'</span>;
+}) {
+  <span class="code-keyword">const</span> <span class="code-function">handleCheckout</span> = <span class="code-keyword">async</span> () => {
+    <span class="code-keyword">const</span> res = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">'/api/checkout'</span>, {
+      method: <span class="code-string">'POST'</span>,
+      headers: { <span class="code-string">'Content-Type'</span>: <span class="code-string">'application/json'</span> },
+      body: JSON.<span class="code-function">stringify</span>({ priceId, mode }),
+    });
+    <span class="code-keyword">const</span> { url } = <span class="code-keyword">await</span> res.<span class="code-function">json</span>();
+    window.location.href = url;
+  };
+
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-keyword">button</span> onClick={handleCheckout}
+      className=<span class="code-string">"bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold"</span>&gt;
+      Get Started
+    &lt;/<span class="code-keyword">button</span>&gt;
+  );
+}
+</pre>
+    </div>
+  </section>
+
+  <!-- Step 3: Webhooks -->
+  <section id="webhooks" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">3. Handling Stripe Webhooks</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">Webhooks are how Stripe notifies your app about events -- successful payments, failed charges, subscription changes, and more. This is the most critical part of your integration. Without proper webhook handling, your database will go out of sync with Stripe.</p>
+
+    <div class="rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 mb-6">
+      <p class="text-yellow-300 text-sm"><strong>Important:</strong> You must verify the webhook signature to ensure the event actually came from Stripe. Never trust webhook payloads without verification.</p>
+    </div>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/api/webhooks/stripe/route.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { NextRequest, NextResponse } <span class="code-keyword">from</span> <span class="code-string">'next/server'</span>;
+<span class="code-keyword">import</span> { stripe } <span class="code-keyword">from</span> <span class="code-string">'@/lib/stripe'</span>;
+<span class="code-keyword">import</span> { prisma } <span class="code-keyword">from</span> <span class="code-string">'@/lib/prisma'</span>;
+<span class="code-keyword">import</span> Stripe <span class="code-keyword">from</span> <span class="code-string">'stripe'</span>;
+
+<span class="code-comment">// Disable body parsing -- Stripe needs the raw body for signature verification</span>
+<span class="code-keyword">export const</span> <span class="code-const">runtime</span> = <span class="code-string">'nodejs'</span>;
+
+<span class="code-keyword">export async function</span> <span class="code-function">POST</span>(req: NextRequest) {
+  <span class="code-keyword">const</span> body = <span class="code-keyword">await</span> req.<span class="code-function">text</span>();
+  <span class="code-keyword">const</span> signature = req.headers.<span class="code-function">get</span>(<span class="code-string">'stripe-signature'</span>)!;
+
+  <span class="code-keyword">let</span> event: Stripe.Event;
+
+  <span class="code-keyword">try</span> {
+    event = stripe.webhooks.<span class="code-function">constructEvent</span>(
+      body,
+      signature,
+      process.env.<span class="code-const">STRIPE_WEBHOOK_SECRET</span>!
+    );
+  } <span class="code-keyword">catch</span> (err) {
+    console.<span class="code-function">error</span>(<span class="code-string">'Webhook signature verification failed'</span>, err);
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>(
+      { error: <span class="code-string">'Invalid signature'</span> },
+      { status: <span class="code-const">400</span> }
+    );
+  }
+
+  <span class="code-keyword">switch</span> (event.type) {
+    <span class="code-keyword">case</span> <span class="code-string">'checkout.session.completed'</span>: {
+      <span class="code-keyword">const</span> session = event.data.object <span class="code-keyword">as</span> Stripe.Checkout.Session;
+      <span class="code-keyword">await</span> prisma.user.<span class="code-function">update</span>({
+        where: { id: session.metadata?.userId },
+        data: {
+          stripeCustomerId: session.customer <span class="code-keyword">as string</span>,
+          stripeSubscriptionId: session.subscription <span class="code-keyword">as string</span>,
+          plan: <span class="code-string">'pro'</span>,
+        },
+      });
+      <span class="code-keyword">break</span>;
+    }
+
+    <span class="code-keyword">case</span> <span class="code-string">'customer.subscription.updated'</span>: {
+      <span class="code-keyword">const</span> subscription = event.data.object <span class="code-keyword">as</span> Stripe.Subscription;
+      <span class="code-keyword">await</span> prisma.user.<span class="code-function">update</span>({
+        where: { stripeCustomerId: subscription.customer <span class="code-keyword">as string</span> },
+        data: {
+          plan: subscription.status === <span class="code-string">'active'</span> ? <span class="code-string">'pro'</span> : <span class="code-string">'free'</span>,
+        },
+      });
+      <span class="code-keyword">break</span>;
+    }
+
+    <span class="code-keyword">case</span> <span class="code-string">'customer.subscription.deleted'</span>: {
+      <span class="code-keyword">const</span> subscription = event.data.object <span class="code-keyword">as</span> Stripe.Subscription;
+      <span class="code-keyword">await</span> prisma.user.<span class="code-function">update</span>({
+        where: { stripeCustomerId: subscription.customer <span class="code-keyword">as string</span> },
+        data: { plan: <span class="code-string">'free'</span> },
+      });
+      <span class="code-keyword">break</span>;
+    }
+  }
+
+  <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>({ received: <span class="code-keyword">true</span> });
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-4">To test webhooks locally, use the Stripe CLI to forward events to your dev server:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">Terminal</span>
+      </div>
+      <pre>stripe listen --forward-to localhost:3000/api/webhooks/stripe</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed">The CLI will output a webhook signing secret (<code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">whsec_...</code>) that you should add to your <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">.env.local</code> file.</p>
+  </section>
+
+  <!-- Step 4: Billing Portal -->
+  <section id="billing-portal" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">4. Adding the Stripe Customer Portal</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">The Stripe Customer Portal lets your users manage their own subscriptions, update payment methods, view invoices, and cancel their plan -- without you building any of that UI. Create an API route that generates a portal session URL:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/api/billing/portal/route.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { NextRequest, NextResponse } <span class="code-keyword">from</span> <span class="code-string">'next/server'</span>;
+<span class="code-keyword">import</span> { stripe } <span class="code-keyword">from</span> <span class="code-string">'@/lib/stripe'</span>;
+<span class="code-keyword">import</span> { getServerSession } <span class="code-keyword">from</span> <span class="code-string">'next-auth'</span>;
+<span class="code-keyword">import</span> { authOptions } <span class="code-keyword">from</span> <span class="code-string">'@/lib/auth'</span>;
+<span class="code-keyword">import</span> { prisma } <span class="code-keyword">from</span> <span class="code-string">'@/lib/prisma'</span>;
+
+<span class="code-keyword">export async function</span> <span class="code-function">POST</span>(req: NextRequest) {
+  <span class="code-keyword">const</span> session = <span class="code-keyword">await</span> <span class="code-function">getServerSession</span>(authOptions);
+  <span class="code-keyword">if</span> (!session?.user) {
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>(
+      { error: <span class="code-string">'Unauthorized'</span> },
+      { status: <span class="code-const">401</span> }
+    );
+  }
+
+  <span class="code-keyword">const</span> user = <span class="code-keyword">await</span> prisma.user.<span class="code-function">findUnique</span>({
+    where: { id: session.user.id },
+    select: { stripeCustomerId: <span class="code-keyword">true</span> },
+  });
+
+  <span class="code-keyword">if</span> (!user?.stripeCustomerId) {
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>(
+      { error: <span class="code-string">'No billing account found'</span> },
+      { status: <span class="code-const">404</span> }
+    );
+  }
+
+  <span class="code-keyword">const</span> portalSession = <span class="code-keyword">await</span> stripe.billingPortal.sessions.<span class="code-function">create</span>({
+    customer: user.stripeCustomerId,
+    return_url: <span class="code-string">`${process.env.NEXT_PUBLIC_APP_URL}/dashboard`</span>,
+  });
+
+  <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>({ url: portalSession.url });
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Add a "Manage Billing" button in your dashboard that calls this endpoint:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">components/ManageBillingButton.tsx</span>
+      </div>
+      <pre><span class="code-string">'use client'</span>;
+
+<span class="code-keyword">export function</span> <span class="code-function">ManageBillingButton</span>() {
+  <span class="code-keyword">const</span> <span class="code-function">handlePortal</span> = <span class="code-keyword">async</span> () => {
+    <span class="code-keyword">const</span> res = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">'/api/billing/portal'</span>, {
+      method: <span class="code-string">'POST'</span>,
+    });
+    <span class="code-keyword">const</span> { url } = <span class="code-keyword">await</span> res.<span class="code-function">json</span>();
+    window.location.href = url;
+  };
+
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-keyword">button</span> onClick={handlePortal}
+      className=<span class="code-string">"border border-gray-600 text-gray-300 px-4 py-2 rounded-lg"</span>&gt;
+      Manage Billing
+    &lt;/<span class="code-keyword">button</span>&gt;
+  );
+}
+</pre>
+    </div>
+
+    <div class="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4 mb-6">
+      <p class="text-blue-300 text-sm"><strong>Tip:</strong> Configure the Customer Portal in your Stripe Dashboard under Settings > Customer Portal. You can control which features users can access -- subscription cancellation, plan switching, payment method updates, and invoice history.</p>
+    </div>
+  </section>
+
+  <!-- Step 5: Subscription Management -->
+  <section id="subscriptions" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">5. Managing Subscriptions</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">For more control over subscription changes (upgrades, downgrades, trials), you can use the Stripe API directly instead of relying solely on the Customer Portal. Here is a helper that handles plan changes:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">lib/subscription.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { stripe } <span class="code-keyword">from</span> <span class="code-string">'@/lib/stripe'</span>;
+<span class="code-keyword">import</span> { prisma } <span class="code-keyword">from</span> <span class="code-string">'@/lib/prisma'</span>;
+
+<span class="code-keyword">export async function</span> <span class="code-function">changePlan</span>(userId: <span class="code-const">string</span>, newPriceId: <span class="code-const">string</span>) {
+  <span class="code-keyword">const</span> user = <span class="code-keyword">await</span> prisma.user.<span class="code-function">findUniqueOrThrow</span>({
+    where: { id: userId },
+    select: { stripeSubscriptionId: <span class="code-keyword">true</span> },
+  });
+
+  <span class="code-keyword">if</span> (!user.stripeSubscriptionId) {
+    <span class="code-keyword">throw new</span> <span class="code-function">Error</span>(<span class="code-string">'No active subscription'</span>);
+  }
+
+  <span class="code-comment">// Get the current subscription to find the item ID</span>
+  <span class="code-keyword">const</span> subscription = <span class="code-keyword">await</span> stripe.subscriptions.<span class="code-function">retrieve</span>(
+    user.stripeSubscriptionId
+  );
+
+  <span class="code-comment">// Update the subscription with the new price</span>
+  <span class="code-keyword">const</span> updated = <span class="code-keyword">await</span> stripe.subscriptions.<span class="code-function">update</span>(
+    user.stripeSubscriptionId,
+    {
+      items: [
+        {
+          id: subscription.items.data[<span class="code-const">0</span>].id,
+          price: newPriceId,
+        },
+      ],
+      <span class="code-comment">// Prorate by default so users pay the difference</span>
+      proration_behavior: <span class="code-string">'create_prorations'</span>,
+    }
+  );
+
+  <span class="code-keyword">return</span> updated;
+}
+
+<span class="code-keyword">export async function</span> <span class="code-function">cancelSubscription</span>(userId: <span class="code-const">string</span>) {
+  <span class="code-keyword">const</span> user = <span class="code-keyword">await</span> prisma.user.<span class="code-function">findUniqueOrThrow</span>({
+    where: { id: userId },
+    select: { stripeSubscriptionId: <span class="code-keyword">true</span> },
+  });
+
+  <span class="code-keyword">if</span> (!user.stripeSubscriptionId) {
+    <span class="code-keyword">throw new</span> <span class="code-function">Error</span>(<span class="code-string">'No active subscription'</span>);
+  }
+
+  <span class="code-comment">// Cancel at period end so users keep access until billing cycle ends</span>
+  <span class="code-keyword">return</span> stripe.subscriptions.<span class="code-function">update</span>(
+    user.stripeSubscriptionId,
+    { cancel_at_period_end: <span class="code-keyword">true</span> }
+  );
+}
+</pre>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4 mt-10">Adding a Free Trial</h3>
+    <p class="text-gray-400 leading-relaxed mb-6">To add a trial period, include the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">subscription_data.trial_period_days</code> parameter when creating the checkout session:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">Checkout session with trial</span>
+      </div>
+      <pre><span class="code-keyword">const</span> checkoutSession = <span class="code-keyword">await</span> stripe.checkout.sessions.<span class="code-function">create</span>({
+  mode: <span class="code-string">'subscription'</span>,
+  line_items: [{ price: priceId, quantity: <span class="code-const">1</span> }],
+  subscription_data: {
+    trial_period_days: <span class="code-const">14</span>, <span class="code-comment">// 14-day free trial</span>
+  },
+  <span class="code-comment">// ... rest of config</span>
+});
+</pre>
+    </div>
+  </section>
+
+  <!-- Summary / Checklist -->
+  <section class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Integration Checklist</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">Here is everything you need to have in place for a production-ready Stripe + Next.js integration:</p>
+    <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+      <ul class="space-y-3 text-gray-300">
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Stripe SDK installed and initialized with environment variables</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Checkout session API route for creating payments</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Webhook endpoint with signature verification</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Handle <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">checkout.session.completed</code> to activate the account</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Handle <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">customer.subscription.updated</code> and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">deleted</code></span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Customer Portal integration for self-service billing</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Database fields for <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">stripeCustomerId</code> and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">stripeSubscriptionId</code></span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Test with Stripe CLI before deploying to production</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-gray-600 mt-0.5 flex-shrink-0">&#9744;</span>
+          <span>Switch from test keys to live keys when ready to launch</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Skip Setup CTA -->
+  <section id="skip-setup" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Or Skip the Setup Entirely</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">That was a lot of code. And we only covered payments -- you still need authentication, a database layer, email templates, a dashboard, error handling, rate limiting, and a deployment pipeline.</p>
+    <p class="text-gray-400 leading-relaxed mb-6">LaunchFast ships with all of the above already wired together and tested. The entire Stripe integration -- checkout sessions, webhooks, billing portal, subscription management, and one-time payments -- is pre-built with Prisma, ready for both development and production.</p>
+    <p class="text-gray-400 leading-relaxed mb-8">Plus you get authentication (OAuth + magic link), Claude AI integration with streaming, Resend email templates, and a complete dashboard UI. All for $79.</p>
+  </section>
+
+  <!-- CTA -->
+  <section class="mx-auto max-w-7xl px-6 py-20">
+    <div class="rounded-2xl bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/20 p-12 text-center">
+      <h2 class="text-3xl font-bold text-white sm:text-4xl">Ship faster with LaunchFast</h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-gray-300">Stripe + Next.js + Auth + AI + Email + Database. Already integrated, already tested, ready to deploy. Stop wiring boilerplate and start building your product.</p>
+      <div class="mt-8 flex items-center justify-center gap-4 flex-wrap">
+        <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-white px-8 py-3 text-base font-semibold text-gray-900 hover:bg-gray-200 transition-colors">Buy LaunchFast - $79</a>
+        <a href="https://github.com/Wittlesus/launchfast-starter" class="rounded-lg border border-gray-600 px-8 py-3 text-base font-semibold text-gray-300 hover:bg-gray-800 transition-colors" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-gray-800 bg-gray-950 py-12">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+      <p class="text-sm text-gray-500">&copy; 2026 LaunchFast. All rights reserved.</p>
+      <nav class="flex gap-6 flex-wrap">
+        <a href="https://wittlesus.github.io/launchfast-starter/" class="text-sm text-gray-500 hover:text-gray-300">Home</a>
+        <a href="alternatives.html" class="text-sm text-gray-500 hover:text-gray-300">Alternatives</a>
+        <a href="saas-starter-kit.html" class="text-sm text-gray-500 hover:text-gray-300">Starter Kits</a>
+        <a href="best-nextjs-boilerplate.html" class="text-sm text-gray-500 hover:text-gray-300">Best Boilerplates</a>
+        <a href="privacy.html" class="text-sm text-gray-500 hover:text-gray-300">Privacy</a>
+        <a href="terms.html" class="text-sm text-gray-500 hover:text-gray-300">Terms</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
