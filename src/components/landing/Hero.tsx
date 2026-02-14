@@ -22,16 +22,18 @@ export default function Hero() {
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-4">
             <Link
-              href="/signup"
+              href="/pricing"
               className="rounded-lg bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors"
             >
-              Get Started Free
+              Get Started
             </Link>
             <Link
-              href="/pricing"
+              href="https://github.com/Wittlesus/launchfast-starter#readme"
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-lg px-6 py-3 text-sm font-semibold text-gray-900 ring-1 ring-gray-200 hover:bg-gray-50 transition-colors"
             >
-              View Pricing
+              View Docs
             </Link>
           </div>
         </div>
