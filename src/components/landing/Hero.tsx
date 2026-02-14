@@ -7,18 +7,18 @@ export default function Hero() {
         <div className="mx-auto max-w-2xl text-center">
           <div className="mb-8 flex justify-center">
             <div className="rounded-full px-4 py-1.5 text-sm font-medium text-gray-600 ring-1 ring-gray-200">
-              Ship your SaaS in days, not months
+              Next.js 16 SaaS Boilerplate
             </div>
           </div>
           <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl">
-            Build faster.
+            Authentication, Payments & AI.
             <br />
-            <span className="text-gray-400">Launch sooner.</span>
+            <span className="text-gray-400">Pre-built. Just $79.</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            The Next.js boilerplate with authentication, payments, emails, and
-            AI built in. Stop wasting weeks on setup. Start building your
-            product today.
+            Production-ready Next.js 16 starter with NextAuth, Stripe, Prisma,
+            and Claude AI already configured. Skip 3 weeks of boilerplate setup.
+            Start shipping features today.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-4">
             <Link
