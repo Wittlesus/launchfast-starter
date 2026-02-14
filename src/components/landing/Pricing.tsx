@@ -86,6 +86,16 @@ export default function Pricing() {
             </div>
           ))}
         </div>
+
+        <div className="mx-auto mt-16 max-w-2xl text-center">
+          <p className="text-sm text-gray-600">
+            <strong>Refund Policy:</strong> If you are not satisfied with your purchase, email{" "}
+            <a href="mailto:support@wittlesus.com" className="text-gray-900 hover:underline">
+              support@wittlesus.com
+            </a>{" "}
+            within 30 days for a full refund. No questions asked.
+          </p>
+        </div>
       </div>
     </section>
   );
