@@ -22,7 +22,9 @@ export default function Header() {
             Pricing
           </Link>
           <Link
-            href="https://github.com"
+            href="https://github.com/Wittlesus/launchfast-starter#readme"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
           >
             Docs
