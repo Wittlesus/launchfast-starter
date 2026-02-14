@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Stack Quiz — What Stack Should You Use for Your SaaS in 2026?</title>
+<meta name="description" content="Free interactive quiz: Answer 7 questions about your team, budget, and needs. Get a personalized tech stack recommendation for your SaaS product in 2026.">
+<meta name="keywords" content="best tech stack for saas, nextjs vs remix for saas, tech stack quiz, saas technology stack, what framework to use for saas, next.js vs sveltekit, best database for saas 2026">
+<link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/tech-stack-quiz.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tech Stack Quiz — What Stack Should You Use for Your SaaS?">
+<meta property="og:description" content="Free interactive quiz: Answer 7 questions and get a personalized tech stack recommendation for your SaaS product in 2026.">
+<meta property="og:url" content="https://wittlesus.github.io/launchfast-starter/tech-stack-quiz.html">
+<meta property="og:site_name" content="LaunchFast">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tech Stack Quiz — What Stack Should You Use for Your SaaS?">
+<meta name="twitter:description" content="Answer 7 questions and get a personalized tech stack recommendation for your SaaS product in 2026.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the best tech stack for a SaaS in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The best tech stack for a SaaS in 2026 depends on your team size, budget, and requirements. For solo developers or small teams, Next.js with Prisma, Stripe, and NextAuth is popular. For larger teams prioritizing type safety, Remix or SvelteKit with Drizzle ORM works well. The key is choosing a stack that balances developer experience, scalability, and ecosystem maturity."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use Next.js or Remix for my SaaS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Next.js is better for teams that want a mature ecosystem, strong Vercel integration, and extensive community resources. Remix is better for teams prioritizing web fundamentals, progressive enhancement, and fine-grained control over data loading. For most solo founders and small teams, Next.js offers faster development due to its larger ecosystem of boilerplates and tutorials."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What database should I use for my SaaS product?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PostgreSQL is the most popular choice for SaaS products in 2026 due to its reliability, JSON support, and strong ecosystem. Use managed PostgreSQL from Supabase, Neon, or Railway for easy setup. For apps with simple data needs, SQLite (with Turso for hosted version) is gaining traction. Avoid NoSQL databases unless you have specific real-time or document storage requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a SaaS boilerplate or can I build from scratch?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Building from scratch takes 150-300+ hours to implement authentication, payments, database, and core infrastructure. A SaaS boilerplate like LaunchFast ($79) includes all of this pre-built, saving weeks of development time. Boilerplates are recommended if you want to ship quickly and focus on your unique product features rather than rebuilding solved problems."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What authentication solution should I use for my SaaS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For most SaaS products, use NextAuth v5 (free, self-hosted) or Clerk (paid, managed service). NextAuth is ideal for budget-conscious developers comfortable with configuration. Clerk is better for teams that want beautiful pre-built UI, social login, and enterprise features out of the box. Supabase Auth is a good middle ground for projects already using Supabase for the database."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I choose between Prisma and Drizzle ORM?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Prisma offers better developer experience with its schema-first approach, excellent TypeScript support, and migrations tooling. Drizzle is lighter, faster at runtime, and gives you more control with its SQL-like query builder. For most SaaS products, Prisma is recommended due to its maturity and ecosystem. Choose Drizzle if you need maximum performance or prefer writing SQL-like queries."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the fastest way to launch a SaaS product in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The fastest way to launch a SaaS in 2026 is to use a pre-built boilerplate or starter kit. Instead of spending 150-300 hours on authentication, payments, database setup, and infrastructure, boilerplates like LaunchFast give you everything pre-configured for $79. This lets you focus on building your unique product features and getting to market in days instead of months."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111119;
+  --bg-card: #16161f;
+  --bg-input: #1c1c28;
+  --border: #2a2a3a;
+  --border-hover: #3a3a4f;
+  --text-primary: #f0f0f5;
+  --text-secondary: #9999aa;
+  --text-muted: #666677;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-glow: rgba(99, 102, 241, 0.15);
+  --green: #22c55e;
+  --green-light: #4ade80;
+  --green-glow: rgba(34, 197, 94, 0.12);
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+/* Header */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  height: 64px;
+}
+.header-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 100%;
+}
+.header-logo { font-size: 20px; font-weight: 700; color: #fff; text-decoration: none; }
+.header-nav { display: flex; align-items: center; gap: 24px; }
+.header-nav a { font-size: 14px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+.header-nav a:hover { color: #fff; }
+.header-cta {
+  display: inline-flex; align-items: center; padding: 8px 20px;
+  background: #fff; color: #000; border-radius: 8px;
+  font-size: 14px; font-weight: 600; text-decoration: none; transition: opacity 0.2s;
+}
+.header-cta:hover { opacity: 0.9; text-decoration: none; }
+
+/* Hero */
+.hero { padding: 120px 0 60px; text-align: center; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 100px;
+  border: 1px solid var(--border); color: var(--text-secondary);
+  font-size: 14px; margin-bottom: 24px;
+}
+.hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.hero h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+.hero h1 .gradient {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #6366f1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p { font-size: 18px; color: var(--text-secondary); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+/* Quiz Container */
+.quiz-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+/* Question Card */
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 24px;
+  display: none;
+}
+
+.question-card.active {
+  display: block;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.question-number {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-light);
+  background: var(--accent-glow);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+}
+
+.question-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.question-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* Answer Options */
+.answer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.answer-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.answer-btn:hover {
+  border-color: var(--border-hover);
+  background: #1e1e2c;
+  transform: translateX(4px);
+}
+
+.answer-btn.selected {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.answer-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.answer-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.answer-btn.selected .answer-desc {
+  color: var(--accent-light);
+}
+
+/* Progress Bar */
+.progress-container {
+  margin-bottom: 32px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-input);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.progress-text {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-secondary {
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: #1e1e2c;
+  border-color: var(--border-hover);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Results */
+.results-container {
+  display: none;
+}
+
+.results-container.active {
+  display: block;
+  animation: slideIn 0.5s ease;
+}
+
+.result-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: var(--green-glow);
+  border: 1px solid var(--green);
+  color: var(--green-light);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.result-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.result-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stack-item {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.stack-category {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.stack-choice {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.stack-note {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.why-section {
+  background: var(--bg-input);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.why-section h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.why-section ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.why-section li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding-left: 24px;
+  position: relative;
+}
+
+.why-section li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+/* CTA Card */
+.cta-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  text-align: center;
+}
+
+.cta-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.cta-description {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.cta-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.cta-feature {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding-left: 20px;
+  position: relative;
+}
+
+.cta-feature::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.cta-price {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.cta-price strong {
+  font-size: 36px;
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 40px;
+  background: #fff;
+  color: #000;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+  text-decoration: none;
+}
+
+.restart-btn {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.restart-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero { padding: 100px 0 40px; }
+  .hero h1 { font-size: 32px; }
+  .question-card { padding: 24px; }
+  .question-title { font-size: 20px; }
+  .result-title { font-size: 26px; }
+  .stack-grid { grid-template-columns: 1fr; }
+  .cta-features { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="header-logo">LaunchFast</a>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="saas-cost-calculator.html">Calculator</a>
+      <a href="https://buy.stripe.com/test_6oE5mq3NK0QP4PS7ss" class="header-cta">Get LaunchFast $79</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Free Interactive Quiz
+    </div>
+    <h1>What <span class="gradient">Tech Stack</span> Should You Use for Your SaaS?</h1>
+    <p>Answer 7 questions about your team, budget, and requirements. Get a personalized stack recommendation in 2 minutes.</p>
+  </div>
+</section>
+
+<!-- Quiz -->
+<div class="container">
+  <div class="quiz-container">
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">Question 1 of 7</div>
+    </div>
+
+    <!-- Question 1: Team Size -->
+    <div class="question-card active" data-question="1">
+      <div class="question-header">
+        <div class="question-number">Question 1 of 7</div>
+      </div>
+      <h2 class="question-title">How large is your development team?</h2>
+      <p class="question-subtitle">This helps us recommend the right level of tooling and collaboration features.</p>
+      <div class="answer-options">
+        <button class="answer-btn" data-answer="solo">
+          <span class="answer-label">Solo developer</span>
+          <span class="answer-desc">Just me, building everything myself</span>
+        </button>
+        <button class="answer-btn" data-answer="small">
+          <span class="answer-label">Small team (2-4 devs)</span>
+          <span class="answer-desc">A few developers working together</span>
+        </button>
+        <button class="answer-btn" data-answer="large">
+          <span class="answer-label">Larger team (5+ devs)</span>
+          <span class="answer-desc">Established team with dedicated roles</span>
+        </button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="previousQuestion()" disabled>Back</button>
+        <button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn1">Next</button>
+      </div>
+    </div>
+
+    <!-- Question 2: Budget -->
+    <div class="question-card" data-question="2">
+      <div class="question-header">
+        <div class="question-number">Question 2 of 7</div>
+      </div>
+      <h2 class="question-title">What's your monthly infrastructure budget?</h2>
+      <p class="question-subtitle">Consider hosting, database, auth services, and other SaaS tools.</p>
+      <div class="answer-options">
+        <button class="answer-btn" data-answer="minimal">
+          <span class="answer-label">Minimal ($0-20/month)</span>
+          <span class="answer-desc">Free tiers and minimal spending</span>
+        </button>
+        <button class="answer-btn" data-answer="moderate">
+          <span class="answer-label">Moderate ($20-100/month)</span>
+          <span class="answer-desc">Comfortable with managed services</span>
+        </button>
+        <button class="answer-btn" data-answer="flexible">
+          <span class="answer-label">Flexible ($100+/month)</span>
+          <span class="answer-desc">Budget isn't a constraint</span>
+        </button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="previousQuestion()">Back</button>
+        <button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn2">Next</button>
+      </div>
+    </div>
+
+    <!-- Question 3: Timeline -->
+    <div class="question-card" data-question="3">
+      <div class="question-header">
+        <div class="question-number">Question 3 of 7</div>
+      </div>
+      <h2 class="question-title">How quickly do you need to launch?</h2>
+      <p class="question-subtitle">Your timeline affects which tools and approaches make sense.</p>
+      <div class="answer-options">
+        <button class="answer-btn" data-answer="asap">
+          <span class="answer-label">ASAP (2-4 weeks)</span>
+          <span class="answer-desc">Need to validate the idea quickly</span>
+        </button>
+        <button class="answer-btn" data-answer="normal">
+          <span class="answer-label">Normal timeline (1-3 months)</span>
+          <span class="answer-desc">Want to build it right without rushing</span>
+        </button>
+        <button class="answer-btn" data-answer="patient">
+          <span class="answer-label">No rush (3+ months)</span>
+          <span class="answer-desc">Can take time to perfect everything</span>
+        </button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="previousQuestion()">Back</button>
+        <button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn3">Next</button>
+      </div>
+    </div>
+
+    <!-- Question 4: Auth Needs -->
+    <div class="question-card" data-question="4">
+      <div class="question-header">
+        <div class="question-number">Question 4 of 7</div>
+      </div>
+      <h2 class="question-title">What authentication features do you need?</h2>
+      <p class="question-subtitle">Auth is critical for any SaaS — let's get it right.</p>
+      <div class="answer-options">
+        <button class="answer-btn" data-answer="basic">
+          <span class="answer-label">Basic email/password</span>
+          <span class="answer-desc">Simple auth, nothing fancy</span>
+        </button>
+        <button class="answer-btn" data-answer="social">
+          <span class="answer-label">Social login (Google, GitHub, etc.)</span>
+          <span class="answer-desc">Want seamless OAuth integration</span>
+        </button>
+        <button class="answer-btn" data-answer="enterprise">
+          <span class="answer-label">Enterprise (SSO, MFA, roles)</span>
+          <span class="answer-desc">Need advanced security and org features</span>
+        </button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="previousQuestion()">Back</button>
+        <button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn4">Next</button>
+      </div>
+    </div>
+
+    <!-- Question 5: Payments -->
+    <div class="question-card" data-question="5">
+      <div class="question-header">
+        <div class="question-number">Question 5 of 7</div>
+      </div>
+      <h2 class="question-title">What payment features do you need?</h2>
+      <p class="question-subtitle">Payments are the lifeline of your SaaS.</p>
+      <div class="answer-options">
+        <button class="answer-btn" data-answer="simple">
+          <span class="answer-label">Simple one-time payments</span>
+          <span class="answer-desc">Sell a product, get paid, done</span>
+        </button>
+        <button class="answer-btn" data-answer="subscriptions">
+          <span class="answer-label">Recurring subscriptions</span>
+          <span class="answer-desc">Monthly/annual billing cycles</span>
+        </button>
+        <button class="answer-btn" data-answer="advanced">
+          <span class="answer-label">Advanced (usage-based, metered)</span>
+          <span class="answer-desc">Complex pricing models and billing</span>
+        </button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="previousQuestion()">Back</button>
+        <button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn5">Next</button>
+      </div>
+    </div>
+
+    <!-- Question 6: AI Features -->
+    <div class="question-card" data-question="6">
+      <div class="question-header">
+        <div class="question-number">Question 6 of 7</div>
+      </div>
+      <h2 class="question-title">Do you plan to integrate AI features?</h2>
+      <p class="question-subtitle">AI integration is increasingly common in modern SaaS products.</p>
+      <div class="answer-options">
+        <button class="answer-btn" data-answer="no-ai">
+          <span class="answer-label">No AI needed</span>
+          <span class="answer-desc">Traditional SaaS, no LLM features</span>
+        </button>
+        <button class="answer-btn" data-answer="basic-ai">
+          <span class="answer-label">Basic AI (ChatGPT API, etc.)</span>
+          <span class="answer-desc">Simple OpenAI/Anthropic integration</span>
+        </button>
+        <button class="answer-btn" data-answer="advanced-ai">
+          <span class="answer-label">Advanced AI (RAG, embeddings, agents)</span>
+          <span class="answer-desc">Vector databases, complex workflows</span>
+        </button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="previousQuestion()">Back</button>
+        <button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn6">Next</button>
+      </div>
+    </div>
+
+    <!-- Question 7: Scaling -->
+    <div class="question-card" data-question="7">
+      <div class="question-header">
+        <div class="question-number">Question 7 of 7</div>
+      </div>
+      <h2 class="question-title">What are your scaling expectations?</h2>
+      <p class="question-subtitle">Let's plan for your growth trajectory.</p>
+      <div class="answer-options">
+        <button class="answer-btn" data-answer="small-scale">
+          <span class="answer-label">Small scale (< 1,000 users)</span>
+          <span class="answer-desc">Niche product, focused audience</span>
+        </button>
+        <button class="answer-btn" data-answer="medium-scale">
+          <span class="answer-label">Medium scale (1K-50K users)</span>
+          <span class="answer-desc">Want room to grow significantly</span>
+        </button>
+        <button class="answer-btn" data-answer="large-scale">
+          <span class="answer-label">Large scale (50K+ users)</span>
+          <span class="answer-desc">Planning for massive growth</span>
+        </button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="previousQuestion()">Back</button>
+        <button class="btn btn-primary" onclick="showResults()" disabled id="nextBtn7">See My Stack</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Results -->
+  <div class="results-container" id="resultsContainer">
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-badge">
+          ✓ Your Personalized Stack
+        </div>
+        <h2 class="result-title" id="resultTitle">Next.js Full Stack</h2>
+        <p class="result-subtitle" id="resultSubtitle">Perfect for solo developers who want to ship fast</p>
+      </div>
+
+      <div class="stack-grid" id="stackGrid">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="why-section">
+        <h3>Why this stack?</h3>
+        <ul id="whyList">
+          <!-- Populated by JS -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- CTA Card -->
+    <div class="cta-card">
+      <h2 class="cta-title">Skip Months of Setup — LaunchFast Gives You This Stack Pre-Built</h2>
+      <p class="cta-description">
+        Instead of spending 150-300 hours configuring auth, payments, database, AI integration, and deployment — get everything ready in 5 minutes.
+      </p>
+
+      <div class="cta-features">
+        <div class="cta-feature">Authentication (NextAuth v5)</div>
+        <div class="cta-feature">Stripe Payments</div>
+        <div class="cta-feature">PostgreSQL + Prisma</div>
+        <div class="cta-feature">AI Integration (OpenAI)</div>
+        <div class="cta-feature">Landing Page</div>
+        <div class="cta-feature">Dashboard UI</div>
+        <div class="cta-feature">Email (Resend)</div>
+        <div class="cta-feature">Full TypeScript</div>
+      </div>
+
+      <div class="cta-price">
+        <strong>$79</strong> one-time — lifetime access, free updates
+      </div>
+
+      <a href="https://buy.stripe.com/test_6oE5mq3NK0QP4PS7ss" class="cta-btn">
+        Get LaunchFast Now →
+      </a>
+
+      <a href="#" class="restart-btn" onclick="restartQuiz(); return false;">← Retake the quiz</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// Quiz state
+const answers = {};
+let currentQuestion = 1;
+const totalQuestions = 7;
+
+// Answer selection handlers
+document.querySelectorAll('.answer-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const questionNum = this.closest('.question-card').dataset.question;
+    const answer = this.dataset.answer;
+
+    // Remove selected class from siblings
+    this.parentElement.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+
+    // Add selected class to clicked button
+    this.classList.add('selected');
+
+    // Store answer
+    answers[`q${questionNum}`] = answer;
+
+    // Enable next button
+    document.getElementById(`nextBtn${questionNum}`).disabled = false;
+  });
+});
+
+function updateProgress() {
+  const progress = (currentQuestion / totalQuestions) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+  document.getElementById('progressText').textContent = `Question ${currentQuestion} of ${totalQuestions}`;
+}
+
+function nextQuestion() {
+  if (currentQuestion < totalQuestions) {
+    document.querySelector(`[data-question="${currentQuestion}"]`).classList.remove('active');
+    currentQuestion++;
+    document.querySelector(`[data-question="${currentQuestion}"]`).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function previousQuestion() {
+  if (currentQuestion > 1) {
+    document.querySelector(`[data-question="${currentQuestion}"]`).classList.remove('active');
+    currentQuestion--;
+    document.querySelector(`[data-question="${currentQuestion}"]`).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function restartQuiz() {
+  // Reset state
+  currentQuestion = 1;
+  Object.keys(answers).forEach(key => delete answers[key]);
+
+  // Reset UI
+  document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.remove('selected'));
+  document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = true);
+  document.querySelectorAll('.question-card').forEach(card => card.classList.remove('active'));
+  document.querySelector('[data-question="1"]').classList.add('active');
+  document.getElementById('resultsContainer').classList.remove('active');
+  document.querySelector('.quiz-container').style.display = 'block';
+
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function calculateStack() {
+  const team = answers.q1;
+  const budget = answers.q2;
+  const timeline = answers.q3;
+  const auth = answers.q4;
+  const payments = answers.q5;
+  const ai = answers.q6;
+  const scale = answers.q7;
+
+  // Decision logic
+  let framework, database, orm, authTool, hosting;
+  let title, subtitle, reasons = [];
+
+  // Framework decision
+  if (timeline === 'asap' || team === 'solo') {
+    framework = 'Next.js 15';
+    reasons.push('Next.js offers the fastest development with its mature ecosystem and extensive boilerplate options');
+  } else if (scale === 'large-scale' && team === 'large') {
+    framework = 'Remix';
+    reasons.push('Remix excels at large-scale apps with its progressive enhancement and fine-grained data loading');
+  } else {
+    framework = 'Next.js 15';
+    reasons.push('Next.js provides the best balance of DX, performance, and community support');
+  }
+
+  // Database + ORM decision
+  if (ai === 'advanced-ai') {
+    database = 'PostgreSQL (Supabase)';
+    orm = 'Drizzle ORM';
+    reasons.push('Supabase includes pgvector for embeddings, and Drizzle offers lightweight performance for AI workloads');
+  } else if (budget === 'minimal' && scale === 'small-scale') {
+    database = 'SQLite (Turso)';
+    orm = 'Drizzle ORM';
+    reasons.push('Turso provides free edge SQLite hosting — perfect for small-scale apps on a budget');
+  } else {
+    database = 'PostgreSQL (Neon)';
+    orm = 'Prisma';
+    reasons.push('Prisma + PostgreSQL is the gold standard for SaaS — mature, reliable, and developer-friendly');
+  }
+
+  // Auth decision
+  if (auth === 'enterprise' || budget === 'flexible') {
+    authTool = 'Clerk';
+    reasons.push('Clerk offers enterprise-grade auth with beautiful UI, SSO, and MFA out of the box');
+  } else if (budget === 'minimal' || team === 'solo') {
+    authTool = 'NextAuth v5';
+    reasons.push('NextAuth v5 is free, flexible, and powerful — ideal for budget-conscious developers');
+  } else {
+    authTool = 'Supabase Auth';
+    reasons.push('Supabase Auth integrates seamlessly with your database and provides social login for free');
+  }
+
+  // Hosting decision
+  if (framework === 'Next.js 15') {
+    hosting = 'Vercel';
+  } else {
+    hosting = 'Railway';
+  }
+
+  // Generate title and subtitle
+  if (team === 'solo' && timeline === 'asap') {
+    title = 'Next.js Speed Stack';
+    subtitle = 'Optimized for solo founders who need to ship fast';
+  } else if (team === 'large' && scale === 'large-scale') {
+    title = 'Enterprise-Grade Stack';
+    subtitle = 'Built for scale, performance, and team collaboration';
+  } else if (budget === 'minimal') {
+    title = 'Lean SaaS Stack';
+    subtitle = 'Maximum value on a minimal budget';
+  } else if (ai !== 'no-ai') {
+    title = 'AI-Ready SaaS Stack';
+    subtitle = 'Purpose-built for modern AI-powered applications';
+  } else {
+    title = `${framework} Full Stack`;
+    subtitle = 'A balanced, production-ready tech stack';
+  }
+
+  return {
+    title,
+    subtitle,
+    stack: {
+      'Framework': framework,
+      'Database': database,
+      'ORM': orm,
+      'Auth': authTool,
+      'Payments': 'Stripe',
+      'Hosting': hosting,
+      'Email': 'Resend'
+    },
+    reasons
+  };
+}
+
+function showResults() {
+  const result = calculateStack();
+
+  // Update title and subtitle
+  document.getElementById('resultTitle').textContent = result.title;
+  document.getElementById('resultSubtitle').textContent = result.subtitle;
+
+  // Populate stack grid
+  const stackGrid = document.getElementById('stackGrid');
+  stackGrid.innerHTML = '';
+  Object.entries(result.stack).forEach(([category, choice]) => {
+    stackGrid.innerHTML += `
+      <div class="stack-item">
+        <div class="stack-category">${category}</div>
+        <div class="stack-choice">${choice}</div>
+      </div>
+    `;
+  });
+
+  // Populate reasons
+  const whyList = document.getElementById('whyList');
+  whyList.innerHTML = '';
+  result.reasons.forEach(reason => {
+    whyList.innerHTML += `<li>${reason}</li>`;
+  });
+
+  // Show results, hide quiz
+  document.querySelector('.quiz-container').style.display = 'none';
+  document.getElementById('resultsContainer').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Initialize progress
+updateProgress();
+</script>
+
+</body>
+</html>
