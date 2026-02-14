@@ -43,10 +43,10 @@ export default function Header() {
             Sign in
           </Link>
           <Link
-            href="/signup"
+            href="/pricing"
             className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 transition-colors"
           >
-            Get Started
+            Buy Now
           </Link>
         </div>
       </div>
