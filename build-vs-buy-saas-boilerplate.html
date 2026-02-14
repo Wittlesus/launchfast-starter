@@ -31,6 +31,15 @@
   .code-string { color: #a5d6ff; }
   .code-function { color: #d2a8ff; }
   .code-const { color: #79c0ff; }
+
+  /* Related Resources */
+  .related-resources { margin: 60px auto; padding: 40px 0; border-top: 1px solid #30363d; max-width: 800px; }
+  .related-resources h2 { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: 2rem; color: #e6edf3; }
+  .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+  .related-card { background: #0d1117; border: 1px solid #30363d; border-radius: 0.75rem; padding: 1.5rem; text-decoration: none; transition: all 0.2s; display: block; }
+  .related-card:hover { border-color: #4f46e5; background: #161b22; transform: translateY(-2px); text-decoration: none; }
+  .related-card-title { font-size: 1rem; font-weight: 600; color: #e6edf3; margin-bottom: 0.5rem; }
+  .related-card-desc { font-size: 0.875rem; color: #8b949e; line-height: 1.5; }
 </style>
 
 <!-- Article Schema Markup -->
@@ -611,6 +620,21 @@
     </div>
   </div>
 </footer>
+
+<!-- Related Resources -->
+<section class="related-resources">
+  <h2>Related Resources</h2>
+  <div class="related-grid">
+    <a href="saas-cost-calculator.html" class="related-card">
+      <div class="related-card-title">SaaS Cost Calculator</div>
+      <div class="related-card-desc">Calculate exactly how much it costs to build your SaaS from scratch</div>
+    </a>
+    <a href="alternatives.html" class="related-card">
+      <div class="related-card-title">LaunchFast Alternatives</div>
+      <div class="related-card-desc">Compare LaunchFast to other popular SaaS boilerplates and starter kits</div>
+    </a>
+  </div>
+</section>
 
 <!-- Analytics: Update GoatCounter URL after signup at goatcounter.com -->
 <script data-goatcounter="https://launchfast-stats.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

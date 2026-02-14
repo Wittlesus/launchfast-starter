@@ -321,6 +321,53 @@ input[type="range"]::-moz-range-thumb {
 .promo-card .promo-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
 .promo-card .promo-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
+/* Related Resources */
+.related-resources {
+  margin: 60px 0;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+}
+.related-resources h2 {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32px;
+  color: var(--text-primary);
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.related-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: block;
+}
+.related-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.related-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.related-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
 /* Footer */
 .site-footer {
   border-top: 1px solid var(--border); padding: 32px 0;
@@ -988,6 +1035,23 @@ input[type="range"]::-moz-range-thumb {
   recalculate();
 })();
 </script>
+
+<!-- Related Resources -->
+<section class="related-resources">
+  <div class="container">
+    <h2>Related Resources</h2>
+    <div class="related-grid">
+      <a href="tech-stack-quiz.html" class="related-card">
+        <div class="related-card-title">Tech Stack Quiz</div>
+        <div class="related-card-desc">Answer 7 questions to get a personalized tech stack recommendation for your SaaS</div>
+      </a>
+      <a href="build-vs-buy-saas-boilerplate.html" class="related-card">
+        <div class="related-card-title">Build vs Buy: SaaS Boilerplate</div>
+        <div class="related-card-desc">Should you build from scratch or use a boilerplate? See the complete cost breakdown</div>
+      </a>
+    </div>
+  </div>
+</section>
 
 <!-- Email Capture Banner -->
 <div id="emailCaptureBanner">
