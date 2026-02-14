@@ -1,0 +1,46 @@
+export const PRICING_PLANS = [
+  {
+    name: "Starter",
+    description: "For solo developers",
+    price: 79,
+    paymentLink: "https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00",
+    features: [
+      "Full Next.js 16 SaaS boilerplate",
+      "NextAuth v5 with Google & GitHub OAuth",
+      "Stripe subscriptions, checkout, webhooks",
+      "Prisma 6 + PostgreSQL schema",
+      "Claude AI integration (auth-gated)",
+      "Landing page, pricing page, dashboard",
+      "Middleware route protection",
+      "1 project license",
+      "Community support via GitHub",
+    ],
+  },
+  {
+    name: "Complete Bundle",
+    description: "Everything we make",
+    price: 99,
+    paymentLink: "https://buy.stripe.com/5kQeVceTj0P8enGe7U08g06",
+    popular: true,
+    features: [
+      "LaunchFast SaaS Starter",
+      "SEO Blog Engine",
+      "Indie Hacker Toolkit",
+      "PromptVault (64 AI prompts)",
+      "CursorRules Pro (8 configs)",
+    ],
+  },
+  {
+    name: "Pro",
+    description: "For professionals & agencies",
+    price: 119,
+    paymentLink: "https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01",
+    features: [
+      "Everything in Starter",
+      "Unlimited project license",
+      "Priority email support",
+      "Early access to updates",
+      "Pro .cursorrules configs included",
+    ],
+  },
+] as const;
