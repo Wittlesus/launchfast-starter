@@ -4,6 +4,7 @@ export const PRICING_PLANS = [
     description: "Personal use, single project",
     price: 79,
     paymentLink: "https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00",
+    popular: false,
     features: [
       "Full Next.js 16 SaaS boilerplate",
       "NextAuth v5 with Google & GitHub OAuth",
@@ -37,6 +38,7 @@ export const PRICING_PLANS = [
     description: "Commercial use, unlimited projects",
     price: 119,
     paymentLink: "https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01",
+    popular: false,
     features: [
       "Everything in Starter",
       "Unlimited projects (commercial license)",
