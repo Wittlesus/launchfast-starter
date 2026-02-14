@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Side Project Cost Calculator - What's Your Side Project Really Costing You?</title>
+    <meta name="description" content="Free interactive calculator showing the true cost of your side project in lost salary and opportunity cost. See how much time and money you're actually spending.">
+    <link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/side-project-cost-calculator.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Side Project Cost Calculator - True Cost of Your Side Project">
+    <meta property="og:description" content="Calculate the real cost of your side project including opportunity cost and lost salary. Free interactive tool for developers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://wittlesus.github.io/launchfast-starter/side-project-cost-calculator.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Side Project Cost Calculator">
+    <meta name="twitter:description" content="See what your side project is REALLY costing you in lost salary and opportunity cost.">
+
+    <!-- FAQPage Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How much does a side project really cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The true cost includes opportunity cost (hours × your hourly rate), direct costs (hosting, domains, tools), and lost revenue. A typical developer spending 20 hours/week for 6 months at $75/hour has an opportunity cost of $39,000 alone, before counting any direct expenses."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is opportunity cost for side projects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Opportunity cost is the potential income you're giving up by working on your side project instead of freelancing, contracting, or overtime work. It's calculated as (hours spent × your hourly rate). This is the biggest hidden cost most developers ignore."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is building a side project from scratch worth it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For most developers, building from scratch costs $10,000-$50,000+ in opportunity cost alone. Using a SaaS boilerplate like LaunchFast ($79-$259) eliminates 40+ hours of setup work, saving thousands in opportunity cost while letting you focus on your unique idea."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I calculate my hourly rate as a developer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For salaried developers: (annual salary ÷ 2080 hours). For freelancers: use your standard hourly rate. If you're not currently billing, use market rate for your skill level ($50-150/hour for most developers). This represents what you could earn instead of working on your side project."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Should I count opportunity cost if I work on side projects during free time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. 'Free time' is only free if you have no alternative uses for it. Most developers working on side projects could freelance, take contract work, or sell consulting hours during that same time. The opportunity cost is real money you're choosing not to earn."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What are typical monthly costs for a side project?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Typical costs include: hosting ($10-50), domain ($12/year), database ($10-25), email service ($15-30), analytics ($10+), authentication service ($15-25), payment processing ($0 + fees), and various SaaS tools ($20-100). Most side projects cost $50-200/month in direct expenses."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How can I reduce side project costs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The biggest cost reduction comes from reducing build time. Use SaaS boilerplates to skip 40-100 hours of auth, payments, and deployment setup. Choose free tiers initially (Vercel, Supabase free plans). Avoid premature optimization. Focus ruthlessly on shipping fast to validate your idea before investing more time."
+        }
+      }]
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #141827;
+            --bg-card: #1a1f35;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #1e293b;
+            --red: #ef4444;
+            --red-glow: rgba(239, 68, 68, 0.3);
+            --green: #10b981;
+            --green-glow: rgba(16, 185, 129, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--red) 0%, #dc2626 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .calculator-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .input-group input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .results-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .result-card {
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--red);
+            text-shadow: 0 0 20px var(--red-glow);
+        }
+
+        .result-value.total {
+            font-size: 3rem;
+        }
+
+        .result-note {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .comparison-section {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .comparison-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .comparison-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .comparison-label {
+            min-width: 120px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 40px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red) 0%, #dc2626 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .bar-fill.launchfast {
+            background: linear-gradient(90deg, var(--green) 0%, #059669 100%);
+        }
+
+        .comparison-value {
+            min-width: 100px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .savings-highlight {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .savings-highlight .big-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green);
+            text-shadow: 0 0 20px var(--green-glow);
+        }
+
+        .share-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .share-card {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .share-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .share-card-stat {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--red);
+            margin-bottom: 8px;
+        }
+
+        .share-card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 12px 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .cta-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .info-section {
+            margin-bottom: 60px;
+        }
+
+        .info-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .info-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        .info-section p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+        }
+
+        .cost-breakdown {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cost-item:last-child {
+            border-bottom: none;
+        }
+
+        .cost-item-name {
+            font-weight: 600;
+        }
+
+        .cost-item-range {
+            color: var(--text-secondary);
+        }
+
+        .faq-section {
+            margin-bottom: 60px;
+        }
+
+        .faq-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .calculator-wrapper {
+                padding: 24px;
+            }
+
+            .results-section {
+                padding: 24px;
+            }
+
+            .result-value {
+                font-size: 2rem;
+            }
+
+            .result-value.total {
+                font-size: 2.5rem;
+            }
+
+            .comparison-section {
+                padding: 24px;
+            }
+
+            .comparison-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .comparison-label {
+                min-width: auto;
+            }
+
+            .bar-container {
+                width: 100%;
+            }
+        }
+
+        /* Email Banner Styles */
+        .email-banner {
+            position: fixed;
+            bottom: -300px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
+            padding: 24px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: bottom 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .email-banner.show {
+            bottom: 0;
+        }
+
+        .email-banner-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .email-banner-text {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .email-banner-text h3 {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            color: white;
+        }
+
+        .email-banner-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            color: white;
+            margin: 0;
+        }
+
+        .email-banner-form {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .email-banner-form input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .email-banner-form button {
+            padding: 12px 24px;
+            background: white;
+            color: var(--accent);
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+            white-space: nowrap;
+        }
+
+        .email-banner-form button:hover {
+            transform: translateY(-2px);
+        }
+
+        .email-banner-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .email-banner-close:hover {
+            opacity: 1;
+        }
+
+        .email-banner-success {
+            display: none;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .email-banner-success.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💸 Side Project Cost Calculator</h1>
+            <p class="subtitle">What's your side project <em>really</em> costing you? See the brutal truth about opportunity cost, lost salary, and time invested.</p>
+        </header>
+
+        <div class="calculator-wrapper">
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label for="hourlyRate">Your Hourly Rate</label>
+                    <input type="number" id="hourlyRate" value="75" min="0" step="5">
+                    <span class="input-hint">What you earn (or could earn) per hour</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="hoursPerWeek">Hours Per Week</label>
+                    <input type="number" id="hoursPerWeek" value="20" min="0" step="1">
+                    <span class="input-hint">Time spent on your side project</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="monthsSpent">Months Spent</label>
+                    <input type="number" id="monthsSpent" value="6" min="0" step="1">
+                    <span class="input-hint">How long you've been building</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="monthlyCosts">Monthly Costs</label>
+                    <input type="number" id="monthlyCosts" value="100" min="0" step="10">
+                    <span class="input-hint">Hosting, domains, tools, services</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="revenue">Revenue Earned</label>
+                    <input type="number" id="revenue" value="0" min="0" step="100">
+                    <span class="input-hint">Total revenue generated so far</span>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2 class="results-title">The Brutal Truth 😬</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Opportunity Cost</div>
+                        <div class="result-value" id="opportunityCost">$0</div>
+                        <div class="result-note">Lost potential income</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-label">Direct Costs</div>
+                        <div class="result-value" id="directCosts">$0</div>
+                        <div class="result-note">Money spent on tools</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-label">Total Investment</div>
+                        <div class="result-value total" id="totalCost">$0</div>
+                        <div class="result-note">Everything you've invested</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-label">Cost Per Revenue $</div>
+                        <div class="result-value" id="costPerRevenue">$∞</div>
+                        <div class="result-note">How much each $1 cost you</div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Total Hours Invested</div>
+                    <div class="result-value" id="totalHours">0</div>
+                    <div class="result-note">Time you'll never get back</div>
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <h3 class="comparison-title">Time Investment Comparison</h3>
+                <div class="comparison-bars">
+                    <div class="comparison-bar">
+                        <div class="comparison-label">Your Project</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" id="yourProjectBar">
+                                <span id="yourProjectHours">0 hrs</span>
+                            </div>
+                        </div>
+                        <div class="comparison-value" id="yourProjectCost">$0</div>
+                    </div>
+
+                    <div class="comparison-bar">
+                        <div class="comparison-label">LaunchFast</div>
+                        <div class="bar-container">
+                            <div class="bar-fill launchfast" style="width: 5%;">
+                                <span>1 hr</span>
+                            </div>
+                        </div>
+                        <div class="comparison-value">$79</div>
+                    </div>
+                </div>
+
+                <div class="savings-highlight">
+                    <p style="margin-bottom: 8px; color: var(--text-secondary);">You could save</p>
+                    <div class="big-number" id="savings">$0</div>
+                    <p style="margin-top: 8px; color: var(--text-secondary);">and <span id="hoursSaved" style="font-weight: 700;">0</span> hours by using LaunchFast</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="share-section">
+            <h2>Share Your Results</h2>
+            <div class="share-card">
+                <div class="share-card-title">My side project cost me</div>
+                <div class="share-card-stat" id="shareTotal">$0</div>
+                <div class="share-card-subtitle" id="shareSubtitle">in opportunity cost and expenses</div>
+            </div>
+            <div class="share-buttons">
+                <button class="share-btn" onclick="shareTwitter()">Share on Twitter</button>
+                <button class="share-btn" onclick="copyResults()">Copy Results</button>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2>Stop Bleeding Money. Start Shipping.</h2>
+            <p>LaunchFast gives you authentication, payments, database, deployment, and everything else you need to ship in <strong>hours, not months</strong>. Stop building the same boring features. Start validating your idea.</p>
+            <a href="https://buy.stripe.com/test_00g4ik7Kzfk4bqEfYY" class="cta-btn">Get LaunchFast for $79 →</a>
+        </div>
+
+        <div class="info-section">
+            <h2>Why This Calculator Exists</h2>
+            <p>Most developers massively underestimate the true cost of side projects. They count the $10/month hosting fee but ignore the 200 hours at $75/hour = <strong>$15,000 in opportunity cost</strong>.</p>
+
+            <p>This calculator shows you the brutal math. Not to discourage you—but to help you make smarter decisions about <em>where</em> to spend your time.</p>
+
+            <h3>The Hidden Costs Nobody Talks About</h3>
+
+            <div class="cost-breakdown">
+                <div class="cost-item">
+                    <span class="cost-item-name">Opportunity Cost (The Big One)</span>
+                    <span class="cost-item-range">$10,000 - $50,000+</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-item-name">Hosting & Infrastructure</span>
+                    <span class="cost-item-range">$20 - $200/month</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-item-name">Domain & Email</span>
+                    <span class="cost-item-range">$20 - $50/year</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-item-name">SaaS Tools (analytics, monitoring, etc.)</span>
+                    <span class="cost-item-range">$30 - $100/month</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-item-name">Payment Processing Fees</span>
+                    <span class="cost-item-range">2.9% + $0.30 per transaction</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-item-name">Context Switching & Mental Overhead</span>
+                    <span class="cost-item-range">Impossible to quantify (but real)</span>
+                </div>
+            </div>
+
+            <h3>The LaunchFast Advantage</h3>
+            <p>LaunchFast eliminates the most expensive part: <strong>your time</strong>. Instead of spending 40-100 hours building authentication, payments, database schema, and deployment pipelines, you get it all pre-built and production-ready.</p>
+
+            <p>For a one-time fee of $79-$259, you save <strong>thousands of dollars in opportunity cost</strong> and ship your idea in days instead of months.</p>
+
+            <p><strong>The math is simple:</strong> Would you rather spend $15,000 worth of your time building auth from scratch, or pay $79 and ship this weekend?</p>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How much does a side project really cost?</div>
+                <div class="faq-answer">The true cost includes opportunity cost (hours × your hourly rate), direct costs (hosting, domains, tools), and lost revenue. A typical developer spending 20 hours/week for 6 months at $75/hour has an opportunity cost of $39,000 alone, before counting any direct expenses.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What is opportunity cost for side projects?</div>
+                <div class="faq-answer">Opportunity cost is the potential income you're giving up by working on your side project instead of freelancing, contracting, or overtime work. It's calculated as (hours spent × your hourly rate). This is the biggest hidden cost most developers ignore.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Is building a side project from scratch worth it?</div>
+                <div class="faq-answer">For most developers, building from scratch costs $10,000-$50,000+ in opportunity cost alone. Using a SaaS boilerplate like LaunchFast ($79-$259) eliminates 40+ hours of setup work, saving thousands in opportunity cost while letting you focus on your unique idea.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I calculate my hourly rate as a developer?</div>
+                <div class="faq-answer">For salaried developers: (annual salary ÷ 2080 hours). For freelancers: use your standard hourly rate. If you're not currently billing, use market rate for your skill level ($50-150/hour for most developers). This represents what you could earn instead of working on your side project.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Should I count opportunity cost if I work on side projects during free time?</div>
+                <div class="faq-answer">Yes. "Free time" is only free if you have no alternative uses for it. Most developers working on side projects could freelance, take contract work, or sell consulting hours during that same time. The opportunity cost is real money you're choosing not to earn.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What are typical monthly costs for a side project?</div>
+                <div class="faq-answer">Typical costs include: hosting ($10-50), domain ($12/year), database ($10-25), email service ($15-30), analytics ($10+), authentication service ($15-25), payment processing ($0 + fees), and various SaaS tools ($20-100). Most side projects cost $50-200/month in direct expenses.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How can I reduce side project costs?</div>
+                <div class="faq-answer">The biggest cost reduction comes from reducing build time. Use SaaS boilerplates to skip 40-100 hours of auth, payments, and deployment setup. Choose free tiers initially (Vercel, Supabase free plans). Avoid premature optimization. Focus ruthlessly on shipping fast to validate your idea before investing more time.</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 LaunchFast. <a href="index.html">Home</a> | <a href="privacy.html">Privacy</a> | <a href="terms.html">Terms</a></p>
+        </footer>
+    </div>
+
+    <!-- Email Capture Banner -->
+    <div class="email-banner" id="emailBanner">
+        <div class="email-banner-content">
+            <div class="email-banner-text">
+                <h3>📬 Get the LaunchFast Newsletter</h3>
+                <p>Ship faster with weekly SaaS tips, boilerplate updates, and launch strategies.</p>
+            </div>
+            <form class="email-banner-form" id="emailForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                <input type="email" name="email" placeholder="your@email.com" required>
+                <button type="submit">Subscribe</button>
+            </form>
+            <button class="email-banner-close" onclick="closeBanner()">&times;</button>
+            <div class="email-banner-success" id="emailSuccess">
+                ✓ Thanks! Check your email to confirm.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calculator Logic
+        function formatCurrency(value) {
+            return '$' + value.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
+        function formatNumber(value) {
+            return value.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
+        function calculate() {
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+            const hoursPerWeek = parseFloat(document.getElementById('hoursPerWeek').value) || 0;
+            const monthsSpent = parseFloat(document.getElementById('monthsSpent').value) || 0;
+            const monthlyCosts = parseFloat(document.getElementById('monthlyCosts').value) || 0;
+            const revenue = parseFloat(document.getElementById('revenue').value) || 0;
+
+            // Calculate totals
+            const totalHours = hoursPerWeek * 4.33 * monthsSpent; // 4.33 weeks per month average
+            const opportunityCost = totalHours * hourlyRate;
+            const directCosts = monthlyCosts * monthsSpent;
+            const totalCost = opportunityCost + directCosts;
+
+            // Calculate cost per revenue dollar
+            let costPerRevenue = '∞';
+            if (revenue > 0) {
+                costPerRevenue = formatCurrency(totalCost / revenue);
+            }
+
+            // Calculate savings vs LaunchFast
+            const launchfastCost = 79;
+            const launchfastHours = 1;
+            const savings = Math.max(0, totalCost - launchfastCost);
+            const hoursSaved = Math.max(0, totalHours - launchfastHours);
+
+            // Update results
+            document.getElementById('opportunityCost').textContent = formatCurrency(opportunityCost);
+            document.getElementById('directCosts').textContent = formatCurrency(directCosts);
+            document.getElementById('totalCost').textContent = formatCurrency(totalCost);
+            document.getElementById('costPerRevenue').textContent = costPerRevenue;
+            document.getElementById('totalHours').textContent = formatNumber(totalHours);
+
+            // Update comparison bars
+            const maxBarValue = Math.max(totalCost, launchfastCost * 2);
+            const yourProjectBarWidth = (totalCost / maxBarValue) * 100;
+
+            document.getElementById('yourProjectBar').style.width = Math.max(5, yourProjectBarWidth) + '%';
+            document.getElementById('yourProjectHours').textContent = formatNumber(totalHours) + ' hrs';
+            document.getElementById('yourProjectCost').textContent = formatCurrency(totalCost);
+
+            document.getElementById('savings').textContent = formatCurrency(savings);
+            document.getElementById('hoursSaved').textContent = formatNumber(hoursSaved);
+
+            // Update share card
+            document.getElementById('shareTotal').textContent = formatCurrency(totalCost);
+            if (revenue > 0) {
+                document.getElementById('shareSubtitle').textContent = `to earn ${formatCurrency(revenue)} (${costPerRevenue} per $1 earned)`;
+            } else {
+                document.getElementById('shareSubtitle').textContent = 'in opportunity cost and expenses';
+            }
+        }
+
+        // Attach event listeners
+        document.getElementById('hourlyRate').addEventListener('input', calculate);
+        document.getElementById('hoursPerWeek').addEventListener('input', calculate);
+        document.getElementById('monthsSpent').addEventListener('input', calculate);
+        document.getElementById('monthlyCosts').addEventListener('input', calculate);
+        document.getElementById('revenue').addEventListener('input', calculate);
+
+        // Share functions
+        function shareTwitter() {
+            const totalCost = document.getElementById('totalCost').textContent;
+            const text = `My side project cost me ${totalCost} in opportunity cost and expenses. 😬\n\nCalculate yours:`;
+            const url = window.location.href;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function copyResults() {
+            const totalCost = document.getElementById('totalCost').textContent;
+            const opportunityCost = document.getElementById('opportunityCost').textContent;
+            const directCosts = document.getElementById('directCosts').textContent;
+            const totalHours = document.getElementById('totalHours').textContent;
+
+            const text = `My Side Project Cost:\n\nOpportunity Cost: ${opportunityCost}\nDirect Costs: ${directCosts}\nTotal: ${totalCost}\nHours: ${totalHours}\n\nCalculate yours: ${window.location.href}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Results copied to clipboard!');
+            });
+        }
+
+        // Email banner logic
+        let bannerShown = false;
+        let scrollTriggered = false;
+
+        function showBanner() {
+            if (bannerShown || localStorage.getItem('emailBannerDismissed')) {
+                return;
+            }
+            document.getElementById('emailBanner').classList.add('show');
+            bannerShown = true;
+        }
+
+        function closeBanner() {
+            document.getElementById('emailBanner').classList.remove('show');
+            localStorage.setItem('emailBannerDismissed', 'true');
+        }
+
+        // Show banner after 30 seconds
+        setTimeout(showBanner, 30000);
+
+        // Show banner on 50% scroll
+        window.addEventListener('scroll', function() {
+            if (scrollTriggered) return;
+
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            if (scrollPercent >= 50) {
+                scrollTriggered = true;
+                showBanner();
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Hide form, show success
+            document.querySelector('.email-banner-text').style.display = 'none';
+            document.querySelector('.email-banner-form').style.display = 'none';
+            document.getElementById('emailSuccess').classList.add('show');
+
+            // Actually submit the form
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            // Close after 3 seconds
+            setTimeout(closeBanner, 3000);
+        });
+
+        // Initial calculation
+        calculate();
+    </script>
+
+    <!-- GoatCounter Analytics -->
+    <script data-goatcounter="https://launchfast-starter.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
