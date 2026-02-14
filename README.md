@@ -11,6 +11,29 @@
 
 A production-ready Next.js SaaS boilerplate. Auth, payments, AI, email -- all wired up. Here's what the actual code looks like.
 
+## Pricing
+
+**Standard: $79 — One-time purchase. Not a subscription.**
+
+[**Buy Standard**](https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00)
+
+**Pro: $119 — One-time purchase. Not a subscription.**
+
+[**Buy Pro**](https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01)
+
+What you get:
+- Complete Next.js 16 source code with TypeScript
+- NextAuth v5 (Google + GitHub OAuth)
+- Stripe integration (checkout, portal, webhooks)
+- Anthropic Claude AI integration
+- Prisma 6 + PostgreSQL setup
+- Email via Resend
+- All landing pages, dashboard, legal pages
+- Full documentation and setup guide
+- Lifetime updates
+
+**Save $119:** Get this + 6 other products in the [Complete Bundle for $99](https://buy.stripe.com/5kQeVceTj0P8enGe7U08g06)
+
 ---
 
 ## The Code
