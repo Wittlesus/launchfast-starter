@@ -55,8 +55,39 @@ export async function POST(req: Request) {
 
   const { prompt, systemPrompt } = await req.json();
 
+  // Input validation
   if (!prompt) {
     return NextResponse.json({ error: "Prompt required" }, { status: 400 });
+  }
+
+  if (typeof prompt !== "string") {
+    return NextResponse.json(
+      { error: "Prompt must be a string" },
+      { status: 400 }
+    );
+  }
+
+  if (prompt.length > 4000) {
+    return NextResponse.json(
+      { error: "Prompt exceeds maximum length of 4000 characters" },
+      { status: 400 }
+    );
+  }
+
+  if (systemPrompt !== undefined) {
+    if (typeof systemPrompt !== "string") {
+      return NextResponse.json(
+        { error: "System prompt must be a string" },
+        { status: 400 }
+      );
+    }
+
+    if (systemPrompt.length > 2000) {
+      return NextResponse.json(
+        { error: "System prompt exceeds maximum length of 2000 characters" },
+        { status: 400 }
+      );
+    }
   }
 
   const message = await anthropic.messages.create({
