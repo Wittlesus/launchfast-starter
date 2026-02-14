@@ -191,7 +191,7 @@ export async function createBillingPortalSession(customerId: string) {
 
 ### AI Integration (Claude API, auth-gated)
 
-One API route. Session-protected. Drop in your Anthropic key and it works:
+One API route. Session-protected, rate-limited, and input-validated. Drop in your Anthropic key and it works:
 
 ```typescript
 // src/app/api/ai/route.ts
@@ -210,10 +210,27 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Rate limiting (see src/lib/ratelimit.ts for full implementation)
+
   const { prompt, systemPrompt } = await req.json();
 
-  if (!prompt) {
-    return NextResponse.json({ error: "Prompt required" }, { status: 400 });
+  // Input validation - prevents expensive API abuse
+  if (!prompt || typeof prompt !== "string") {
+    return NextResponse.json({ error: "Valid prompt required" }, { status: 400 });
+  }
+
+  if (prompt.length > 4000) {
+    return NextResponse.json(
+      { error: "Prompt exceeds maximum length of 4000 characters" },
+      { status: 400 }
+    );
+  }
+
+  if (systemPrompt !== undefined && typeof systemPrompt !== "string") {
+    return NextResponse.json(
+      { error: "System prompt must be a string" },
+      { status: 400 }
+    );
   }
 
   const message = await anthropic.messages.create({
@@ -229,6 +246,12 @@ export async function POST(req: Request) {
   return NextResponse.json({ response: text });
 }
 ```
+
+**Security features:**
+- Authentication required (NextAuth)
+- Rate limiting (10 requests/minute in dev, configurable via Upstash Redis in production)
+- Input validation (prompt max 4000 chars, systemPrompt max 2000 chars)
+- Type checking to prevent malicious payloads
 
 ### Transactional Email (Resend)
 
