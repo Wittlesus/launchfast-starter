@@ -2,10 +2,12 @@
 
 ### Ship your SaaS in days, not months.
 
-![Next.js 15](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
+![Next.js 16](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![React 19](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css)
-![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?style=for-the-badge&logo=prisma)
+![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?style=for-the-badge&logo=prisma)
+![NextAuth](https://img.shields.io/badge/NextAuth-v5-9333EA?style=for-the-badge)
 
 A production-ready Next.js SaaS boilerplate. Auth, payments, AI, email -- all wired up. Here's what the actual code looks like.
 
