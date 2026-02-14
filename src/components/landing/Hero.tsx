@@ -25,7 +25,7 @@ export default function Hero() {
               href="/pricing"
               className="rounded-lg bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors"
             >
-              Get Started
+              Buy Now - $79
             </Link>
             <Link
               href="https://github.com/Wittlesus/launchfast-starter#readme"
