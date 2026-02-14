@@ -1,5 +1,9 @@
 import Link from "next/link";
 
+/**
+ * Header component for the landing page
+ * Links to GitHub repo README for documentation
+ */
 export default function Header() {
   return (
     <header className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm">
