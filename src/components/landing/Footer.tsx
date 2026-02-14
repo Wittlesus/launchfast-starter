@@ -22,10 +22,12 @@ export default function Footer() {
               Terms
             </Link>
             <Link
-              href="mailto:support@example.com"
+              href="https://github.com/Wittlesus/launchfast-starter/issues"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm text-gray-500 hover:text-gray-700"
             >
-              Contact
+              Support
             </Link>
           </nav>
         </div>
