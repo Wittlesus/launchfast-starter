@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Add Stripe Payments to Your Next.js App (Complete 2026 Guide)</title>
+<meta name="description" content="Step-by-step tutorial for integrating Stripe Checkout with Next.js. Learn checkout sessions, webhooks, success pages, subscription billing, and common mistakes that cost you money.">
+<meta name="keywords" content="stripe checkout next.js, stripe integration tutorial, next.js payments, stripe next.js 2026, stripe checkout session, stripe webhooks nextjs, stripe subscription billing">
+<link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/stripe-checkout-nextjs-tutorial.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Add Stripe Payments to Your Next.js App (Complete 2026 Guide)">
+<meta property="og:description" content="Step-by-step tutorial for integrating Stripe Checkout with Next.js. Checkout sessions, webhooks, success pages, subscription billing, and common mistakes.">
+<meta property="og:url" content="https://wittlesus.github.io/launchfast-starter/stripe-checkout-nextjs-tutorial.html">
+<meta property="og:site_name" content="LaunchFast">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Add Stripe Payments to Your Next.js App (Complete 2026 Guide)">
+<meta name="twitter:description" content="Step-by-step tutorial for integrating Stripe Checkout with Next.js. Checkout sessions, webhooks, and subscription billing.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  pre { tab-size: 2; }
+  code { font-family: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace; }
+  .code-block { background: #0d1117; border: 1px solid #30363d; border-radius: 0.75rem; overflow-x: auto; }
+  .code-block pre { padding: 1.5rem; margin: 0; color: #e6edf3; font-size: 0.875rem; line-height: 1.7; }
+  .code-comment { color: #8b949e; }
+  .code-keyword { color: #ff7b72; }
+  .code-string { color: #a5d6ff; }
+  .code-function { color: #d2a8ff; }
+  .code-const { color: #79c0ff; }
+
+  /* Warning boxes */
+  .warning-box { background: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 0.75rem; padding: 1.25rem; margin: 1.5rem 0; }
+  .warning-box-title { color: #eab308; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .warning-box-content { color: #e6edf3; font-size: 0.9375rem; line-height: 1.6; }
+
+  /* Related Resources */
+  .related-resources { margin: 60px auto; padding: 40px 0; border-top: 1px solid #30363d; max-width: 800px; }
+  .related-resources h2 { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: 2rem; color: #e6edf3; }
+  .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+  .related-card { background: #0d1117; border: 1px solid #30363d; border-radius: 0.75rem; padding: 1.5rem; text-decoration: none; transition: all 0.2s; display: block; }
+  .related-card:hover { border-color: #4f46e5; background: #161b22; transform: translateY(-2px); text-decoration: none; }
+  .related-card-title { font-size: 1rem; font-weight: 600; color: #e6edf3; margin-bottom: 0.5rem; }
+  .related-card-desc { font-size: 0.875rem; color: #8b949e; line-height: 1.5; }
+
+  /* Email Capture Banner */
+  #emailCaptureBanner {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: linear-gradient(135deg, #000, #1a1a2e);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 24px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #emailCaptureBanner.show { transform: translateY(0); }
+  .email-banner-content {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .email-banner-text {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .email-banner-title {
+    font-size: 16px; font-weight: 700; color: #fff;
+  }
+  .email-banner-desc {
+    font-size: 13px; color: rgba(255, 255, 255, 0.85);
+  }
+  .email-banner-form {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .email-banner-input {
+    padding: 10px 16px; border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff; font-size: 14px;
+    min-width: 260px;
+    backdrop-filter: blur(10px);
+  }
+  .email-banner-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .email-banner-input:focus {
+    outline: none; border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .email-banner-submit {
+    padding: 10px 24px; border-radius: 8px;
+    background: #fff; color: #000;
+    font-size: 14px; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .email-banner-submit:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+  }
+  .email-banner-close {
+    background: none; border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer; padding: 4px 8px;
+    font-size: 24px; line-height: 1;
+    transition: color 0.2s;
+  }
+  .email-banner-close:hover {
+    color: #fff;
+  }
+  .email-banner-success {
+    display: none; color: #fff; font-size: 14px; font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .email-banner-content { flex-direction: column; align-items: stretch; }
+    .email-banner-form { flex-direction: column; width: 100%; }
+    .email-banner-input { min-width: auto; width: 100%; }
+    .email-banner-submit { width: 100%; }
+    #emailCaptureBanner { padding: 12px 16px; }
+    .email-banner-title { font-size: 15px; }
+    .email-banner-desc { font-size: 12px; }
+  }
+</style>
+
+<!-- HowTo Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Add Stripe Payments to Your Next.js App",
+  "description": "A complete step-by-step tutorial for integrating Stripe Checkout with Next.js, including checkout sessions, webhooks, success pages, and subscription billing.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Install Stripe Packages",
+      "text": "Install the Stripe Node.js SDK and the official Stripe React library using npm or yarn."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Set Up API Keys",
+      "text": "Create a Stripe account, get your publishable and secret keys, and add them to your environment variables."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Create Products in Stripe Dashboard",
+      "text": "Set up your products and pricing in the Stripe Dashboard to get Price IDs for checkout sessions."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Build Checkout Session API Route",
+      "text": "Create a Next.js API route that generates Stripe Checkout Sessions for one-time or subscription payments."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Create Success and Cancel Pages",
+      "text": "Build dedicated pages to handle successful payments and cancelled checkout attempts."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add Webhook Handler",
+      "text": "Implement a webhook endpoint to securely process Stripe events like successful payments and subscription updates."
+    }
+  ]
+}
+</script>
+
+<!-- FAQPage Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I add Stripe Checkout to Next.js?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To add Stripe Checkout to Next.js: 1) Install the stripe npm package, 2) Add your Stripe secret key to environment variables, 3) Create an API route that generates checkout sessions, 4) Create a button that calls your API route, 5) Set up success and cancel URLs, 6) Implement webhook handling for fulfillment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between test mode and live mode in Stripe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Test mode uses test API keys (starting with sk_test_ and pk_test_) and accepts test card numbers like 4242 4242 4242 4242. No real money is charged. Live mode uses live keys (sk_live_ and pk_live_) and processes real payments with real credit cards. Always develop in test mode first."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I handle Stripe webhooks in Next.js?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Create an API route at /api/webhooks/stripe that: 1) Retrieves the raw request body, 2) Verifies the webhook signature using stripe.webhooks.constructEvent, 3) Handles specific events like checkout.session.completed or customer.subscription.updated, 4) Updates your database based on the event, 5) Returns a 200 status to acknowledge receipt."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are common Stripe integration mistakes that cost money?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Common costly mistakes: 1) Not verifying webhook signatures (allows fake payment events), 2) Missing idempotency keys (can charge customers twice), 3) Accidentally using live keys in development, 4) Not handling failed payments in subscriptions, 5) Granting access before webhook confirmation, 6) Not implementing proper error handling for declined cards."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I implement subscription billing with Stripe in Next.js?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For subscription billing: 1) Create subscription products in Stripe Dashboard with recurring prices, 2) Use mode: 'subscription' in checkout sessions, 3) Listen to customer.subscription.created, updated, and deleted webhook events, 4) Store subscription status in your database, 5) Implement the Stripe Customer Portal for users to manage subscriptions, 6) Handle metered billing by reporting usage via the Stripe API."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use Stripe Checkout or Stripe Elements?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use Stripe Checkout for quick integration with a hosted payment page that Stripe maintains (supports 40+ payment methods, mobile-optimized, PCI compliant out of the box). Use Stripe Elements for custom embedded payment forms where you need full design control. For most SaaS products, Checkout is faster to implement and has fewer compliance requirements."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body class="bg-gray-950 text-gray-100 antialiased">
+
+<!-- Header -->
+<header class="fixed top-0 z-50 w-full border-b border-gray-800 bg-gray-950/90 backdrop-blur-sm">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+    <a href="https://wittlesus.github.io/launchfast-starter/" class="text-xl font-bold text-white">LaunchFast</a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="https://wittlesus.github.io/launchfast-starter/" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+      <a href="alternatives.html" class="text-sm text-gray-400 hover:text-white transition-colors">Comparisons</a>
+      <a href="best-nextjs-boilerplate.html" class="text-sm text-gray-400 hover:text-white transition-colors">Best Boilerplates</a>
+      <a href="saas-cost-calculator.html" class="text-sm text-gray-400 hover:text-white transition-colors">Cost Calculator</a>
+    </nav>
+    <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200 transition-colors">Buy Now - $79</a>
+  </div>
+</header>
+
+<main class="pt-24 pb-20">
+  <!-- Hero -->
+  <section class="mx-auto max-w-4xl px-6 py-16 text-center">
+    <div class="mb-6 inline-flex items-center rounded-full border border-gray-700 px-4 py-1.5 text-sm text-gray-400">
+      Updated February 2026
+    </div>
+    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+      How to Add Stripe Payments to Your Next.js App<br><span class="gradient-text">(Complete 2026 Guide)</span>
+    </h1>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
+      A complete step-by-step tutorial for integrating Stripe Checkout with Next.js. Covers checkout sessions, webhooks, success pages, subscription billing, and the common mistakes that will cost you money.
+    </p>
+  </section>
+
+  <!-- Main Content -->
+  <article class="mx-auto max-w-4xl px-6">
+
+    <!-- Introduction -->
+    <section class="mb-16">
+      <p class="text-lg leading-relaxed text-gray-300 mb-6">
+        Stripe is the most popular payment processor for SaaS products, and Next.js is the most popular React framework. This tutorial shows you exactly how to integrate Stripe Checkout with your Next.js app — with real code you can copy and paste.
+      </p>
+      <p class="text-lg leading-relaxed text-gray-300">
+        We'll cover one-time payments, subscription billing, webhook handling, and the costly mistakes developers make when integrating Stripe for the first time.
+      </p>
+    </section>
+
+    <!-- Step 1: Install -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Step 1: Install Stripe Packages</h2>
+      <p class="text-lg text-gray-300 mb-6">
+        First, install the Stripe Node.js SDK. This handles server-side operations like creating checkout sessions and verifying webhooks.
+      </p>
+      <div class="code-block mb-6">
+        <pre><span class="code-comment"># Using npm</span>
+npm install stripe
+
+<span class="code-comment"># Using yarn</span>
+yarn add stripe
+
+<span class="code-comment"># Using pnpm</span>
+pnpm add stripe</pre>
+      </div>
+      <p class="text-lg text-gray-300 mb-6">
+        Optionally, install the official Stripe React library if you want to embed payment forms directly (not needed for Stripe Checkout):
+      </p>
+      <div class="code-block">
+        <pre>npm install @stripe/stripe-js @stripe/react-stripe-js</pre>
+      </div>
+    </section>
+
+    <!-- Step 2: API Keys -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Step 2: Set Up Your Stripe API Keys</h2>
+      <p class="text-lg text-gray-300 mb-6">
+        Get your API keys from the <a href="https://dashboard.stripe.com/test/apikeys" class="text-blue-400 hover:underline">Stripe Dashboard</a>. You'll need both the publishable key (starts with <code class="bg-gray-800 px-2 py-1 rounded text-sm">pk_test_</code>) and the secret key (starts with <code class="bg-gray-800 px-2 py-1 rounded text-sm">sk_test_</code>).
+      </p>
+      <p class="text-lg text-gray-300 mb-6">
+        Add them to your <code class="bg-gray-800 px-2 py-1 rounded text-sm">.env.local</code> file:
+      </p>
+      <div class="code-block mb-6">
+        <pre><span class="code-comment"># .env.local</span>
+<span class="code-const">NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</span>=pk_test_51xxxxx
+<span class="code-const">STRIPE_SECRET_KEY</span>=sk_test_51xxxxx
+<span class="code-const">STRIPE_WEBHOOK_SECRET</span>=whsec_xxxxx <span class="code-comment"># Get this after setting up webhooks</span></pre>
+      </div>
+      <div class="warning-box">
+        <div class="warning-box-title">⚠️ Critical Security Warning</div>
+        <div class="warning-box-content">
+          Never commit your <code class="bg-gray-800 px-2 py-1 rounded text-sm">.env.local</code> file to Git. Add it to your <code class="bg-gray-800 px-2 py-1 rounded text-sm">.gitignore</code>. Your secret key can charge real money — if it leaks, attackers can create fraudulent charges.
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3: Create Products -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Step 3: Create Products in Stripe Dashboard</h2>
+      <p class="text-lg text-gray-300 mb-6">
+        Before you can accept payments, you need to create products and prices in your Stripe Dashboard:
+      </p>
+      <ol class="list-decimal list-inside space-y-3 text-lg text-gray-300 mb-6 ml-4">
+        <li>Go to <a href="https://dashboard.stripe.com/test/products" class="text-blue-400 hover:underline">Products</a> in the Stripe Dashboard</li>
+        <li>Click "Add product"</li>
+        <li>Enter a name (e.g., "Pro Plan")</li>
+        <li>Add a price (e.g., $29/month or $99 one-time)</li>
+        <li>Copy the <strong>Price ID</strong> (starts with <code class="bg-gray-800 px-2 py-1 rounded text-sm">price_</code>)</li>
+      </ol>
+      <p class="text-lg text-gray-300">
+        You'll use this Price ID when creating checkout sessions. For testing, use test mode products (you can toggle between test and live mode in the top-right corner of the dashboard).
+      </p>
+    </section>
+
+    <!-- Step 4: Checkout Session API Route -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Step 4: Build a Checkout Session API Route</h2>
+      <p class="text-lg text-gray-300 mb-6">
+        Create an API route that generates Stripe Checkout Sessions. This is where users go to complete their purchase.
+      </p>
+      <p class="text-lg text-gray-300 mb-6">
+        Create <code class="bg-gray-800 px-2 py-1 rounded text-sm">app/api/checkout/route.ts</code> (App Router) or <code class="bg-gray-800 px-2 py-1 rounded text-sm">pages/api/checkout.ts</code> (Pages Router):
+      </p>
+      <div class="code-block mb-6">
+        <pre><span class="code-comment">// app/api/checkout/route.ts (App Router)</span>
+<span class="code-keyword">import</span> { NextRequest, NextResponse } <span class="code-keyword">from</span> <span class="code-string">'next/server'</span>
+<span class="code-keyword">import</span> Stripe <span class="code-keyword">from</span> <span class="code-string">'stripe'</span>
+
+<span class="code-keyword">const</span> <span class="code-const">stripe</span> = <span class="code-keyword">new</span> <span class="code-function">Stripe</span>(process.env.<span class="code-const">STRIPE_SECRET_KEY</span>!)
+
+<span class="code-keyword">export</span> <span class="code-keyword">async</span> <span class="code-keyword">function</span> <span class="code-function">POST</span>(req: NextRequest) {
+  <span class="code-keyword">try</span> {
+    <span class="code-keyword">const</span> { priceId } = <span class="code-keyword">await</span> req.<span class="code-function">json</span>()
+
+    <span class="code-comment">// Create Checkout Session</span>
+    <span class="code-keyword">const</span> session = <span class="code-keyword">await</span> stripe.checkout.sessions.<span class="code-function">create</span>({
+      <span class="code-const">mode</span>: <span class="code-string">'payment'</span>, <span class="code-comment">// Use 'subscription' for recurring payments</span>
+      <span class="code-const">payment_method_types</span>: [<span class="code-string">'card'</span>],
+      <span class="code-const">line_items</span>: [
+        {
+          <span class="code-const">price</span>: priceId, <span class="code-comment">// Price ID from Stripe Dashboard</span>
+          <span class="code-const">quantity</span>: 1,
+        },
+      ],
+      <span class="code-const">success_url</span>: <span class="code-string">`${process.env.NEXT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`</span>,
+      <span class="code-const">cancel_url</span>: <span class="code-string">`${process.env.NEXT_PUBLIC_URL}/cancel`</span>,
+    })
+
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>({ sessionId: session.id })
+  } <span class="code-keyword">catch</span> (error) {
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>(
+      { <span class="code-const">error</span>: <span class="code-string">'Failed to create checkout session'</span> },
+      { <span class="code-const">status</span>: 500 }
+    )
+  }
+}</pre>
+      </div>
+      <p class="text-lg text-gray-300 mb-6">
+        For the <strong>Pages Router</strong>, the code is nearly identical but uses different request/response types:
+      </p>
+      <div class="code-block">
+        <pre><span class="code-comment">// pages/api/checkout.ts (Pages Router)</span>
+<span class="code-keyword">import</span> { NextApiRequest, NextApiResponse } <span class="code-keyword">from</span> <span class="code-string">'next'</span>
+<span class="code-keyword">import</span> Stripe <span class="code-keyword">from</span> <span class="code-string">'stripe'</span>
+
+<span class="code-keyword">const</span> <span class="code-const">stripe</span> = <span class="code-keyword">new</span> <span class="code-function">Stripe</span>(process.env.<span class="code-const">STRIPE_SECRET_KEY</span>!)
+
+<span class="code-keyword">export</span> <span class="code-keyword">default</span> <span class="code-keyword">async</span> <span class="code-keyword">function</span> <span class="code-function">handler</span>(req: NextApiRequest, res: NextApiResponse) {
+  <span class="code-keyword">if</span> (req.method !== <span class="code-string">'POST'</span>) {
+    <span class="code-keyword">return</span> res.<span class="code-function">status</span>(405).<span class="code-function">json</span>({ <span class="code-const">error</span>: <span class="code-string">'Method not allowed'</span> })
+  }
+
+  <span class="code-keyword">const</span> { priceId } = req.body
+
+  <span class="code-keyword">const</span> session = <span class="code-keyword">await</span> stripe.checkout.sessions.<span class="code-function">create</span>({
+    <span class="code-const">mode</span>: <span class="code-string">'payment'</span>,
+    <span class="code-const">payment_method_types</span>: [<span class="code-string">'card'</span>],
+    <span class="code-const">line_items</span>: [{ <span class="code-const">price</span>: priceId, <span class="code-const">quantity</span>: 1 }],
+    <span class="code-const">success_url</span>: <span class="code-string">`${process.env.NEXT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`</span>,
+    <span class="code-const">cancel_url</span>: <span class="code-string">`${process.env.NEXT_PUBLIC_URL}/cancel`</span>,
+  })
+
+  res.<span class="code-function">status</span>(200).<span class="code-function">json</span>({ sessionId: session.id })
+}</pre>
+      </div>
+    </section>
+
+    <!-- Step 5: Create Buy Button -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Step 5: Create a "Buy Now" Button</h2>
+      <p class="text-lg text-gray-300 mb-6">
+        Now create a button that calls your API route and redirects users to Stripe Checkout:
+      </p>
+      <div class="code-block">
+        <pre><span class="code-comment">// components/CheckoutButton.tsx</span>
+<span class="code-string">'use client'</span> <span class="code-comment">// Only needed for App Router</span>
+
+<span class="code-keyword">import</span> { useState } <span class="code-keyword">from</span> <span class="code-string">'react'</span>
+<span class="code-keyword">import</span> { loadStripe } <span class="code-keyword">from</span> <span class="code-string">'@stripe/stripe-js'</span>
+
+<span class="code-keyword">const</span> <span class="code-const">stripePromise</span> = <span class="code-function">loadStripe</span>(
+  process.env.<span class="code-const">NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</span>!
+)
+
+<span class="code-keyword">export</span> <span class="code-keyword">default</span> <span class="code-keyword">function</span> <span class="code-function">CheckoutButton</span>({ priceId }: { priceId: string }) {
+  <span class="code-keyword">const</span> [loading, setLoading] = <span class="code-function">useState</span>(false)
+
+  <span class="code-keyword">const</span> <span class="code-function">handleCheckout</span> = <span class="code-keyword">async</span> () => {
+    <span class="code-function">setLoading</span>(true)
+
+    <span class="code-comment">// Call your API route</span>
+    <span class="code-keyword">const</span> response = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">'/api/checkout'</span>, {
+      <span class="code-const">method</span>: <span class="code-string">'POST'</span>,
+      <span class="code-const">headers</span>: { <span class="code-string">'Content-Type'</span>: <span class="code-string">'application/json'</span> },
+      <span class="code-const">body</span>: JSON.<span class="code-function">stringify</span>({ priceId }),
+    })
+
+    <span class="code-keyword">const</span> { sessionId } = <span class="code-keyword">await</span> response.<span class="code-function">json</span>()
+
+    <span class="code-comment">// Redirect to Stripe Checkout</span>
+    <span class="code-keyword">const</span> stripe = <span class="code-keyword">await</span> stripePromise
+    <span class="code-keyword">await</span> stripe?.<span class="code-function">redirectToCheckout</span>({ sessionId })
+
+    <span class="code-function">setLoading</span>(false)
+  }
+
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-function">button</span> onClick={handleCheckout} disabled={loading}&gt;
+      {loading ? <span class="code-string">'Loading...'</span> : <span class="code-string">'Buy Now'</span>}
+    &lt;/<span class="code-function">button</span>&gt;
+  )
+}</pre>
+      </div>
+    </section>
+
+    <!-- Step 6: Success and Cancel Pages -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Step 6: Create Success and Cancel Pages</h2>
+      <p class="text-lg text-gray-300 mb-6">
+        After a customer completes or cancels checkout, Stripe redirects them to the URLs you specified. Create these pages:
+      </p>
+      <div class="code-block mb-6">
+        <pre><span class="code-comment">// app/success/page.tsx (App Router)</span>
+<span class="code-keyword">export</span> <span class="code-keyword">default</span> <span class="code-keyword">function</span> <span class="code-function">SuccessPage</span>() {
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-function">div</span>&gt;
+      &lt;<span class="code-function">h1</span>&gt;Payment Successful!&lt;/<span class="code-function">h1</span>&gt;
+      &lt;<span class="code-function">p</span>&gt;Thank you for your purchase. Check your email for confirmation.&lt;/<span class="code-function">p</span>&gt;
+    &lt;/<span class="code-function">div</span>&gt;
+  )
+}</pre>
+      </div>
+      <div class="code-block mb-6">
+        <pre><span class="code-comment">// app/cancel/page.tsx (App Router)</span>
+<span class="code-keyword">export</span> <span class="code-keyword">default</span> <span class="code-keyword">function</span> <span class="code-function">CancelPage</span>() {
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-function">div</span>&gt;
+      &lt;<span class="code-function">h1</span>&gt;Payment Cancelled&lt;/<span class="code-function">h1</span>&gt;
+      &lt;<span class="code-function">p</span>&gt;Your payment was cancelled. No charges were made.&lt;/<span class="code-function">p</span>&gt;
+    &lt;/<span class="code-function">div</span>&gt;
+  )
+}</pre>
+      </div>
+      <div class="warning-box">
+        <div class="warning-box-title">⚠️ Don't Grant Access Yet</div>
+        <div class="warning-box-content">
+          Never grant access to your product on the success page. Users can manually navigate to <code class="bg-gray-800 px-2 py-1 rounded text-sm">/success</code> without paying. Always verify payments via webhooks (next step) before granting access.
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 7: Webhook Handler -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Step 7: Add a Webhook Handler (Critical!)</h2>
+      <p class="text-lg text-gray-300 mb-6">
+        Webhooks are how Stripe notifies your app when payments succeed, subscriptions renew, or cards fail. This is where you <strong>actually grant access</strong> to your product.
+      </p>
+      <p class="text-lg text-gray-300 mb-6">
+        Create <code class="bg-gray-800 px-2 py-1 rounded text-sm">app/api/webhooks/stripe/route.ts</code>:
+      </p>
+      <div class="code-block mb-6">
+        <pre><span class="code-comment">// app/api/webhooks/stripe/route.ts</span>
+<span class="code-keyword">import</span> { NextRequest, NextResponse } <span class="code-keyword">from</span> <span class="code-string">'next/server'</span>
+<span class="code-keyword">import</span> Stripe <span class="code-keyword">from</span> <span class="code-string">'stripe'</span>
+
+<span class="code-keyword">const</span> <span class="code-const">stripe</span> = <span class="code-keyword">new</span> <span class="code-function">Stripe</span>(process.env.<span class="code-const">STRIPE_SECRET_KEY</span>!)
+<span class="code-keyword">const</span> <span class="code-const">webhookSecret</span> = process.env.<span class="code-const">STRIPE_WEBHOOK_SECRET</span>!
+
+<span class="code-keyword">export</span> <span class="code-keyword">async</span> <span class="code-keyword">function</span> <span class="code-function">POST</span>(req: NextRequest) {
+  <span class="code-keyword">const</span> body = <span class="code-keyword">await</span> req.<span class="code-function">text</span>()
+  <span class="code-keyword">const</span> signature = req.headers.<span class="code-function">get</span>(<span class="code-string">'stripe-signature'</span>)!
+
+  <span class="code-keyword">let</span> event: Stripe.Event
+
+  <span class="code-keyword">try</span> {
+    <span class="code-comment">// Verify webhook signature</span>
+    event = stripe.webhooks.<span class="code-function">constructEvent</span>(body, signature, webhookSecret)
+  } <span class="code-keyword">catch</span> (error) {
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>(
+      { <span class="code-const">error</span>: <span class="code-string">'Invalid signature'</span> },
+      { <span class="code-const">status</span>: 400 }
+    )
+  }
+
+  <span class="code-comment">// Handle specific events</span>
+  <span class="code-keyword">switch</span> (event.type) {
+    <span class="code-keyword">case</span> <span class="code-string">'checkout.session.completed'</span>:
+      <span class="code-keyword">const</span> session = event.data.object <span class="code-keyword">as</span> Stripe.Checkout.Session
+
+      <span class="code-comment">// Grant access to your product here!</span>
+      <span class="code-comment">// Example: Update database to mark user as paid</span>
+      <span class="code-keyword">await</span> <span class="code-function">grantAccess</span>(session.customer <span class="code-keyword">as</span> string, session.metadata)
+      <span class="code-keyword">break</span>
+
+    <span class="code-keyword">case</span> <span class="code-string">'customer.subscription.updated'</span>:
+      <span class="code-comment">// Handle subscription changes (upgrade/downgrade)</span>
+      <span class="code-keyword">break</span>
+
+    <span class="code-keyword">case</span> <span class="code-string">'customer.subscription.deleted'</span>:
+      <span class="code-comment">// Revoke access when subscription is cancelled</span>
+      <span class="code-keyword">break</span>
+
+    <span class="code-keyword">case</span> <span class="code-string">'invoice.payment_failed'</span>:
+      <span class="code-comment">// Handle failed subscription renewal</span>
+      <span class="code-keyword">break</span>
+  }
+
+  <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>({ received: true })
+}
+
+<span class="code-keyword">async</span> <span class="code-keyword">function</span> <span class="code-function">grantAccess</span>(customerId: string, metadata: any) {
+  <span class="code-comment">// Your logic to update database</span>
+  <span class="code-comment">// Example: await db.user.update({ where: { stripeCustomerId: customerId }, data: { isPaid: true } })</span>
+}</pre>
+      </div>
+      <p class="text-lg text-gray-300 mb-6">
+        <strong>Important:</strong> You need to tell Stripe where to send webhooks. In the Stripe Dashboard:
+      </p>
+      <ol class="list-decimal list-inside space-y-3 text-lg text-gray-300 mb-6 ml-4">
+        <li>Go to Developers → Webhooks</li>
+        <li>Click "Add endpoint"</li>
+        <li>Enter your webhook URL: <code class="bg-gray-800 px-2 py-1 rounded text-sm">https://yourdomain.com/api/webhooks/stripe</code></li>
+        <li>Select events: <code class="bg-gray-800 px-2 py-1 rounded text-sm">checkout.session.completed</code>, <code class="bg-gray-800 px-2 py-1 rounded text-sm">customer.subscription.*</code>, <code class="bg-gray-800 px-2 py-1 rounded text-sm">invoice.payment_failed</code></li>
+        <li>Copy the <strong>signing secret</strong> (starts with <code class="bg-gray-800 px-2 py-1 rounded text-sm">whsec_</code>) and add it to your <code class="bg-gray-800 px-2 py-1 rounded text-sm">.env.local</code></li>
+      </ol>
+      <p class="text-lg text-gray-300">
+        For local testing, use the <a href="https://stripe.com/docs/stripe-cli" class="text-blue-400 hover:underline">Stripe CLI</a> to forward webhooks to localhost:
+      </p>
+      <div class="code-block">
+        <pre>stripe listen --forward-to localhost:3000/api/webhooks/stripe</pre>
+      </div>
+    </section>
+
+    <!-- Common Mistakes -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Common Mistakes That Will Cost You Money</h2>
+      <p class="text-lg text-gray-300 mb-8">
+        Here are the most expensive mistakes developers make when integrating Stripe:
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-blue-400">1. Not Verifying Webhook Signatures</h3>
+        <p class="text-lg text-gray-300 mb-4">
+          If you skip <code class="bg-gray-800 px-2 py-1 rounded text-sm">stripe.webhooks.constructEvent()</code>, attackers can send fake "payment successful" events to your webhook endpoint and get free access to your product.
+        </p>
+        <div class="warning-box">
+          <div class="warning-box-title">❌ Wrong (Insecure)</div>
+          <div class="warning-box-content">
+            <pre class="bg-transparent p-0 m-0"><span class="code-comment">// Never do this!</span>
+<span class="code-keyword">const</span> event = <span class="code-keyword">await</span> req.<span class="code-function">json</span>() <span class="code-comment">// Anyone can send this</span>
+<span class="code-keyword">if</span> (event.type === <span class="code-string">'checkout.session.completed'</span>) {
+  <span class="code-function">grantAccess</span>() <span class="code-comment">// Attacker gets free access!</span>
+}</pre>
+          </div>
+        </div>
+        <p class="text-lg text-gray-300 mt-4">
+          ✅ Always verify the signature using <code class="bg-gray-800 px-2 py-1 rounded text-sm">stripe.webhooks.constructEvent()</code> as shown in Step 7.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-blue-400">2. Using Live Keys in Development</h3>
+        <p class="text-lg text-gray-300 mb-4">
+          Accidentally using <code class="bg-gray-800 px-2 py-1 rounded text-sm">sk_live_</code> keys in development means test transactions charge real credit cards. This has cost developers thousands in refunds.
+        </p>
+        <p class="text-lg text-gray-300">
+          ✅ Use separate <code class="bg-gray-800 px-2 py-1 rounded text-sm">.env.local</code> (test keys) and <code class="bg-gray-800 px-2 py-1 rounded text-sm">.env.production</code> (live keys) files.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-blue-400">3. Missing Idempotency Keys</h3>
+        <p class="text-lg text-gray-300 mb-4">
+          Without idempotency keys, network failures can cause customers to be charged twice. Stripe automatically handles this if you pass an idempotency key:
+        </p>
+        <div class="code-block">
+          <pre><span class="code-keyword">const</span> session = <span class="code-keyword">await</span> stripe.checkout.sessions.<span class="code-function">create</span>(
+  { <span class="code-comment">/* ... */</span> },
+  { <span class="code-const">idempotencyKey</span>: userId + <span class="code-string">'-'</span> + Date.<span class="code-function">now</span>() }
+)</pre>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-blue-400">4. Granting Access Before Webhook Confirmation</h3>
+        <p class="text-lg text-gray-300 mb-4">
+          The <code class="bg-gray-800 px-2 py-1 rounded text-sm">/success</code> page fires <em>before</em> payment actually completes. Users can navigate to it manually or their payment can fail after redirect.
+        </p>
+        <p class="text-lg text-gray-300">
+          ✅ Only grant access in your webhook handler after <code class="bg-gray-800 px-2 py-1 rounded text-sm">checkout.session.completed</code> fires.
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-blue-400">5. Not Handling Failed Payments</h3>
+        <p class="text-lg text-gray-300 mb-4">
+          For subscriptions, credit cards fail all the time (expired cards, insufficient funds, etc.). If you don't listen to <code class="bg-gray-800 px-2 py-1 rounded text-sm">invoice.payment_failed</code> events, users keep using your service without paying.
+        </p>
+        <p class="text-lg text-gray-300">
+          ✅ Handle <code class="bg-gray-800 px-2 py-1 rounded text-sm">invoice.payment_failed</code> to send dunning emails and eventually revoke access.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-bold mb-4 text-blue-400">6. Storing Card Details Yourself</h3>
+        <p class="text-lg text-gray-300 mb-4">
+          Never store card numbers, CVVs, or expiration dates in your database. This violates PCI compliance and can result in massive fines.
+        </p>
+        <p class="text-lg text-gray-300">
+          ✅ Stripe handles all card storage. You only store the <code class="bg-gray-800 px-2 py-1 rounded text-sm">customer_id</code> and <code class="bg-gray-800 px-2 py-1 rounded text-sm">subscription_id</code>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Subscription Billing -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-6">Subscription Billing with Stripe</h2>
+      <p class="text-lg text-gray-300 mb-6">
+        For recurring revenue (the best kind), switch from one-time payments to subscriptions:
+      </p>
+
+      <h3 class="text-2xl font-bold mb-4">1. Create a Subscription Product</h3>
+      <p class="text-lg text-gray-300 mb-4">
+        In the Stripe Dashboard, create a product with a <strong>recurring price</strong> (e.g., $29/month). Copy the Price ID.
+      </p>
+
+      <h3 class="text-2xl font-bold mb-4">2. Change Checkout Mode to "subscription"</h3>
+      <div class="code-block mb-6">
+        <pre><span class="code-keyword">const</span> session = <span class="code-keyword">await</span> stripe.checkout.sessions.<span class="code-function">create</span>({
+  <span class="code-const">mode</span>: <span class="code-string">'subscription'</span>, <span class="code-comment">// Changed from 'payment'</span>
+  <span class="code-const">line_items</span>: [{ <span class="code-const">price</span>: <span class="code-string">'price_monthly'</span>, <span class="code-const">quantity</span>: 1 }],
+  <span class="code-comment">// ...</span>
+})</pre>
+      </div>
+
+      <h3 class="text-2xl font-bold mb-4">3. Handle Subscription Webhooks</h3>
+      <p class="text-lg text-gray-300 mb-4">
+        Listen for these events to manage the subscription lifecycle:
+      </p>
+      <ul class="list-disc list-inside space-y-2 text-lg text-gray-300 mb-6 ml-4">
+        <li><code class="bg-gray-800 px-2 py-1 rounded text-sm">customer.subscription.created</code> — Grant access</li>
+        <li><code class="bg-gray-800 px-2 py-1 rounded text-sm">customer.subscription.updated</code> — Handle plan changes</li>
+        <li><code class="bg-gray-800 px-2 py-1 rounded text-sm">customer.subscription.deleted</code> — Revoke access</li>
+        <li><code class="bg-gray-800 px-2 py-1 rounded text-sm">invoice.payment_succeeded</code> — Renewal successful</li>
+        <li><code class="bg-gray-800 px-2 py-1 rounded text-sm">invoice.payment_failed</code> — Renewal failed, send warning</li>
+      </ul>
+
+      <h3 class="text-2xl font-bold mb-4">4. Add the Stripe Customer Portal</h3>
+      <p class="text-lg text-gray-300 mb-6">
+        Let customers manage their own subscriptions (upgrade, cancel, update payment method) with Stripe's hosted portal:
+      </p>
+      <div class="code-block mb-6">
+        <pre><span class="code-comment">// app/api/customer-portal/route.ts</span>
+<span class="code-keyword">const</span> session = <span class="code-keyword">await</span> stripe.billingPortal.sessions.<span class="code-function">create</span>({
+  <span class="code-const">customer</span>: customerId, <span class="code-comment">// From your database</span>
+  <span class="code-const">return_url</span>: <span class="code-string">`${process.env.NEXT_PUBLIC_URL}/dashboard`</span>,
+})
+
+<span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>({ url: session.url })</pre>
+      </div>
+
+      <h3 class="text-2xl font-bold mb-4">5. Metered Billing (Usage-Based Pricing)</h3>
+      <p class="text-lg text-gray-300 mb-6">
+        For usage-based pricing (like API calls or GB of storage), report usage to Stripe:
+      </p>
+      <div class="code-block">
+        <pre><span class="code-comment">// Report usage for a subscription item</span>
+<span class="code-keyword">await</span> stripe.subscriptionItems.<span class="code-function">createUsageRecord</span>(
+  subscriptionItemId,
+  { <span class="code-const">quantity</span>: 100, <span class="code-const">action</span>: <span class="code-string">'increment'</span> }
+)</pre>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="my-16 rounded-2xl border border-green-500/20 bg-gradient-to-br from-green-950/50 to-emerald-950/30 p-8">
+      <div class="text-center">
+        <h2 class="mb-4 text-3xl font-bold text-green-400">Skip the Setup — Get Stripe Working in 5 Minutes</h2>
+        <p class="mx-auto mb-6 max-w-2xl text-lg text-gray-300">
+          LaunchFast includes a complete Stripe integration out of the box: checkout sessions, webhook handlers, subscription management, customer portal, and a database schema that tracks payments. No setup required.
+        </p>
+        <div class="flex items-center justify-center gap-4">
+          <span class="text-2xl font-bold text-white">$79</span>
+          <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-green-500 px-8 py-3 font-semibold text-gray-900 hover:bg-green-400 transition-colors">
+            Get LaunchFast Now
+          </a>
+        </div>
+        <p class="mt-4 text-sm text-gray-400">One-time payment. Lifetime access. No subscription.</p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
+
+      <div class="space-y-6">
+        <div class="border border-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-3 text-blue-400">How do I add Stripe Checkout to Next.js?</h3>
+          <p class="text-gray-300 leading-relaxed">
+            To add Stripe Checkout to Next.js: 1) Install the stripe npm package, 2) Add your Stripe secret key to environment variables, 3) Create an API route that generates checkout sessions, 4) Create a button that calls your API route, 5) Set up success and cancel URLs, 6) Implement webhook handling for fulfillment.
+          </p>
+        </div>
+
+        <div class="border border-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-3 text-blue-400">What is the difference between test mode and live mode in Stripe?</h3>
+          <p class="text-gray-300 leading-relaxed">
+            Test mode uses test API keys (starting with sk_test_ and pk_test_) and accepts test card numbers like 4242 4242 4242 4242. No real money is charged. Live mode uses live keys (sk_live_ and pk_live_) and processes real payments with real credit cards. Always develop in test mode first.
+          </p>
+        </div>
+
+        <div class="border border-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-3 text-blue-400">How do I handle Stripe webhooks in Next.js?</h3>
+          <p class="text-gray-300 leading-relaxed">
+            Create an API route at /api/webhooks/stripe that: 1) Retrieves the raw request body, 2) Verifies the webhook signature using stripe.webhooks.constructEvent, 3) Handles specific events like checkout.session.completed or customer.subscription.updated, 4) Updates your database based on the event, 5) Returns a 200 status to acknowledge receipt.
+          </p>
+        </div>
+
+        <div class="border border-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-3 text-blue-400">What are common Stripe integration mistakes that cost money?</h3>
+          <p class="text-gray-300 leading-relaxed">
+            Common costly mistakes: 1) Not verifying webhook signatures (allows fake payment events), 2) Missing idempotency keys (can charge customers twice), 3) Accidentally using live keys in development, 4) Not handling failed payments in subscriptions, 5) Granting access before webhook confirmation, 6) Not implementing proper error handling for declined cards.
+          </p>
+        </div>
+
+        <div class="border border-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-3 text-blue-400">How do I implement subscription billing with Stripe in Next.js?</h3>
+          <p class="text-gray-300 leading-relaxed">
+            For subscription billing: 1) Create subscription products in Stripe Dashboard with recurring prices, 2) Use mode: 'subscription' in checkout sessions, 3) Listen to customer.subscription.created, updated, and deleted webhook events, 4) Store subscription status in your database, 5) Implement the Stripe Customer Portal for users to manage subscriptions, 6) Handle metered billing by reporting usage via the Stripe API.
+          </p>
+        </div>
+
+        <div class="border border-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-3 text-blue-400">Should I use Stripe Checkout or Stripe Elements?</h3>
+          <p class="text-gray-300 leading-relaxed">
+            Use Stripe Checkout for quick integration with a hosted payment page that Stripe maintains (supports 40+ payment methods, mobile-optimized, PCI compliant out of the box). Use Stripe Elements for custom embedded payment forms where you need full design control. For most SaaS products, Checkout is faster to implement and has fewer compliance requirements.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- Related Resources -->
+  <section class="related-resources">
+    <div class="container mx-auto px-6">
+      <h2>Related Tutorials</h2>
+      <div class="related-grid">
+        <a href="nextjs-stripe-integration.html" class="related-card">
+          <div class="related-card-title">Complete Stripe + Next.js Integration</div>
+          <div class="related-card-desc">Full guide covering checkout, webhooks, billing portal, and subscription management</div>
+        </a>
+        <a href="nextauth-v5-tutorial.html" class="related-card">
+          <div class="related-card-title">NextAuth v5 Tutorial</div>
+          <div class="related-card-desc">Set up authentication with Google & GitHub OAuth, Prisma adapter, and middleware</div>
+        </a>
+        <a href="saas-cost-calculator.html" class="related-card">
+          <div class="related-card-title">SaaS Cost Calculator</div>
+          <div class="related-card-desc">Calculate the true cost of building a SaaS from scratch vs using a boilerplate</div>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-gray-800 py-12">
+  <div class="mx-auto max-w-7xl px-6 text-center text-sm text-gray-500">
+    <p>&copy; 2026 LaunchFast. All rights reserved.</p>
+    <div class="mt-4 flex justify-center gap-6">
+      <a href="privacy.html" class="hover:text-gray-400">Privacy</a>
+      <a href="terms.html" class="hover:text-gray-400">Terms</a>
+      <a href="mailto:patricksereyouch@gmail.com" class="hover:text-gray-400">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Email Capture Banner -->
+<div id="emailCaptureBanner">
+  <div class="email-banner-content">
+    <div class="email-banner-text">
+      <div class="email-banner-title">🚀 Get our free SaaS Launch Checklist (47 steps)</div>
+      <div class="email-banner-desc">Everything you need to launch your SaaS — from idea to first customer</div>
+    </div>
+    <form class="email-banner-form" id="emailCaptureForm">
+      <input type="email" name="email" class="email-banner-input" placeholder="your@email.com" required>
+      <button type="submit" class="email-banner-submit">Get Checklist</button>
+    </form>
+    <div class="email-banner-success" id="emailSuccess">✓ Check your email!</div>
+    <button class="email-banner-close" id="closeBanner" aria-label="Close">&times;</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var STORAGE_KEY = 'emailBannerDismissed';
+  var FORMSPREE_URL = 'https://formspree.io/f/PLACEHOLDER';
+  var SCROLL_THRESHOLD = 0.5; // 50% scroll
+  var TIME_DELAY = 30000; // 30 seconds
+
+  var banner = document.getElementById('emailCaptureBanner');
+  var form = document.getElementById('emailCaptureForm');
+  var closeBtn = document.getElementById('closeBanner');
+  var successMsg = document.getElementById('emailSuccess');
+
+  var shown = false;
+  var dismissed = false;
+  var timeoutId = null;
+
+  // Check if already dismissed
+  if (localStorage.getItem(STORAGE_KEY)) {
+    return; // Don't show banner
+  }
+
+  function showBanner() {
+    if (shown || dismissed) return;
+    shown = true;
+    banner.classList.add('show');
+  }
+
+  function hideBanner() {
+    banner.classList.remove('show');
+    dismissed = true;
+    localStorage.setItem(STORAGE_KEY, 'true');
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+
+  // Time-based trigger (30 seconds)
+  timeoutId = setTimeout(function() {
+    showBanner();
+  }, TIME_DELAY);
+
+  // Scroll-based trigger (50% of page)
+  function checkScroll() {
+    if (shown || dismissed) return;
+    var scrollPercent = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+    if (scrollPercent >= SCROLL_THRESHOLD) {
+      showBanner();
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }
+
+  window.addEventListener('scroll', checkScroll, { passive: true });
+
+  // Close button
+  closeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    hideBanner();
+  });
+
+  // Form submission
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var formData = new FormData(form);
+
+    fetch(FORMSPREE_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(response) {
+      if (response.ok) {
+        form.style.display = 'none';
+        successMsg.style.display = 'block';
+        setTimeout(function() {
+          hideBanner();
+        }, 3000);
+      } else {
+        alert('Oops! There was a problem. Please try again.');
+      }
+    })
+    .catch(function() {
+      alert('Oops! There was a problem. Please try again.');
+    });
+  });
+})();
+</script>
+
+<!-- Analytics: Update GoatCounter URL after signup at goatcounter.com -->
+<script data-goatcounter="https://launchfast-stats.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+</body>
+</html>
