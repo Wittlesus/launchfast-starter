@@ -36,7 +36,7 @@ export async function POST(req: Request) {
           stripeSubscriptionId: subscription.id,
           stripePriceId: subscription.items.data[0].price.id,
           stripeCurrentPeriodEnd: new Date(
-            (subscription as Record<string, unknown>).current_period_end as number * 1000
+            (subscription as unknown as Record<string, unknown>).current_period_end as number * 1000
           ),
         },
       });
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     }
 
     case "invoice.payment_succeeded": {
-      const invoice = event.data.object as Record<string, unknown>;
+      const invoice = event.data.object as unknown as Record<string, unknown>;
       if (!invoice.subscription) break;
 
       const sub = await stripe.subscriptions.retrieve(
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
         data: {
           stripePriceId: subscription.items.data[0].price.id,
           stripeCurrentPeriodEnd: new Date(
-            (subscription as Record<string, unknown>).current_period_end as number * 1000
+            (subscription as unknown as Record<string, unknown>).current_period_end as number * 1000
           ),
         },
       });
