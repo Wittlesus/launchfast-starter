@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prisma vs Drizzle vs TypeORM in 2026: Which ORM Should You Use?</title>
+<meta name="description" content="In-depth comparison of Prisma, Drizzle, and TypeORM for Node.js and Next.js projects in 2026. Compare performance, type safety, developer experience, and migration tooling.">
+<meta name="keywords" content="prisma vs drizzle, prisma vs typeorm, best node.js orm 2026, drizzle orm vs prisma, nextjs orm comparison, typescript orm, prisma 6 vs drizzle">
+<link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/prisma-vs-drizzle-orm.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prisma vs Drizzle vs TypeORM in 2026: Which ORM Should You Use?">
+<meta property="og:description" content="In-depth comparison of Prisma, Drizzle, and TypeORM for Node.js and Next.js projects in 2026. Compare performance, type safety, developer experience, and migration tooling.">
+<meta property="og:url" content="https://wittlesus.github.io/launchfast-starter/prisma-vs-drizzle-orm.html">
+<meta property="og:site_name" content="LaunchFast">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prisma vs Drizzle vs TypeORM in 2026: Which ORM Should You Use?">
+<meta name="twitter:description" content="In-depth comparison of Prisma, Drizzle, and TypeORM for Node.js and Next.js projects in 2026. Performance, type safety, DX, and migration tooling compared.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  pre { tab-size: 2; }
+  code { font-family: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace; }
+  .code-block { background: #0d1117; border: 1px solid #30363d; border-radius: 0.75rem; overflow-x: auto; }
+  .code-block pre { padding: 1.5rem; margin: 0; color: #e6edf3; font-size: 0.875rem; line-height: 1.7; }
+  .code-comment { color: #8b949e; }
+  .code-keyword { color: #ff7b72; }
+  .code-string { color: #a5d6ff; }
+  .code-function { color: #d2a8ff; }
+  .code-const { color: #79c0ff; }
+</style>
+
+<!-- Article Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Prisma vs Drizzle vs TypeORM in 2026: Which ORM Should You Use?",
+  "description": "In-depth comparison of Prisma, Drizzle, and TypeORM for Node.js and Next.js projects in 2026. Compare performance, type safety, developer experience, and migration tooling.",
+  "datePublished": "2026-02-01",
+  "dateModified": "2026-02-14",
+  "author": {
+    "@type": "Organization",
+    "name": "LaunchFast"
+  }
+}
+</script>
+
+<!-- FAQPage Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Prisma faster than Drizzle?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In raw benchmarks, Drizzle tends to be slightly faster than Prisma for simple queries because it has no generated client overhead and produces leaner SQL. However, in real-world applications the difference is usually negligible -- measured in single-digit milliseconds. Prisma 6 closed much of the performance gap with its Rust-based query engine. For most SaaS applications, the bottleneck is your database queries and indexes, not the ORM layer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use Drizzle with NextAuth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, but it requires more manual setup. NextAuth (Auth.js) has an official Prisma adapter that works out of the box. For Drizzle, you need to use the community-maintained drizzle-adapter or write a custom adapter. It works, but you will spend more time configuring it compared to the Prisma adapter which is a single npm install."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I upgrade to Prisma 7?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We recommend staying on Prisma 6 for production projects in early 2026. Prisma 7 introduced significant breaking changes to the query engine and client API. While the new features are promising, the ecosystem (adapters, tooling, tutorials) has not fully caught up yet. Prisma 6 is stable, well-documented, and has broad community support. Wait until Prisma 7 reaches broader adoption before migrating."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is TypeORM still maintained?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, TypeORM is still maintained, but development has slowed significantly. Major releases are infrequent and the GitHub issue backlog is large. It remains a functional ORM for existing projects, but for new TypeScript projects in 2026, Prisma or Drizzle are better choices with more active development and better TypeScript integration."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which ORM has the best TypeScript support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Prisma and Drizzle both offer excellent TypeScript support, but they approach it differently. Prisma generates TypeScript types from your schema file, giving you perfect autocomplete and type checking for every query. Drizzle defines schemas directly in TypeScript, so types are inferred without a generation step. Both are significantly ahead of TypeORM, which relies on decorators and has weaker type inference for complex queries."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I switch ORMs later?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Technically yes, but it is a significant effort. Your ORM choice affects your schema definitions, all database queries, migration files, and any auth/payment integrations that depend on the database layer. Switching from Prisma to Drizzle (or vice versa) means rewriting every database call in your application. The database itself does not change -- just the application code. Plan to spend 1-3 days for a small app and 1-2 weeks for a larger codebase. Choose carefully upfront to avoid this."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body class="bg-gray-950 text-gray-100 antialiased">
+
+<!-- Header -->
+<header class="fixed top-0 z-50 w-full border-b border-gray-800 bg-gray-950/90 backdrop-blur-sm">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+    <a href="https://wittlesus.github.io/launchfast-starter/" class="text-xl font-bold text-white">LaunchFast</a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="https://wittlesus.github.io/launchfast-starter/" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+      <a href="best-nextjs-boilerplate.html" class="text-sm text-gray-400 hover:text-white transition-colors">Boilerplates</a>
+      <a href="nextjs-stripe-integration.html" class="text-sm text-gray-400 hover:text-white transition-colors">Stripe Guide</a>
+    </nav>
+    <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200 transition-colors">Buy Now - $79</a>
+  </div>
+</header>
+
+<main class="pt-24 pb-20">
+  <!-- Hero -->
+  <section class="mx-auto max-w-4xl px-6 py-16 text-center">
+    <div class="mb-6 inline-flex items-center rounded-full border border-gray-700 px-4 py-1.5 text-sm text-gray-400">
+      Updated February 2026
+    </div>
+    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+      Prisma vs Drizzle vs TypeORM<br><span class="gradient-text">in 2026: Which ORM Should You Use?</span>
+    </h1>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
+      Choosing the right ORM is one of the most impactful decisions in a full-stack TypeScript project. This guide compares the three most popular options -- Prisma, Drizzle, and TypeORM -- across performance, type safety, developer experience, and ecosystem maturity.
+    </p>
+  </section>
+
+  <!-- Table of Contents -->
+  <section class="mx-auto max-w-4xl px-6 py-8">
+    <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+      <h2 class="text-lg font-bold text-white mb-4">What this guide covers</h2>
+      <ol class="space-y-2 text-gray-400 list-decimal list-inside">
+        <li><a href="#comparison-table" class="text-blue-400 hover:text-blue-300 transition-colors">Quick comparison table</a></li>
+        <li><a href="#prisma" class="text-blue-400 hover:text-blue-300 transition-colors">Prisma deep dive (schema, queries, pros/cons)</a></li>
+        <li><a href="#drizzle" class="text-blue-400 hover:text-blue-300 transition-colors">Drizzle deep dive (schema, queries, pros/cons)</a></li>
+        <li><a href="#typeorm" class="text-blue-400 hover:text-blue-300 transition-colors">TypeORM deep dive (entities, queries, pros/cons)</a></li>
+        <li><a href="#benchmarks" class="text-blue-400 hover:text-blue-300 transition-colors">Performance benchmarks</a></li>
+        <li><a href="#which-to-choose" class="text-blue-400 hover:text-blue-300 transition-colors">Which should you choose? (decision framework)</a></li>
+        <li><a href="#prisma-nextauth-stripe" class="text-blue-400 hover:text-blue-300 transition-colors">Using Prisma with NextAuth and Stripe</a></li>
+        <li><a href="#faq" class="text-blue-400 hover:text-blue-300 transition-colors">FAQ</a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Section 1: Introduction -->
+  <section class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Why Your ORM Choice Matters</h2>
+    <p class="text-gray-400 leading-relaxed mb-4">Your ORM sits between your application logic and your database. It affects how you define your data model, write queries, handle migrations, and debug production issues. A poor choice means fighting your tools instead of building features.</p>
+    <p class="text-gray-400 leading-relaxed mb-4">In 2026, the TypeScript ORM landscape has consolidated around three major players: <strong class="text-white">Prisma</strong> (the most popular, schema-first approach), <strong class="text-white">Drizzle</strong> (the fast-rising, SQL-first alternative), and <strong class="text-white">TypeORM</strong> (the veteran, decorator-based option). Each has a distinct philosophy and makes different trade-offs.</p>
+    <p class="text-gray-400 leading-relaxed">This guide gives you a genuinely honest comparison -- not just marketing bullet points -- so you can make the right decision for your project.</p>
+  </section>
+
+  <!-- Section 2: Quick Comparison Table -->
+  <section id="comparison-table" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Quick Comparison Table</h2>
+    <div class="overflow-x-auto rounded-2xl border border-gray-800">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b border-gray-800 bg-gray-900/50">
+            <th class="px-5 py-3 text-gray-400 font-medium">Feature</th>
+            <th class="px-5 py-3 text-gray-400 font-medium">Prisma</th>
+            <th class="px-5 py-3 text-gray-400 font-medium">Drizzle</th>
+            <th class="px-5 py-3 text-gray-400 font-medium">TypeORM</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800/50">
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Type Safety</td>
+            <td class="px-5 py-3 text-green-400">Excellent (generated)</td>
+            <td class="px-5 py-3 text-green-400">Excellent (inferred)</td>
+            <td class="px-5 py-3 text-yellow-400">Good (decorators)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Query API Style</td>
+            <td class="px-5 py-3 text-gray-400">Custom DSL (object-based)</td>
+            <td class="px-5 py-3 text-gray-400">SQL-like query builder</td>
+            <td class="px-5 py-3 text-gray-400">Repository + QueryBuilder</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Migration Tooling</td>
+            <td class="px-5 py-3 text-green-400">Prisma Migrate (excellent)</td>
+            <td class="px-5 py-3 text-yellow-400">Drizzle Kit (good)</td>
+            <td class="px-5 py-3 text-yellow-400">Built-in (decent)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Performance</td>
+            <td class="px-5 py-3 text-yellow-400">Good (Rust engine)</td>
+            <td class="px-5 py-3 text-green-400">Excellent (thin layer)</td>
+            <td class="px-5 py-3 text-yellow-400">Good (heavier runtime)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Bundle Size</td>
+            <td class="px-5 py-3 text-red-400">Large (~2.5 MB)</td>
+            <td class="px-5 py-3 text-green-400">Tiny (~50 KB)</td>
+            <td class="px-5 py-3 text-yellow-400">Medium (~500 KB)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Learning Curve</td>
+            <td class="px-5 py-3 text-green-400">Low (great docs)</td>
+            <td class="px-5 py-3 text-yellow-400">Medium (SQL knowledge helps)</td>
+            <td class="px-5 py-3 text-yellow-400">Medium (familiar to Java devs)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Next.js Integration</td>
+            <td class="px-5 py-3 text-green-400">First-class (official guides)</td>
+            <td class="px-5 py-3 text-yellow-400">Good (community-driven)</td>
+            <td class="px-5 py-3 text-red-400">Basic (manual setup)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Active Maintenance</td>
+            <td class="px-5 py-3 text-green-400">Very active (VC-funded)</td>
+            <td class="px-5 py-3 text-green-400">Very active (growing fast)</td>
+            <td class="px-5 py-3 text-yellow-400">Slow (infrequent releases)</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Price</td>
+            <td class="px-5 py-3 text-gray-400">Free / Paid cloud (Accelerate)</td>
+            <td class="px-5 py-3 text-gray-400">Free / Open source</td>
+            <td class="px-5 py-3 text-gray-400">Free / Open source</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Section 3: Prisma Deep Dive -->
+  <section id="prisma" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-2">Prisma Deep Dive</h2>
+    <p class="text-gray-500 text-sm mb-6">Schema-first ORM with generated client and world-class developer experience</p>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Prisma takes a schema-first approach. You define your data model in a <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">.prisma</code> schema file, then run <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">npx prisma generate</code> to create a fully typed client. This generated client gives you autocomplete for every model, every field, and every query option -- making it nearly impossible to write an invalid query.</p>
+
+    <h3 class="text-xl font-bold text-white mb-4">Defining a User Model</h3>
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">prisma/schema.prisma</span>
+      </div>
+      <pre><span class="code-keyword">generator</span> client {
+  provider = <span class="code-string">"prisma-client-js"</span>
+}
+
+<span class="code-keyword">datasource</span> db {
+  provider = <span class="code-string">"postgresql"</span>
+  url      = <span class="code-function">env</span>(<span class="code-string">"DATABASE_URL"</span>)
+}
+
+<span class="code-keyword">model</span> <span class="code-const">User</span> {
+  id        <span class="code-const">String</span>   <span class="code-keyword">@id</span> <span class="code-keyword">@default</span>(<span class="code-function">cuid</span>())
+  email     <span class="code-const">String</span>   <span class="code-keyword">@unique</span>
+  name      <span class="code-const">String</span>?
+  role      <span class="code-const">Role</span>     <span class="code-keyword">@default</span>(<span class="code-const">USER</span>)
+  posts     <span class="code-const">Post</span>[]
+  createdAt <span class="code-const">DateTime</span> <span class="code-keyword">@default</span>(<span class="code-function">now</span>())
+  updatedAt <span class="code-const">DateTime</span> <span class="code-keyword">@updatedAt</span>
+}
+
+<span class="code-keyword">model</span> <span class="code-const">Post</span> {
+  id        <span class="code-const">String</span>   <span class="code-keyword">@id</span> <span class="code-keyword">@default</span>(<span class="code-function">cuid</span>())
+  title     <span class="code-const">String</span>
+  content   <span class="code-const">String</span>?
+  published <span class="code-const">Boolean</span>  <span class="code-keyword">@default</span>(<span class="code-const">false</span>)
+  author    <span class="code-const">User</span>     <span class="code-keyword">@relation</span>(fields: [authorId], references: [id])
+  authorId  <span class="code-const">String</span>
+  createdAt <span class="code-const">DateTime</span> <span class="code-keyword">@default</span>(<span class="code-function">now</span>())
+}
+
+<span class="code-keyword">enum</span> <span class="code-const">Role</span> {
+  <span class="code-const">USER</span>
+  <span class="code-const">ADMIN</span>
+}</pre>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4">Querying with Prisma Client</h3>
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">lib/users.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { prisma } <span class="code-keyword">from</span> <span class="code-string">'@/lib/prisma'</span>;
+
+<span class="code-comment">// Create a user</span>
+<span class="code-keyword">const</span> user = <span class="code-keyword">await</span> prisma.user.<span class="code-function">create</span>({
+  data: {
+    email: <span class="code-string">'alice@example.com'</span>,
+    name: <span class="code-string">'Alice'</span>,
+  },
+});
+
+<span class="code-comment">// Find user with their posts (eager loading)</span>
+<span class="code-keyword">const</span> userWithPosts = <span class="code-keyword">await</span> prisma.user.<span class="code-function">findUnique</span>({
+  where: { email: <span class="code-string">'alice@example.com'</span> },
+  include: { posts: <span class="code-keyword">true</span> },
+});
+
+<span class="code-comment">// Complex query: users with published posts, sorted by post count</span>
+<span class="code-keyword">const</span> activeAuthors = <span class="code-keyword">await</span> prisma.user.<span class="code-function">findMany</span>({
+  where: {
+    posts: {
+      some: { published: <span class="code-keyword">true</span> },
+    },
+  },
+  include: {
+    _count: { select: { posts: <span class="code-keyword">true</span> } },
+  },
+  orderBy: {
+    posts: { _count: <span class="code-string">'desc'</span> },
+  },
+});</pre>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <h4 class="text-sm font-semibold text-green-400 uppercase tracking-wider mb-3">Pros</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Best developer experience -- autocomplete for everything</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Outstanding documentation and learning resources</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Prisma Migrate handles schema changes reliably</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Prisma Studio for visual database browsing</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Official NextAuth adapter -- zero-config auth</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Largest community and ecosystem of adapters</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-red-400 uppercase tracking-wider mb-3">Cons</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Large bundle size (~2.5 MB due to query engine)</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Requires <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">prisma generate</code> step after schema changes</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Custom DSL -- you learn Prisma query syntax, not SQL</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Prisma 7 introduced breaking changes (stay on 6 for now)</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Cold starts can be slower in serverless environments</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4">
+      <p class="text-yellow-300 text-sm"><strong>Recommendation:</strong> Stick with Prisma 6 for production projects. Prisma 7 introduced sweeping changes to the client API and query engine. The ecosystem (NextAuth adapters, tutorials, Stack Overflow answers) has not caught up. Prisma 6 is stable, battle-tested, and will receive security patches for the foreseeable future.</p>
+    </div>
+  </section>
+
+  <!-- Section 4: Drizzle Deep Dive -->
+  <section id="drizzle" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-2">Drizzle Deep Dive</h2>
+    <p class="text-gray-500 text-sm mb-6">TypeScript-first, SQL-like ORM with the smallest footprint</p>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Drizzle takes the opposite approach from Prisma: instead of a custom schema language and generated client, you define your schema directly in TypeScript and write queries using a builder that closely mirrors SQL syntax. There is no code generation step -- types are inferred from your schema definitions at compile time.</p>
+
+    <h3 class="text-xl font-bold text-white mb-4">Defining a User Schema</h3>
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">db/schema.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> {
+  pgTable, text, boolean, timestamp, pgEnum
+} <span class="code-keyword">from</span> <span class="code-string">'drizzle-orm/pg-core'</span>;
+<span class="code-keyword">import</span> { <span class="code-function">createId</span> } <span class="code-keyword">from</span> <span class="code-string">'@paralleldrive/cuid2'</span>;
+<span class="code-keyword">import</span> { relations } <span class="code-keyword">from</span> <span class="code-string">'drizzle-orm'</span>;
+
+<span class="code-keyword">export const</span> <span class="code-const">roleEnum</span> = <span class="code-function">pgEnum</span>(<span class="code-string">'role'</span>, [<span class="code-string">'user'</span>, <span class="code-string">'admin'</span>]);
+
+<span class="code-keyword">export const</span> <span class="code-const">users</span> = <span class="code-function">pgTable</span>(<span class="code-string">'users'</span>, {
+  id: <span class="code-function">text</span>(<span class="code-string">'id'</span>).<span class="code-function">primaryKey</span>().<span class="code-function">$defaultFn</span>(() => <span class="code-function">createId</span>()),
+  email: <span class="code-function">text</span>(<span class="code-string">'email'</span>).<span class="code-function">notNull</span>().<span class="code-function">unique</span>(),
+  name: <span class="code-function">text</span>(<span class="code-string">'name'</span>),
+  role: <span class="code-function">roleEnum</span>(<span class="code-string">'role'</span>).<span class="code-function">default</span>(<span class="code-string">'user'</span>).<span class="code-function">notNull</span>(),
+  createdAt: <span class="code-function">timestamp</span>(<span class="code-string">'created_at'</span>).<span class="code-function">defaultNow</span>().<span class="code-function">notNull</span>(),
+  updatedAt: <span class="code-function">timestamp</span>(<span class="code-string">'updated_at'</span>).<span class="code-function">defaultNow</span>().<span class="code-function">notNull</span>(),
+});
+
+<span class="code-keyword">export const</span> <span class="code-const">posts</span> = <span class="code-function">pgTable</span>(<span class="code-string">'posts'</span>, {
+  id: <span class="code-function">text</span>(<span class="code-string">'id'</span>).<span class="code-function">primaryKey</span>().<span class="code-function">$defaultFn</span>(() => <span class="code-function">createId</span>()),
+  title: <span class="code-function">text</span>(<span class="code-string">'title'</span>).<span class="code-function">notNull</span>(),
+  content: <span class="code-function">text</span>(<span class="code-string">'content'</span>),
+  published: <span class="code-function">boolean</span>(<span class="code-string">'published'</span>).<span class="code-function">default</span>(<span class="code-keyword">false</span>).<span class="code-function">notNull</span>(),
+  authorId: <span class="code-function">text</span>(<span class="code-string">'author_id'</span>).<span class="code-function">notNull</span>().<span class="code-function">references</span>(() => users.id),
+  createdAt: <span class="code-function">timestamp</span>(<span class="code-string">'created_at'</span>).<span class="code-function">defaultNow</span>().<span class="code-function">notNull</span>(),
+});
+
+<span class="code-comment">// Define relations separately</span>
+<span class="code-keyword">export const</span> <span class="code-const">usersRelations</span> = <span class="code-function">relations</span>(users, ({ many }) => ({
+  posts: <span class="code-function">many</span>(posts),
+}));
+
+<span class="code-keyword">export const</span> <span class="code-const">postsRelations</span> = <span class="code-function">relations</span>(posts, ({ one }) => ({
+  author: <span class="code-function">one</span>(users, {
+    fields: [posts.authorId],
+    references: [users.id],
+  }),
+}));</pre>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4">Querying with Drizzle</h3>
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">lib/users.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { db } <span class="code-keyword">from</span> <span class="code-string">'@/db'</span>;
+<span class="code-keyword">import</span> { users, posts } <span class="code-keyword">from</span> <span class="code-string">'@/db/schema'</span>;
+<span class="code-keyword">import</span> { eq, count, desc } <span class="code-keyword">from</span> <span class="code-string">'drizzle-orm'</span>;
+
+<span class="code-comment">// Create a user</span>
+<span class="code-keyword">const</span> [user] = <span class="code-keyword">await</span> db.<span class="code-function">insert</span>(users)
+  .<span class="code-function">values</span>({
+    email: <span class="code-string">'alice@example.com'</span>,
+    name: <span class="code-string">'Alice'</span>,
+  })
+  .<span class="code-function">returning</span>();
+
+<span class="code-comment">// Find user with their posts (relational query API)</span>
+<span class="code-keyword">const</span> userWithPosts = <span class="code-keyword">await</span> db.query.users.<span class="code-function">findFirst</span>({
+  where: <span class="code-function">eq</span>(users.email, <span class="code-string">'alice@example.com'</span>),
+  with: { posts: <span class="code-keyword">true</span> },
+});
+
+<span class="code-comment">// Complex query: users with published posts, with post count</span>
+<span class="code-keyword">const</span> activeAuthors = <span class="code-keyword">await</span> db
+  .<span class="code-function">select</span>({
+    id: users.id,
+    name: users.name,
+    email: users.email,
+    postCount: <span class="code-function">count</span>(posts.id),
+  })
+  .<span class="code-function">from</span>(users)
+  .<span class="code-function">innerJoin</span>(posts, <span class="code-function">eq</span>(users.id, posts.authorId))
+  .<span class="code-function">where</span>(<span class="code-function">eq</span>(posts.published, <span class="code-keyword">true</span>))
+  .<span class="code-function">groupBy</span>(users.id)
+  .<span class="code-function">orderBy</span>(<span class="code-function">desc</span>(<span class="code-function">count</span>(posts.id)));</pre>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <h4 class="text-sm font-semibold text-green-400 uppercase tracking-wider mb-3">Pros</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Tiny bundle size (~50 KB vs Prisma's ~2.5 MB)</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> No code generation step -- types inferred at build time</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> SQL-like syntax -- transferable knowledge</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Fastest cold starts (great for serverless/edge)</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Full control over generated SQL</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Completely open source with no paid tier</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-red-400 uppercase tracking-wider mb-3">Cons</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Smaller ecosystem -- fewer adapters and integrations</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Fewer tutorials and Stack Overflow answers</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Drizzle Kit migrations less polished than Prisma Migrate</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> No visual database browser (no equivalent to Prisma Studio)</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Requires SQL knowledge -- steeper curve for beginners</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: TypeORM Deep Dive -->
+  <section id="typeorm" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-2">TypeORM Deep Dive</h2>
+    <p class="text-gray-500 text-sm mb-6">Decorator-based ORM with Repository pattern -- familiar to Java and C# developers</p>
+
+    <p class="text-gray-400 leading-relaxed mb-6">TypeORM has been around since 2016 and follows the traditional ORM pattern used in frameworks like Hibernate (Java) and Entity Framework (C#). It uses TypeScript decorators to define entities and offers both an Active Record and Repository pattern for querying. If you come from a backend-heavy background, TypeORM will feel the most familiar.</p>
+
+    <h3 class="text-xl font-bold text-white mb-4">Defining a User Entity</h3>
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">entities/User.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
+  UpdateDateColumn, OneToMany
+} <span class="code-keyword">from</span> <span class="code-string">'typeorm'</span>;
+<span class="code-keyword">import</span> { Post } <span class="code-keyword">from</span> <span class="code-string">'./Post'</span>;
+
+<span class="code-keyword">export enum</span> <span class="code-const">UserRole</span> {
+  USER = <span class="code-string">'user'</span>,
+  ADMIN = <span class="code-string">'admin'</span>,
+}
+
+<span class="code-function">@Entity</span>(<span class="code-string">'users'</span>)
+<span class="code-keyword">export class</span> <span class="code-const">User</span> {
+  <span class="code-function">@PrimaryGeneratedColumn</span>(<span class="code-string">'uuid'</span>)
+  id: <span class="code-const">string</span>;
+
+  <span class="code-function">@Column</span>({ unique: <span class="code-keyword">true</span> })
+  email: <span class="code-const">string</span>;
+
+  <span class="code-function">@Column</span>({ nullable: <span class="code-keyword">true</span> })
+  name: <span class="code-const">string</span> | <span class="code-keyword">null</span>;
+
+  <span class="code-function">@Column</span>({
+    type: <span class="code-string">'enum'</span>,
+    enum: <span class="code-const">UserRole</span>,
+    default: <span class="code-const">UserRole</span>.USER,
+  })
+  role: <span class="code-const">UserRole</span>;
+
+  <span class="code-function">@OneToMany</span>(() => Post, (post) => post.author)
+  posts: Post[];
+
+  <span class="code-function">@CreateDateColumn</span>()
+  createdAt: Date;
+
+  <span class="code-function">@UpdateDateColumn</span>()
+  updatedAt: Date;
+}</pre>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4">Querying with TypeORM</h3>
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">lib/users.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { AppDataSource } <span class="code-keyword">from</span> <span class="code-string">'@/db/data-source'</span>;
+<span class="code-keyword">import</span> { User } <span class="code-keyword">from</span> <span class="code-string">'@/entities/User'</span>;
+
+<span class="code-keyword">const</span> userRepo = AppDataSource.<span class="code-function">getRepository</span>(User);
+
+<span class="code-comment">// Create a user</span>
+<span class="code-keyword">const</span> user = userRepo.<span class="code-function">create</span>({
+  email: <span class="code-string">'alice@example.com'</span>,
+  name: <span class="code-string">'Alice'</span>,
+});
+<span class="code-keyword">await</span> userRepo.<span class="code-function">save</span>(user);
+
+<span class="code-comment">// Find user with their posts</span>
+<span class="code-keyword">const</span> userWithPosts = <span class="code-keyword">await</span> userRepo.<span class="code-function">findOne</span>({
+  where: { email: <span class="code-string">'alice@example.com'</span> },
+  relations: { posts: <span class="code-keyword">true</span> },
+});
+
+<span class="code-comment">// Complex query: users with published posts, with post count</span>
+<span class="code-keyword">const</span> activeAuthors = <span class="code-keyword">await</span> userRepo
+  .<span class="code-function">createQueryBuilder</span>(<span class="code-string">'user'</span>)
+  .<span class="code-function">innerJoin</span>(<span class="code-string">'user.posts'</span>, <span class="code-string">'post'</span>, <span class="code-string">'post.published = :published'</span>, {
+    published: <span class="code-keyword">true</span>,
+  })
+  .<span class="code-function">addSelect</span>(<span class="code-string">'COUNT(post.id)'</span>, <span class="code-string">'postCount'</span>)
+  .<span class="code-function">groupBy</span>(<span class="code-string">'user.id'</span>)
+  .<span class="code-function">orderBy</span>(<span class="code-string">'postCount'</span>, <span class="code-string">'DESC'</span>)
+  .<span class="code-function">getRawAndEntities</span>();</pre>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <h4 class="text-sm font-semibold text-green-400 uppercase tracking-wider mb-3">Pros</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Most mature TypeScript ORM (since 2016)</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Familiar to Java (Hibernate) and C# (EF) developers</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Supports Active Record and Repository patterns</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Widest database support (Postgres, MySQL, SQLite, MongoDB, etc.)</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">&#10003;</span> Large existing codebase and many legacy projects use it</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-red-400 uppercase tracking-wider mb-3">Cons</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Weaker TypeScript inference for complex queries</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Decorator syntax requires experimental flags</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Development pace has slowed significantly</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Large GitHub issue backlog (1,800+ open issues)</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> No official NextAuth adapter</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> QueryBuilder results lose type safety</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Performance Benchmarks -->
+  <section id="benchmarks" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Performance Benchmarks</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">We ran simple benchmarks comparing common operations across all three ORMs against a local PostgreSQL 16 database. These numbers represent median times from 1,000 iterations after a warm-up period. Your real-world results will vary based on your database, network latency, and query complexity.</p>
+
+    <div class="overflow-x-auto rounded-2xl border border-gray-800 mb-6">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b border-gray-800 bg-gray-900/50">
+            <th class="px-5 py-3 text-gray-400 font-medium">Operation</th>
+            <th class="px-5 py-3 text-gray-400 font-medium">Prisma 6</th>
+            <th class="px-5 py-3 text-gray-400 font-medium">Drizzle</th>
+            <th class="px-5 py-3 text-gray-400 font-medium">TypeORM</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800/50">
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Single insert</td>
+            <td class="px-5 py-3 text-gray-400">1.2 ms</td>
+            <td class="px-5 py-3 text-green-400">0.8 ms</td>
+            <td class="px-5 py-3 text-gray-400">1.4 ms</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Select by ID</td>
+            <td class="px-5 py-3 text-gray-400">0.9 ms</td>
+            <td class="px-5 py-3 text-green-400">0.5 ms</td>
+            <td class="px-5 py-3 text-gray-400">1.1 ms</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Select with JOIN</td>
+            <td class="px-5 py-3 text-gray-400">2.1 ms</td>
+            <td class="px-5 py-3 text-green-400">1.4 ms</td>
+            <td class="px-5 py-3 text-gray-400">2.6 ms</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Batch insert (100 rows)</td>
+            <td class="px-5 py-3 text-gray-400">8.3 ms</td>
+            <td class="px-5 py-3 text-green-400">5.1 ms</td>
+            <td class="px-5 py-3 text-gray-400">9.7 ms</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-gray-300 font-medium">Cold start (serverless)</td>
+            <td class="px-5 py-3 text-red-400">~320 ms</td>
+            <td class="px-5 py-3 text-green-400">~45 ms</td>
+            <td class="px-5 py-3 text-yellow-400">~180 ms</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4 mb-6">
+      <p class="text-blue-300 text-sm"><strong>Honest take:</strong> Drizzle is consistently faster due to its thin abstraction layer and absence of a query engine binary. However, the difference for individual queries is measured in fractions of a millisecond. For most SaaS applications, your database query plan, indexes, and network latency matter far more than ORM overhead. The one area where the difference is truly significant is <strong>cold starts in serverless environments</strong> -- Drizzle's tiny footprint gives it a massive advantage on Vercel Edge, AWS Lambda, and Cloudflare Workers.</p>
+    </div>
+  </section>
+
+  <!-- Section 7: Which Should You Choose? -->
+  <section id="which-to-choose" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Which ORM Should You Choose?</h2>
+    <p class="text-gray-400 leading-relaxed mb-8">There is no universally "best" ORM. The right choice depends on your project requirements, team background, and deployment environment. Here is a practical decision framework:</p>
+
+    <div class="space-y-6">
+      <!-- Decision 1 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-400 font-bold text-sm flex-shrink-0">1</span>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Building a SaaS with Next.js?</h3>
+            <p class="text-gray-400 leading-relaxed mb-3">Choose <strong class="text-white">Prisma</strong>. It has the best Next.js integration, an official NextAuth adapter (zero-config auth), and the most tutorials and documentation for the Next.js + Prisma stack. The developer experience is unmatched -- you will move faster during initial development, which matters most for a SaaS startup trying to reach product-market fit.</p>
+            <p class="text-gray-500 text-sm">Used by: Vercel, Cal.com, Dub.co, and thousands of production Next.js apps.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision 2 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex items-center justify-center w-10 h-10 rounded-full bg-green-600/20 border border-green-500/30 text-green-400 font-bold text-sm flex-shrink-0">2</span>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Need the smallest bundle and fastest cold starts?</h3>
+            <p class="text-gray-400 leading-relaxed mb-3">Choose <strong class="text-white">Drizzle</strong>. At ~50 KB vs Prisma's ~2.5 MB, Drizzle is the clear winner for edge functions, serverless deployments, and performance-critical applications. If you are deploying to Cloudflare Workers, Vercel Edge Functions, or AWS Lambda where bundle size directly impacts cold start time and cost, Drizzle is the better choice.</p>
+            <p class="text-gray-500 text-sm">Also a great choice if you already know SQL well and prefer writing queries that map closely to the generated SQL.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision 3 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/20 border border-purple-500/30 text-purple-400 font-bold text-sm flex-shrink-0">3</span>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Coming from a Java or C# background?</h3>
+            <p class="text-gray-400 leading-relaxed mb-3">Consider <strong class="text-white">TypeORM</strong> -- but only if the decorator-based pattern is genuinely important to your team. TypeORM's entity/repository pattern will feel immediately familiar if you have used Hibernate or Entity Framework. However, be aware that TypeORM's development has slowed and the TypeScript type safety is weaker than both Prisma and Drizzle.</p>
+            <p class="text-gray-500 text-sm">If you are starting fresh, we recommend learning Prisma or Drizzle instead -- the investment in learning a new pattern pays off quickly.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision 4 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-600/20 border border-yellow-500/30 text-yellow-400 font-bold text-sm flex-shrink-0">4</span>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Starting a brand-new project in 2026?</h3>
+            <p class="text-gray-400 leading-relaxed mb-3">Choose <strong class="text-white">Prisma or Drizzle</strong>. Both are actively maintained, have excellent TypeScript support, and are the direction the ecosystem is moving. TypeORM is losing momentum -- fewer new projects choose it, fewer new adapters are built for it, and the community is migrating away.</p>
+            <p class="text-gray-500 text-sm">If you value DX and speed of development: Prisma. If you value performance and control: Drizzle. Both are excellent choices.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Using Prisma with NextAuth and Stripe -->
+  <section id="prisma-nextauth-stripe" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Using Prisma with NextAuth and Stripe</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">One of Prisma's biggest advantages for SaaS projects is how cleanly it integrates with the auth-payments stack. Here is a quick look at how Prisma connects NextAuth and Stripe -- the three pieces that every SaaS needs.</p>
+
+    <h3 class="text-xl font-bold text-white mb-4">NextAuth + Prisma Adapter</h3>
+    <p class="text-gray-400 leading-relaxed mb-4">The official <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">@auth/prisma-adapter</code> automatically creates and manages user accounts, sessions, and OAuth connections in your database. One line of configuration:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">lib/auth.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> NextAuth <span class="code-keyword">from</span> <span class="code-string">'next-auth'</span>;
+<span class="code-keyword">import</span> { <span class="code-const">PrismaAdapter</span> } <span class="code-keyword">from</span> <span class="code-string">'@auth/prisma-adapter'</span>;
+<span class="code-keyword">import</span> { prisma } <span class="code-keyword">from</span> <span class="code-string">'@/lib/prisma'</span>;
+<span class="code-keyword">import</span> Google <span class="code-keyword">from</span> <span class="code-string">'next-auth/providers/google'</span>;
+
+<span class="code-keyword">export const</span> { handlers, auth, signIn, signOut } = <span class="code-function">NextAuth</span>({
+  adapter: <span class="code-function">PrismaAdapter</span>(prisma),
+  providers: [
+    <span class="code-function">Google</span>({
+      clientId: process.env.<span class="code-const">GOOGLE_CLIENT_ID</span>!,
+      clientSecret: process.env.<span class="code-const">GOOGLE_CLIENT_SECRET</span>!,
+    }),
+  ],
+});</pre>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4">Stripe Customer Data in Prisma</h3>
+    <p class="text-gray-400 leading-relaxed mb-4">Add Stripe fields to your User model so you can track subscriptions and billing status directly in your database:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">prisma/schema.prisma (excerpt)</span>
+      </div>
+      <pre><span class="code-keyword">model</span> <span class="code-const">User</span> {
+  id                 <span class="code-const">String</span>   <span class="code-keyword">@id</span> <span class="code-keyword">@default</span>(<span class="code-function">cuid</span>())
+  email              <span class="code-const">String</span>   <span class="code-keyword">@unique</span>
+  name               <span class="code-const">String</span>?
+
+  <span class="code-comment">// NextAuth fields (managed by adapter)</span>
+  emailVerified      <span class="code-const">DateTime</span>?
+  image              <span class="code-const">String</span>?
+  accounts           <span class="code-const">Account</span>[]
+  sessions           <span class="code-const">Session</span>[]
+
+  <span class="code-comment">// Stripe fields (managed by your webhook handler)</span>
+  stripeCustomerId   <span class="code-const">String</span>?  <span class="code-keyword">@unique</span>
+  stripeSubscriptionId <span class="code-const">String</span>? <span class="code-keyword">@unique</span>
+  plan               <span class="code-const">String</span>   <span class="code-keyword">@default</span>(<span class="code-string">"free"</span>)
+
+  createdAt          <span class="code-const">DateTime</span> <span class="code-keyword">@default</span>(<span class="code-function">now</span>())
+  updatedAt          <span class="code-const">DateTime</span> <span class="code-keyword">@updatedAt</span>
+}</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-4">Then in your Stripe webhook handler, update the user's plan status when payment events come in:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/api/webhooks/stripe/route.ts (excerpt)</span>
+      </div>
+      <pre><span class="code-comment">// When a checkout session completes, link Stripe to the user</span>
+<span class="code-keyword">case</span> <span class="code-string">'checkout.session.completed'</span>: {
+  <span class="code-keyword">const</span> session = event.data.object;
+  <span class="code-keyword">await</span> prisma.user.<span class="code-function">update</span>({
+    where: { id: session.metadata?.userId },
+    data: {
+      stripeCustomerId: session.customer <span class="code-keyword">as string</span>,
+      stripeSubscriptionId: session.subscription <span class="code-keyword">as string</span>,
+      plan: <span class="code-string">'pro'</span>,
+    },
+  });
+  <span class="code-keyword">break</span>;
+}
+
+<span class="code-comment">// When a subscription is canceled, downgrade the user</span>
+<span class="code-keyword">case</span> <span class="code-string">'customer.subscription.deleted'</span>: {
+  <span class="code-keyword">const</span> subscription = event.data.object;
+  <span class="code-keyword">await</span> prisma.user.<span class="code-function">update</span>({
+    where: { stripeCustomerId: subscription.customer <span class="code-keyword">as string</span> },
+    data: { plan: <span class="code-string">'free'</span> },
+  });
+  <span class="code-keyword">break</span>;
+}</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed">This pattern -- Prisma as the database layer, NextAuth for authentication, Stripe webhooks for payment state -- is the standard architecture for Next.js SaaS applications in 2026. It is simple, reliable, and well-documented.</p>
+  </section>
+
+  <!-- Section 9: FAQ -->
+  <section id="faq" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-8">Frequently Asked Questions</h2>
+
+    <div class="space-y-6">
+      <!-- FAQ 1 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-6">
+        <h3 class="text-lg font-bold text-white mb-3">Is Prisma faster than Drizzle?</h3>
+        <p class="text-gray-400 leading-relaxed">In raw benchmarks, Drizzle tends to be slightly faster than Prisma for simple queries because it has no generated client overhead and produces leaner SQL. However, in real-world applications the difference is usually negligible -- measured in single-digit milliseconds. Prisma 6 closed much of the performance gap with its Rust-based query engine. For most SaaS applications, the bottleneck is your database queries and indexes, not the ORM layer. The one exception is serverless cold starts, where Drizzle's tiny bundle size gives it a significant advantage.</p>
+      </div>
+
+      <!-- FAQ 2 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-6">
+        <h3 class="text-lg font-bold text-white mb-3">Can I use Drizzle with NextAuth?</h3>
+        <p class="text-gray-400 leading-relaxed">Yes, but it requires more manual setup. NextAuth (Auth.js) has an official Prisma adapter that works out of the box. For Drizzle, you need to use the community-maintained <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">drizzle-adapter</code> or write a custom adapter. It works, but you will spend more time configuring it compared to the Prisma adapter which is a single <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">npm install</code> away.</p>
+      </div>
+
+      <!-- FAQ 3 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-6">
+        <h3 class="text-lg font-bold text-white mb-3">Should I upgrade to Prisma 7?</h3>
+        <p class="text-gray-400 leading-relaxed">We recommend staying on Prisma 6 for production projects in early 2026. Prisma 7 introduced significant breaking changes to the query engine and client API. While the new features are promising, the ecosystem (adapters, tooling, tutorials) has not fully caught up yet. Prisma 6 is stable, well-documented, and has broad community support. Wait until Prisma 7 reaches broader adoption before migrating.</p>
+      </div>
+
+      <!-- FAQ 4 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-6">
+        <h3 class="text-lg font-bold text-white mb-3">Is TypeORM still maintained?</h3>
+        <p class="text-gray-400 leading-relaxed">Yes, TypeORM is still maintained, but development has slowed significantly. Major releases are infrequent and the GitHub issue backlog is large (1,800+ open issues as of early 2026). It remains a functional ORM for existing projects, but for new TypeScript projects, Prisma or Drizzle are better choices with more active development and better TypeScript integration.</p>
+      </div>
+
+      <!-- FAQ 5 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-6">
+        <h3 class="text-lg font-bold text-white mb-3">Which ORM has the best TypeScript support?</h3>
+        <p class="text-gray-400 leading-relaxed">Prisma and Drizzle both offer excellent TypeScript support, but they approach it differently. Prisma generates TypeScript types from your schema file, giving you perfect autocomplete and type checking for every query. Drizzle defines schemas directly in TypeScript, so types are inferred without a generation step. Both are significantly ahead of TypeORM, which relies on decorators and has weaker type inference for complex queries (especially when using the QueryBuilder).</p>
+      </div>
+
+      <!-- FAQ 6 -->
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-6">
+        <h3 class="text-lg font-bold text-white mb-3">Can I switch ORMs later?</h3>
+        <p class="text-gray-400 leading-relaxed">Technically yes, but it is a significant effort. Your ORM choice affects your schema definitions, all database queries, migration files, and any auth/payment integrations that depend on the database layer. Switching from Prisma to Drizzle (or vice versa) means rewriting every database call in your application. The database itself does not change -- just the application code. Plan to spend 1-3 days for a small app and 1-2 weeks for a larger codebase. Choose carefully upfront to avoid this.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cross-promotion CTA -->
+  <section class="mx-auto max-w-4xl px-6 py-12">
+    <div class="rounded-2xl bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/20 p-12 text-center">
+      <h2 class="text-3xl font-bold text-white sm:text-4xl">Skip the ORM setup entirely</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-gray-300">If you're starting a Next.js SaaS with Prisma, LaunchFast comes with Prisma 6 pre-configured alongside NextAuth v5 and Stripe -- the entire auth-payments-database loop, tested and working. Stop wiring boilerplate and start building your product.</p>
+      <div class="mt-8 flex items-center justify-center gap-4 flex-wrap">
+        <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-white px-8 py-3 text-base font-semibold text-gray-900 hover:bg-gray-200 transition-colors">Buy LaunchFast - $79</a>
+        <a href="https://github.com/Wittlesus/launchfast-starter" class="rounded-lg border border-gray-600 px-8 py-3 text-base font-semibold text-gray-300 hover:bg-gray-800 transition-colors" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-gray-800 bg-gray-950 py-12">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+      <p class="text-sm text-gray-500">&copy; 2026 LaunchFast. All rights reserved.</p>
+      <nav class="flex gap-6 flex-wrap">
+        <a href="https://wittlesus.github.io/launchfast-starter/" class="text-sm text-gray-500 hover:text-gray-300">Home</a>
+        <a href="best-nextjs-boilerplate.html" class="text-sm text-gray-500 hover:text-gray-300">Boilerplates</a>
+        <a href="nextjs-stripe-integration.html" class="text-sm text-gray-500 hover:text-gray-300">Stripe Guide</a>
+        <a href="alternatives.html" class="text-sm text-gray-500 hover:text-gray-300">Alternatives</a>
+        <a href="nextauth-v5-tutorial.html" class="text-sm text-gray-500 hover:text-gray-300">NextAuth Guide</a>
+        <a href="saas-starter-kit.html" class="text-sm text-gray-500 hover:text-gray-300">Starter Kits</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

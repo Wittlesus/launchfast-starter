@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextAuth v5 Tutorial: Complete Guide to Authentication in Next.js (2026)</title>
+<meta name="description" content="Learn how to set up NextAuth v5 in Next.js with Google and GitHub OAuth, Prisma adapter, session callbacks, type augmentation, and middleware route protection. Complete tutorial with code examples.">
+<meta name="keywords" content="nextauth v5 tutorial, nextauth next.js 2026, next-auth v5 setup, nextjs authentication tutorial, nextauth prisma adapter, nextauth v5 session callback, nextauth middleware">
+<link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/nextauth-v5-tutorial.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="NextAuth v5 Tutorial: Complete Guide to Authentication in Next.js (2026)">
+<meta property="og:description" content="Learn how to set up NextAuth v5 in Next.js with Google and GitHub OAuth, Prisma adapter, session callbacks, type augmentation, and middleware route protection.">
+<meta property="og:url" content="https://wittlesus.github.io/launchfast-starter/nextauth-v5-tutorial.html">
+<meta property="og:site_name" content="LaunchFast">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NextAuth v5 Tutorial: Complete Guide to Authentication in Next.js (2026)">
+<meta name="twitter:description" content="Learn how to set up NextAuth v5 in Next.js with Google and GitHub OAuth, Prisma adapter, session callbacks, type augmentation, and middleware route protection.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  pre { tab-size: 2; }
+  code { font-family: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace; }
+  .code-block { background: #0d1117; border: 1px solid #30363d; border-radius: 0.75rem; overflow-x: auto; }
+  .code-block pre { padding: 1.5rem; margin: 0; color: #e6edf3; font-size: 0.875rem; line-height: 1.7; }
+  .code-comment { color: #8b949e; }
+  .code-keyword { color: #ff7b72; }
+  .code-string { color: #a5d6ff; }
+  .code-function { color: #d2a8ff; }
+  .code-const { color: #79c0ff; }
+</style>
+
+<!-- Article Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "NextAuth v5 Tutorial: Complete Guide to Authentication in Next.js (2026)",
+  "description": "Learn how to set up NextAuth v5 in Next.js with Google and GitHub OAuth, Prisma adapter, session callbacks, type augmentation, and middleware route protection.",
+  "datePublished": "2026-02-01",
+  "dateModified": "2026-02-14",
+  "author": {
+    "@type": "Organization",
+    "name": "LaunchFast"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LaunchFast"
+  }
+}
+</script>
+
+<!-- HowTo Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Set Up NextAuth v5 in Next.js",
+  "description": "A complete guide to setting up NextAuth v5 with Google and GitHub OAuth, Prisma adapter, session callbacks, type augmentation, and middleware route protection in a Next.js application.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Install NextAuth v5 and Dependencies",
+      "text": "Install next-auth v5 (beta), the Prisma adapter, and Prisma ORM in your Next.js project using npm."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Configure Auth with Prisma Adapter",
+      "text": "Create an auth.ts configuration file with the Prisma adapter, Google and GitHub providers, and a session callback that exposes user.id."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add Type Augmentation",
+      "text": "Create a next-auth.d.ts file to extend the Session type so TypeScript knows about the user.id field on the session object."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Set Up Google and GitHub OAuth",
+      "text": "Create OAuth applications in Google Cloud Console and GitHub Developer Settings, then add client IDs and secrets to your environment variables."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Define the Prisma Schema for Auth",
+      "text": "Create User, Account, Session, and VerificationToken models in your Prisma schema that match the NextAuth database adapter requirements."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add Middleware Route Protection",
+      "text": "Create a middleware.ts file at the project root that uses the NextAuth middleware to protect routes matching a configurable pattern."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Use Sessions in Components",
+      "text": "Access the authenticated user session in both server components using the auth() function and client components using the useSession() hook with a SessionProvider."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Integrate Authentication with Stripe",
+      "text": "Wire NextAuth sessions to Stripe checkout by passing the authenticated user ID as metadata to link payments to user accounts."
+    }
+  ]
+}
+</script>
+
+<!-- FAQPage Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between NextAuth v4 and NextAuth v5?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "NextAuth v5 introduces a new universal auth() function that replaces getServerSession(), getSession(), and useSession() with a single API. It uses a root-level auth.ts config file instead of the /api/auth/[...nextauth] route handler pattern. The session callback signature changes when using database sessions: v5 passes {session, user} instead of {session, token}. It also adds native Edge Runtime support and built-in middleware integration for route protection."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need the Prisma adapter for NextAuth v5?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not strictly. NextAuth v5 supports JWT-based sessions by default, which require no database adapter. However, if you want database-backed sessions (more secure, server-side session revocation, storing user data persistently), you need an adapter. The Prisma adapter is the most popular choice because it works with PostgreSQL, MySQL, SQLite, and other databases that Prisma supports."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is user.id undefined on my NextAuth v5 session?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This is the most common NextAuth v5 issue. By default, the session object does not include the user ID. You need to do two things: first, add a session callback in your auth.ts config that copies the user ID onto the session object. Second, create a next-auth.d.ts type declaration file that extends the Session interface to include user.id. Without the type augmentation, TypeScript will not recognize session.user.id even if you add it in the callback."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use NextAuth v5 with the Next.js App Router?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, NextAuth v5 was designed specifically for the Next.js App Router. It exports an auth() function from your auth.ts config that works directly in Server Components, Server Actions, Route Handlers, and Middleware. For Client Components, you wrap your app in a SessionProvider and use the useSession() hook. The auth() function replaces the old getServerSession() pattern from v4."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I protect routes with NextAuth v5 middleware?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Create a middleware.ts file in your project root (not inside the app directory). Import the auth function from your auth config and export it as the default middleware. Then export a config object with a matcher array that specifies which routes to protect. For example, matcher: ['/dashboard/:path*', '/api/protected/:path*'] will require authentication for all dashboard and protected API routes. Unauthenticated users are automatically redirected to the sign-in page."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body class="bg-gray-950 text-gray-100 antialiased">
+
+<!-- Header -->
+<header class="fixed top-0 z-50 w-full border-b border-gray-800 bg-gray-950/90 backdrop-blur-sm">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+    <a href="https://wittlesus.github.io/launchfast-starter/" class="text-xl font-bold text-white">LaunchFast</a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="https://wittlesus.github.io/launchfast-starter/" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+      <a href="alternatives.html" class="text-sm text-gray-400 hover:text-white transition-colors">Comparisons</a>
+      <a href="nextjs-stripe-integration.html" class="text-sm text-gray-400 hover:text-white transition-colors">Stripe Guide</a>
+    </nav>
+    <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200 transition-colors">Buy Now - $79</a>
+  </div>
+</header>
+
+<main class="pt-24 pb-20">
+  <!-- Hero -->
+  <section class="mx-auto max-w-4xl px-6 py-16 text-center">
+    <div class="mb-6 inline-flex items-center rounded-full border border-gray-700 px-4 py-1.5 text-sm text-gray-400">
+      Updated February 2026
+    </div>
+    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+      NextAuth v5 Tutorial:<br><span class="gradient-text">Complete Authentication Guide (2026)</span>
+    </h1>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-400">
+      A step-by-step guide to setting up NextAuth v5 with Google and GitHub OAuth, Prisma adapter, session callbacks, type augmentation, and middleware route protection. Real code you can copy into your project.
+    </p>
+  </section>
+
+  <!-- Table of Contents -->
+  <section class="mx-auto max-w-4xl px-6 py-8">
+    <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+      <h2 class="text-lg font-bold text-white mb-4">What you'll learn</h2>
+      <ol class="space-y-2 text-gray-400 list-decimal list-inside">
+        <li><a href="#intro" class="text-blue-400 hover:text-blue-300 transition-colors">Why NextAuth v5 and what changed from v4</a></li>
+        <li><a href="#installation" class="text-blue-400 hover:text-blue-300 transition-colors">Installation and environment setup</a></li>
+        <li><a href="#auth-config" class="text-blue-400 hover:text-blue-300 transition-colors">Configure Auth with the Prisma adapter</a></li>
+        <li><a href="#type-augmentation" class="text-blue-400 hover:text-blue-300 transition-colors">Type augmentation for session.user.id</a></li>
+        <li><a href="#oauth-setup" class="text-blue-400 hover:text-blue-300 transition-colors">Google and GitHub OAuth setup</a></li>
+        <li><a href="#prisma-schema" class="text-blue-400 hover:text-blue-300 transition-colors">Prisma schema for NextAuth models</a></li>
+        <li><a href="#middleware" class="text-blue-400 hover:text-blue-300 transition-colors">Middleware route protection</a></li>
+        <li><a href="#session-usage" class="text-blue-400 hover:text-blue-300 transition-colors">Using sessions in server and client components</a></li>
+        <li><a href="#stripe-integration" class="text-blue-400 hover:text-blue-300 transition-colors">Integrating auth with Stripe</a></li>
+        <li><a href="#common-mistakes" class="text-blue-400 hover:text-blue-300 transition-colors">Common mistakes and gotchas</a></li>
+        <li><a href="#faq" class="text-blue-400 hover:text-blue-300 transition-colors">Frequently asked questions</a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Introduction -->
+  <section id="intro" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Why NextAuth v5 Is the Standard for Next.js Authentication</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">NextAuth (now called Auth.js) v5 is the most widely adopted authentication library for Next.js applications. It handles OAuth flows, session management, database persistence, and token security so you do not have to build any of that from scratch. In 2026, it is the default choice for most production Next.js apps, and for good reason: it integrates natively with the App Router, supports Edge Runtime, and works with every major OAuth provider.</p>
+
+    <p class="text-gray-400 leading-relaxed mb-6">If you are coming from NextAuth v4, there are several important changes in v5 you need to understand before migrating:</p>
+
+    <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8 mb-6">
+      <h3 class="text-lg font-bold text-white mb-4">Key Differences: v4 vs v5</h3>
+      <div class="space-y-4">
+        <div class="flex items-start gap-3">
+          <span class="text-blue-400 mt-1 flex-shrink-0 font-bold">1.</span>
+          <div>
+            <p class="text-white font-medium">Config file location changed</p>
+            <p class="text-gray-400 text-sm mt-1">v4 used <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">app/api/auth/[...nextauth]/route.ts</code> with an exported <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">authOptions</code> object. v5 uses a root-level <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth.ts</code> file that exports <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth</code>, <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">signIn</code>, <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">signOut</code>, and <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">handlers</code>.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-blue-400 mt-1 flex-shrink-0 font-bold">2.</span>
+          <div>
+            <p class="text-white font-medium">Universal auth() function</p>
+            <p class="text-gray-400 text-sm mt-1">v5 replaces <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">getServerSession()</code>, <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">getSession()</code>, and <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">getToken()</code> with a single <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth()</code> call that works in Server Components, Route Handlers, Server Actions, and Middleware.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-blue-400 mt-1 flex-shrink-0 font-bold">3.</span>
+          <div>
+            <p class="text-white font-medium">Session callback signature changed</p>
+            <p class="text-gray-400 text-sm mt-1">When using database sessions with an adapter, the session callback now receives <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">{ session, user }</code> instead of <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">{ session, token }</code>. The <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">user</code> object comes directly from the database, not from the JWT.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-blue-400 mt-1 flex-shrink-0 font-bold">4.</span>
+          <div>
+            <p class="text-white font-medium">Built-in middleware support</p>
+            <p class="text-gray-400 text-sm mt-1">v5 exports your <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth</code> config directly as middleware, eliminating the need for custom <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">withAuth</code> wrappers.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-blue-400 mt-1 flex-shrink-0 font-bold">5.</span>
+          <div>
+            <p class="text-white font-medium">Edge Runtime support</p>
+            <p class="text-gray-400 text-sm mt-1">v5 is designed to run on the Edge Runtime. However, when using a database adapter like Prisma, you need to split your config to handle the edge limitation (more on this below).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed">This tutorial walks you through setting up NextAuth v5 from scratch with the Prisma adapter, Google and GitHub OAuth, proper TypeScript types, middleware protection, and session usage in both server and client components. Every code example is copy-paste ready and tested against the latest versions.</p>
+  </section>
+
+  <!-- Step 1: Installation -->
+  <section id="installation" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Step 1: Installation and Environment Setup</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">Install NextAuth v5, the Prisma adapter, and Prisma itself. NextAuth v5 is published under the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">next-auth@beta</code> tag (as of early 2026, the stable v5 release uses the beta npm tag):</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">Terminal</span>
+      </div>
+      <pre>npm install next-auth@beta @auth/prisma-adapter
+npm install prisma @prisma/client</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Initialize Prisma if you have not already:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">Terminal</span>
+      </div>
+      <pre>npx prisma init</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Now set up your environment variables. NextAuth v5 requires an <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">AUTH_SECRET</code> for encrypting tokens and cookies. Generate one with the built-in CLI command:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">Terminal</span>
+      </div>
+      <pre>npx auth secret</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Add these variables to your <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">.env.local</code> file:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">.env.local</span>
+      </div>
+      <pre><span class="code-comment"># NextAuth</span>
+AUTH_SECRET=your_generated_secret_here
+AUTH_URL=http://localhost:3000
+
+<span class="code-comment"># Google OAuth</span>
+AUTH_GOOGLE_ID=your_google_client_id
+AUTH_GOOGLE_SECRET=your_google_client_secret
+
+<span class="code-comment"># GitHub OAuth</span>
+AUTH_GITHUB_ID=your_github_client_id
+AUTH_GITHUB_SECRET=your_github_client_secret
+
+<span class="code-comment"># Database</span>
+DATABASE_URL="postgresql://user:password@localhost:5432/mydb?schema=public"</pre>
+    </div>
+
+    <div class="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4 mb-6">
+      <p class="text-blue-300 text-sm"><strong>Note on environment variable naming:</strong> NextAuth v5 automatically detects environment variables prefixed with <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">AUTH_</code>. When you name your Google variables <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">AUTH_GOOGLE_ID</code> and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">AUTH_GOOGLE_SECRET</code>, the Google provider picks them up automatically without any configuration. Same for GitHub with <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">AUTH_GITHUB_ID</code> and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">AUTH_GITHUB_SECRET</code>.</p>
+    </div>
+  </section>
+
+  <!-- Step 2: Auth Config with Prisma -->
+  <section id="auth-config" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Step 2: Configure Auth with the Prisma Adapter</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">This is the core of your authentication setup. Create an <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth.ts</code> file at the root of your project (next to <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">next.config.ts</code>). This file configures providers, the database adapter, session strategy, and callbacks:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">auth.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> NextAuth <span class="code-keyword">from</span> <span class="code-string">"next-auth"</span>;
+<span class="code-keyword">import</span> Google <span class="code-keyword">from</span> <span class="code-string">"next-auth/providers/google"</span>;
+<span class="code-keyword">import</span> GitHub <span class="code-keyword">from</span> <span class="code-string">"next-auth/providers/github"</span>;
+<span class="code-keyword">import</span> { PrismaAdapter } <span class="code-keyword">from</span> <span class="code-string">"@auth/prisma-adapter"</span>;
+<span class="code-keyword">import</span> { prisma } <span class="code-keyword">from</span> <span class="code-string">"@/lib/prisma"</span>;
+
+<span class="code-keyword">export const</span> { handlers, auth, signIn, signOut } = <span class="code-function">NextAuth</span>({
+  adapter: <span class="code-function">PrismaAdapter</span>(prisma),
+  session: { strategy: <span class="code-string">"database"</span> },
+  providers: [
+    <span class="code-function">Google</span>({
+      <span class="code-comment">// Auto-detected from AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET</span>
+      allowDangerousEmailAccountLinking: <span class="code-keyword">true</span>,
+    }),
+    <span class="code-function">GitHub</span>({
+      <span class="code-comment">// Auto-detected from AUTH_GITHUB_ID and AUTH_GITHUB_SECRET</span>
+      allowDangerousEmailAccountLinking: <span class="code-keyword">true</span>,
+    }),
+  ],
+  callbacks: {
+    <span class="code-comment">// IMPORTANT: With database sessions, the callback receives { session, user }</span>
+    <span class="code-comment">// NOT { session, token } like JWT sessions in v4.</span>
+    <span class="code-comment">// The `user` object here comes directly from your database.</span>
+    <span class="code-keyword">async</span> <span class="code-function">session</span>({ session, user }) {
+      <span class="code-keyword">if</span> (session.user) {
+        session.user.id = user.id;
+      }
+      <span class="code-keyword">return</span> session;
+    },
+  },
+  pages: {
+    signIn: <span class="code-string">"/login"</span>,     <span class="code-comment">// Custom sign-in page (optional)</span>
+    error: <span class="code-string">"/login"</span>,      <span class="code-comment">// Error page redirect (optional)</span>
+  },
+});
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Now create the Prisma client singleton. This ensures you do not create multiple Prisma client instances during development hot reloads:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">lib/prisma.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { PrismaClient } <span class="code-keyword">from</span> <span class="code-string">"@prisma/client"</span>;
+
+<span class="code-keyword">const</span> <span class="code-function">globalForPrisma</span> = globalThis <span class="code-keyword">as unknown as</span> {
+  prisma: PrismaClient | <span class="code-keyword">undefined</span>;
+};
+
+<span class="code-keyword">export const</span> <span class="code-const">prisma</span> = globalForPrisma.prisma ?? <span class="code-keyword">new</span> <span class="code-function">PrismaClient</span>();
+
+<span class="code-keyword">if</span> (process.env.<span class="code-const">NODE_ENV</span> !== <span class="code-string">"production"</span>) {
+  globalForPrisma.prisma = prisma;
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Finally, wire the auth handlers into the App Router. Create the API route that NextAuth needs:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/api/auth/[...nextauth]/route.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { handlers } <span class="code-keyword">from</span> <span class="code-string">"@/auth"</span>;
+
+<span class="code-keyword">export const</span> { GET, POST } = handlers;
+</pre>
+    </div>
+
+    <div class="rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 mb-6">
+      <p class="text-yellow-300 text-sm"><strong>Critical difference from v4:</strong> When using a database adapter (like Prisma), NextAuth v5 defaults to database sessions. The session callback receives <code class="text-yellow-200 bg-gray-800 px-1 py-0.5 rounded text-xs">{ session, user }</code> where <code class="text-yellow-200 bg-gray-800 px-1 py-0.5 rounded text-xs">user</code> is the full database user record. In v4 with JWT sessions, you received <code class="text-yellow-200 bg-gray-800 px-1 py-0.5 rounded text-xs">{ session, token }</code>. If you copy v4 callback code into v5, your user ID will be undefined. This is by far the most common migration bug.</p>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4 mt-10">Why allowDangerousEmailAccountLinking?</h3>
+    <p class="text-gray-400 leading-relaxed mb-6">By default, NextAuth refuses to link accounts from different OAuth providers that share the same email. If a user signs up with Google and later tries to log in with GitHub using the same email, they get an error. Setting <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">allowDangerousEmailAccountLinking: true</code> allows both accounts to link to the same user record. Despite the scary name, this is the behavior most users expect and is safe when both OAuth providers have verified the email address (which Google and GitHub both do).</p>
+  </section>
+
+  <!-- Step 3: Type Augmentation -->
+  <section id="type-augmentation" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Step 3: Type Augmentation for session.user.id</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">Even though we added <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">session.user.id = user.id</code> in the session callback, TypeScript does not know about this field. By default, the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">Session</code> type only includes <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">name</code>, <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">email</code>, and <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">image</code> on the user object. If you try to access <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">session.user.id</code> anywhere in your app, TypeScript will throw a "Property 'id' does not exist" error.</p>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Fix this by creating a type declaration file:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">next-auth.d.ts (project root)</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { DefaultSession } <span class="code-keyword">from</span> <span class="code-string">"next-auth"</span>;
+
+<span class="code-keyword">declare module</span> <span class="code-string">"next-auth"</span> {
+  <span class="code-keyword">interface</span> <span class="code-const">Session</span> {
+    user: {
+      id: <span class="code-const">string</span>;
+    } & DefaultSession[<span class="code-string">"user"</span>];
+  }
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">This uses TypeScript module augmentation to extend the built-in <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">Session</code> interface. The <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">& DefaultSession["user"]</code> intersection preserves the original <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">name</code>, <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">email</code>, and <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">image</code> fields while adding <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">id</code>.</p>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Make sure this file is included in your TypeScript config. If your <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">tsconfig.json</code> uses <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">"include"</code>, add the declaration file:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">tsconfig.json (relevant section)</span>
+      </div>
+      <pre>{
+  <span class="code-string">"include"</span>: [
+    <span class="code-string">"next-env.d.ts"</span>,
+    <span class="code-string">"next-auth.d.ts"</span>,
+    <span class="code-string">"**/*.ts"</span>,
+    <span class="code-string">"**/*.tsx"</span>,
+    <span class="code-string">".next/types/**/*.ts"</span>
+  ]
+}
+</pre>
+    </div>
+
+    <div class="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4 mb-6">
+      <p class="text-blue-300 text-sm"><strong>Why is this needed?</strong> NextAuth intentionally keeps the default session type minimal for security. The library does not know what fields you are attaching in your session callback, so it cannot type them automatically. Type augmentation is the official pattern for telling TypeScript about your custom session shape. If you also add custom fields like <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">role</code> or <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">plan</code>, extend the interface the same way.</p>
+    </div>
+  </section>
+
+  <!-- Step 4: OAuth Setup -->
+  <section id="oauth-setup" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Step 4: Google and GitHub OAuth Setup</h2>
+
+    <h3 class="text-xl font-bold text-white mb-4">Google OAuth Credentials</h3>
+    <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8 mb-8">
+      <ol class="space-y-4 text-gray-400">
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">1.</span>
+          <span>Go to the <a href="https://console.cloud.google.com/apis/credentials" class="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener">Google Cloud Console Credentials page</a>.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">2.</span>
+          <span>Create a new project (or select an existing one).</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">3.</span>
+          <span>Click <strong class="text-white">Create Credentials</strong> and select <strong class="text-white">OAuth 2.0 Client ID</strong>.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">4.</span>
+          <span>Set application type to <strong class="text-white">Web application</strong>.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">5.</span>
+          <div>
+            <span>Add these authorized redirect URIs:</span>
+            <div class="code-block mt-3">
+              <pre>http://localhost:3000/api/auth/callback/google    <span class="code-comment"># Development</span>
+https://yourdomain.com/api/auth/callback/google    <span class="code-comment"># Production</span></pre>
+            </div>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">6.</span>
+          <span>Copy the <strong class="text-white">Client ID</strong> and <strong class="text-white">Client Secret</strong> into your <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-sm">.env.local</code> as <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-sm">AUTH_GOOGLE_ID</code> and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-sm">AUTH_GOOGLE_SECRET</code>.</span>
+        </li>
+      </ol>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4">GitHub OAuth Credentials</h3>
+    <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8 mb-6">
+      <ol class="space-y-4 text-gray-400">
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">1.</span>
+          <span>Go to <a href="https://github.com/settings/developers" class="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener">GitHub Developer Settings</a> and click <strong class="text-white">New OAuth App</strong>.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">2.</span>
+          <span>Set the <strong class="text-white">Homepage URL</strong> to <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-sm">http://localhost:3000</code>.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">3.</span>
+          <div>
+            <span>Set the <strong class="text-white">Authorization callback URL</strong> to:</span>
+            <div class="code-block mt-3">
+              <pre>http://localhost:3000/api/auth/callback/github</pre>
+            </div>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">4.</span>
+          <span>After creating the app, generate a <strong class="text-white">Client Secret</strong>.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-blue-400 mt-0.5 flex-shrink-0 font-bold">5.</span>
+          <span>Copy the <strong class="text-white">Client ID</strong> and <strong class="text-white">Client Secret</strong> into your <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-sm">.env.local</code> as <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-sm">AUTH_GITHUB_ID</code> and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-sm">AUTH_GITHUB_SECRET</code>.</span>
+        </li>
+      </ol>
+    </div>
+
+    <div class="rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 mb-6">
+      <p class="text-yellow-300 text-sm"><strong>Production tip:</strong> For GitHub, create a separate OAuth App for production with your production domain as the callback URL. For Google, add your production callback URL to the same OAuth client.</p>
+    </div>
+  </section>
+
+  <!-- Step 5: Prisma Schema -->
+  <section id="prisma-schema" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Step 5: Prisma Schema for NextAuth</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">The Prisma adapter requires specific models in your schema. These models store users, their OAuth accounts, database sessions, and verification tokens. Here is the complete schema with explanations for each field:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">prisma/schema.prisma</span>
+      </div>
+      <pre><span class="code-keyword">generator</span> client {
+  provider = <span class="code-string">"prisma-client-js"</span>
+}
+
+<span class="code-keyword">datasource</span> db {
+  provider = <span class="code-string">"postgresql"</span>
+  url      = <span class="code-function">env</span>(<span class="code-string">"DATABASE_URL"</span>)
+}
+
+<span class="code-keyword">model</span> <span class="code-const">User</span> {
+  id            String    <span class="code-keyword">@id @default</span>(<span class="code-function">cuid</span>())
+  name          String?
+  email         String?   <span class="code-keyword">@unique</span>
+  emailVerified DateTime?
+  image         String?
+
+  <span class="code-comment">// NextAuth relations</span>
+  accounts      Account[]
+  sessions      Session[]
+
+  <span class="code-comment">// Your custom fields (add as needed)</span>
+  plan              String?   <span class="code-keyword">@default</span>(<span class="code-string">"free"</span>)
+  stripeCustomerId  String?   <span class="code-keyword">@unique</span>
+
+  createdAt DateTime <span class="code-keyword">@default</span>(<span class="code-function">now</span>())
+  updatedAt DateTime <span class="code-keyword">@updatedAt</span>
+}
+
+<span class="code-keyword">model</span> <span class="code-const">Account</span> {
+  id                String  <span class="code-keyword">@id @default</span>(<span class="code-function">cuid</span>())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? <span class="code-keyword">@db.Text</span>
+  access_token      String? <span class="code-keyword">@db.Text</span>
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? <span class="code-keyword">@db.Text</span>
+  session_state     String?
+
+  user User <span class="code-keyword">@relation</span>(fields: [userId], references: [id], onDelete: Cascade)
+
+  <span class="code-keyword">@@unique</span>([provider, providerAccountId])
+}
+
+<span class="code-keyword">model</span> <span class="code-const">Session</span> {
+  id           String   <span class="code-keyword">@id @default</span>(<span class="code-function">cuid</span>())
+  sessionToken String   <span class="code-keyword">@unique</span>
+  userId       String
+  expires      DateTime
+
+  user User <span class="code-keyword">@relation</span>(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+<span class="code-keyword">model</span> <span class="code-const">VerificationToken</span> {
+  identifier String
+  token      String   <span class="code-keyword">@unique</span>
+  expires    DateTime
+
+  <span class="code-keyword">@@unique</span>([identifier, token])
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Here is what each model does:</p>
+
+    <div class="space-y-4 mb-6">
+      <div class="rounded-xl border border-gray-800 bg-gray-900/30 p-4">
+        <p class="text-white font-medium mb-1">User</p>
+        <p class="text-gray-400 text-sm">Stores user profile data. The <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">email</code>, <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">name</code>, <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">image</code>, and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">emailVerified</code> fields are populated automatically from the OAuth provider. Add your own custom fields (like <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">plan</code> or <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">stripeCustomerId</code>) below the required fields.</p>
+      </div>
+      <div class="rounded-xl border border-gray-800 bg-gray-900/30 p-4">
+        <p class="text-white font-medium mb-1">Account</p>
+        <p class="text-gray-400 text-sm">Links OAuth provider accounts to users. A single user can have multiple accounts (Google + GitHub). The <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">refresh_token</code>, <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">access_token</code>, and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">id_token</code> fields use <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">@db.Text</code> because OAuth tokens can exceed the default varchar length.</p>
+      </div>
+      <div class="rounded-xl border border-gray-800 bg-gray-900/30 p-4">
+        <p class="text-white font-medium mb-1">Session</p>
+        <p class="text-gray-400 text-sm">Stores active sessions when using the database session strategy. Each session has a unique token, an expiration timestamp, and a reference to the user. Sessions are cleaned up automatically when they expire.</p>
+      </div>
+      <div class="rounded-xl border border-gray-800 bg-gray-900/30 p-4">
+        <p class="text-white font-medium mb-1">VerificationToken</p>
+        <p class="text-gray-400 text-sm">Used for email-based magic link authentication. If you are only using OAuth providers, this model is still required by the adapter but will remain empty.</p>
+      </div>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">After creating the schema, run the migration:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">Terminal</span>
+      </div>
+      <pre>npx prisma migrate dev --name init_auth
+npx prisma generate</pre>
+    </div>
+  </section>
+
+  <!-- Step 6: Middleware -->
+  <section id="middleware" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Step 6: Middleware Route Protection</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">NextAuth v5 makes route protection simple with middleware. Create a <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">middleware.ts</code> file at the root of your project (same level as <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">app/</code>, not inside it). This single file protects all matched routes:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">middleware.ts</span>
+      </div>
+      <pre><span class="code-keyword">export</span> { auth <span class="code-keyword">as</span> default } <span class="code-keyword">from</span> <span class="code-string">"@/auth"</span>;
+
+<span class="code-keyword">export const</span> <span class="code-const">config</span> = {
+  matcher: [
+    <span class="code-string">"/dashboard/:path*"</span>,
+    <span class="code-string">"/settings/:path*"</span>,
+    <span class="code-string">"/api/protected/:path*"</span>,
+  ],
+};
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">That is it -- three lines of actual code. When an unauthenticated user tries to access any route matching those patterns, they are automatically redirected to the sign-in page defined in your <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth.ts</code> config.</p>
+
+    <div class="rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 mb-6">
+      <p class="text-yellow-300 text-sm"><strong>Edge Runtime limitation:</strong> Next.js middleware runs on the Edge Runtime, which does not support Node.js APIs. The Prisma client uses Node.js APIs, so you cannot directly query Prisma in middleware. NextAuth v5 handles this by using a lightweight JWT check in the middleware layer and only touching the database adapter in the server-side route handlers. If you get a "PrismaClient is not configured to run in Edge Runtime" error, make sure you are not importing Prisma in your middleware file.</p>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4 mt-10">Advanced: Custom Middleware Logic</h3>
+    <p class="text-gray-400 leading-relaxed mb-6">If you need more control (role-based access, custom redirects), wrap the auth function with your own logic:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">middleware.ts (advanced)</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { auth } <span class="code-keyword">from</span> <span class="code-string">"@/auth"</span>;
+<span class="code-keyword">import</span> { NextResponse } <span class="code-keyword">from</span> <span class="code-string">"next/server"</span>;
+
+<span class="code-keyword">export default</span> <span class="code-function">auth</span>((req) => {
+  <span class="code-keyword">const</span> { nextUrl } = req;
+  <span class="code-keyword">const</span> isLoggedIn = !!req.auth;
+
+  <span class="code-comment">// Protect dashboard routes</span>
+  <span class="code-keyword">if</span> (nextUrl.pathname.<span class="code-function">startsWith</span>(<span class="code-string">"/dashboard"</span>) && !isLoggedIn) {
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">redirect</span>(
+      <span class="code-keyword">new</span> <span class="code-function">URL</span>(<span class="code-string">"/login"</span>, nextUrl)
+    );
+  }
+
+  <span class="code-comment">// Redirect logged-in users away from login page</span>
+  <span class="code-keyword">if</span> (nextUrl.pathname === <span class="code-string">"/login"</span> && isLoggedIn) {
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">redirect</span>(
+      <span class="code-keyword">new</span> <span class="code-function">URL</span>(<span class="code-string">"/dashboard"</span>, nextUrl)
+    );
+  }
+
+  <span class="code-keyword">return</span> NextResponse.<span class="code-function">next</span>();
+});
+
+<span class="code-keyword">export const</span> <span class="code-const">config</span> = {
+  matcher: [<span class="code-string">"/dashboard/:path*"</span>, <span class="code-string">"/login"</span>],
+};
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed">The <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">req.auth</code> object contains the session data when the user is authenticated, or <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">null</code> when they are not. This gives you full control over redirects, role checks, and conditional access without writing custom authentication logic.</p>
+  </section>
+
+  <!-- Step 7: Using Sessions -->
+  <section id="session-usage" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Step 7: Using Sessions in Components</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">NextAuth v5 provides two patterns for accessing the session: the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth()</code> function for server-side code and the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">useSession()</code> hook for client components.</p>
+
+    <h3 class="text-xl font-bold text-white mb-4">Server Components (recommended)</h3>
+    <p class="text-gray-400 leading-relaxed mb-6">In React Server Components, call the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth()</code> function directly. It returns the session or <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">null</code>:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/dashboard/page.tsx (Server Component)</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { auth } <span class="code-keyword">from</span> <span class="code-string">"@/auth"</span>;
+<span class="code-keyword">import</span> { redirect } <span class="code-keyword">from</span> <span class="code-string">"next/navigation"</span>;
+
+<span class="code-keyword">export default async function</span> <span class="code-function">DashboardPage</span>() {
+  <span class="code-keyword">const</span> session = <span class="code-keyword">await</span> <span class="code-function">auth</span>();
+
+  <span class="code-keyword">if</span> (!session?.user) {
+    <span class="code-function">redirect</span>(<span class="code-string">"/login"</span>);
+  }
+
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-keyword">div</span>&gt;
+      &lt;<span class="code-keyword">h1</span>&gt;Welcome, {session.user.name}&lt;/<span class="code-keyword">h1</span>&gt;
+      &lt;<span class="code-keyword">p</span>&gt;User ID: {session.user.id}&lt;/<span class="code-keyword">p</span>&gt;
+      &lt;<span class="code-keyword">p</span>&gt;Email: {session.user.email}&lt;/<span class="code-keyword">p</span>&gt;
+      {session.user.image && (
+        &lt;<span class="code-keyword">img</span>
+          src={session.user.image}
+          alt={session.user.name ?? <span class="code-string">"Avatar"</span>}
+          className=<span class="code-string">"w-12 h-12 rounded-full"</span>
+        /&gt;
+      )}
+    &lt;/<span class="code-keyword">div</span>&gt;
+  );
+}
+</pre>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4 mt-10">Server Actions</h3>
+    <p class="text-gray-400 leading-relaxed mb-6">The <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">auth()</code> function also works in Server Actions:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/actions.ts</span>
+      </div>
+      <pre><span class="code-string">"use server"</span>;
+
+<span class="code-keyword">import</span> { auth } <span class="code-keyword">from</span> <span class="code-string">"@/auth"</span>;
+<span class="code-keyword">import</span> { prisma } <span class="code-keyword">from</span> <span class="code-string">"@/lib/prisma"</span>;
+
+<span class="code-keyword">export async function</span> <span class="code-function">updateProfile</span>(formData: FormData) {
+  <span class="code-keyword">const</span> session = <span class="code-keyword">await</span> <span class="code-function">auth</span>();
+  <span class="code-keyword">if</span> (!session?.user?.id) {
+    <span class="code-keyword">throw new</span> <span class="code-function">Error</span>(<span class="code-string">"Unauthorized"</span>);
+  }
+
+  <span class="code-keyword">const</span> name = formData.<span class="code-function">get</span>(<span class="code-string">"name"</span>) <span class="code-keyword">as string</span>;
+
+  <span class="code-keyword">await</span> prisma.user.<span class="code-function">update</span>({
+    where: { id: session.user.id },
+    data: { name },
+  });
+}
+</pre>
+    </div>
+
+    <h3 class="text-xl font-bold text-white mb-4 mt-10">Client Components</h3>
+    <p class="text-gray-400 leading-relaxed mb-6">For client components, wrap your app with the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">SessionProvider</code> and use the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">useSession()</code> hook. First, create a provider component:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">components/Providers.tsx</span>
+      </div>
+      <pre><span class="code-string">"use client"</span>;
+
+<span class="code-keyword">import</span> { SessionProvider } <span class="code-keyword">from</span> <span class="code-string">"next-auth/react"</span>;
+
+<span class="code-keyword">export function</span> <span class="code-function">Providers</span>({ children }: { children: React.ReactNode }) {
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-const">SessionProvider</span>&gt;
+      {children}
+    &lt;/<span class="code-const">SessionProvider</span>&gt;
+  );
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Add the provider to your root layout:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/layout.tsx</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { Providers } <span class="code-keyword">from</span> <span class="code-string">"@/components/Providers"</span>;
+
+<span class="code-keyword">export default function</span> <span class="code-function">RootLayout</span>({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-keyword">html</span> lang=<span class="code-string">"en"</span>&gt;
+      &lt;<span class="code-keyword">body</span>&gt;
+        &lt;<span class="code-const">Providers</span>&gt;{children}&lt;/<span class="code-const">Providers</span>&gt;
+      &lt;/<span class="code-keyword">body</span>&gt;
+    &lt;/<span class="code-keyword">html</span>&gt;
+  );
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Then use <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">useSession()</code> in any client component:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">components/UserNav.tsx</span>
+      </div>
+      <pre><span class="code-string">"use client"</span>;
+
+<span class="code-keyword">import</span> { useSession, signOut } <span class="code-keyword">from</span> <span class="code-string">"next-auth/react"</span>;
+
+<span class="code-keyword">export function</span> <span class="code-function">UserNav</span>() {
+  <span class="code-keyword">const</span> { data: session, status } = <span class="code-function">useSession</span>();
+
+  <span class="code-keyword">if</span> (status === <span class="code-string">"loading"</span>) {
+    <span class="code-keyword">return</span> &lt;<span class="code-keyword">div</span>&gt;Loading...&lt;/<span class="code-keyword">div</span>&gt;;
+  }
+
+  <span class="code-keyword">if</span> (!session) {
+    <span class="code-keyword">return</span> &lt;<span class="code-keyword">a</span> href=<span class="code-string">"/login"</span>&gt;Sign in&lt;/<span class="code-keyword">a</span>&gt;;
+  }
+
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-keyword">div</span> className=<span class="code-string">"flex items-center gap-4"</span>&gt;
+      &lt;<span class="code-keyword">span</span>&gt;{session.user.name}&lt;/<span class="code-keyword">span</span>&gt;
+      &lt;<span class="code-keyword">button</span> onClick={() => <span class="code-function">signOut</span>()}&gt;
+        Sign out
+      &lt;/<span class="code-keyword">button</span>&gt;
+    &lt;/<span class="code-keyword">div</span>&gt;
+  );
+}
+</pre>
+    </div>
+
+    <div class="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4 mb-6">
+      <p class="text-blue-300 text-sm"><strong>Best practice:</strong> Prefer server components for session checks whenever possible. They do not need a provider wrapper, have zero client-side JavaScript overhead, and the session data is available immediately without a loading state. Use client-side <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">useSession()</code> only when you need reactive session updates (e.g., the session changes while the user is on the page).</p>
+    </div>
+  </section>
+
+  <!-- Step 8: Stripe Integration -->
+  <section id="stripe-integration" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Step 8: Integrating Authentication with Stripe</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">Once you have authentication working, the next step for most SaaS apps is connecting it to Stripe for payments. The key idea is simple: pass the authenticated user's ID as metadata when creating a Stripe checkout session, then use that metadata in your webhook handler to link the payment to the correct user.</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">app/api/checkout/route.ts</span>
+      </div>
+      <pre><span class="code-keyword">import</span> { NextRequest, NextResponse } <span class="code-keyword">from</span> <span class="code-string">"next/server"</span>;
+<span class="code-keyword">import</span> { auth } <span class="code-keyword">from</span> <span class="code-string">"@/auth"</span>;
+<span class="code-keyword">import</span> { stripe } <span class="code-keyword">from</span> <span class="code-string">"@/lib/stripe"</span>;
+
+<span class="code-keyword">export async function</span> <span class="code-function">POST</span>(req: NextRequest) {
+  <span class="code-comment">// Use NextAuth v5's auth() instead of getServerSession()</span>
+  <span class="code-keyword">const</span> session = <span class="code-keyword">await</span> <span class="code-function">auth</span>();
+
+  <span class="code-keyword">if</span> (!session?.user?.id) {
+    <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>(
+      { error: <span class="code-string">"Unauthorized"</span> },
+      { status: <span class="code-const">401</span> }
+    );
+  }
+
+  <span class="code-keyword">const</span> { priceId } = <span class="code-keyword">await</span> req.<span class="code-function">json</span>();
+
+  <span class="code-keyword">const</span> checkoutSession = <span class="code-keyword">await</span> stripe.checkout.sessions.<span class="code-function">create</span>({
+    customer_email: session.user.email!,
+    mode: <span class="code-string">"subscription"</span>,
+    line_items: [{ price: priceId, quantity: <span class="code-const">1</span> }],
+    success_url: <span class="code-string">`${process.env.AUTH_URL}/dashboard?success=true`</span>,
+    cancel_url: <span class="code-string">`${process.env.AUTH_URL}/pricing?canceled=true`</span>,
+    metadata: {
+      <span class="code-comment">// This is how you link the Stripe payment to your user</span>
+      userId: session.user.id,
+    },
+  });
+
+  <span class="code-keyword">return</span> NextResponse.<span class="code-function">json</span>({ url: checkoutSession.url });
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">Then in your Stripe webhook handler, extract the <code class="text-blue-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm">userId</code> from the metadata to update the user's plan in your database:</p>
+
+    <div class="code-block mb-6">
+      <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+        <span class="text-xs text-gray-500">Webhook handler (excerpt)</span>
+      </div>
+      <pre><span class="code-keyword">case</span> <span class="code-string">"checkout.session.completed"</span>: {
+  <span class="code-keyword">const</span> checkoutSession = event.data.object;
+  <span class="code-keyword">const</span> userId = checkoutSession.metadata?.userId;
+
+  <span class="code-keyword">if</span> (userId) {
+    <span class="code-keyword">await</span> prisma.user.<span class="code-function">update</span>({
+      where: { id: userId },
+      data: {
+        stripeCustomerId: checkoutSession.customer <span class="code-keyword">as string</span>,
+        plan: <span class="code-string">"pro"</span>,
+      },
+    });
+  }
+  <span class="code-keyword">break</span>;
+}
+</pre>
+    </div>
+
+    <p class="text-gray-400 leading-relaxed mb-6">This pattern -- auth session to checkout metadata to webhook database update -- is the standard way to wire authentication and payments together in a Next.js SaaS app. For a complete Stripe integration guide covering webhooks, the billing portal, and subscription management, see our <a href="nextjs-stripe-integration.html" class="text-blue-400 hover:text-blue-300 underline">full Next.js Stripe tutorial</a>.</p>
+  </section>
+
+  <!-- Common Mistakes -->
+  <section id="common-mistakes" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Common Mistakes and Gotchas</h2>
+    <p class="text-gray-400 leading-relaxed mb-8">After helping dozens of developers set up NextAuth v5, these are the five most common issues we see:</p>
+
+    <div class="space-y-6">
+      <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
+        <h3 class="text-lg font-bold text-red-300 mb-3">1. Using {session, token} instead of {session, user} in the session callback</h3>
+        <p class="text-gray-400 leading-relaxed mb-3">When using a database adapter (Prisma, Drizzle, etc.) with database sessions, NextAuth v5 passes the <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">user</code> object from your database to the session callback -- not a JWT token. If you copy v4 callback code that references <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">token.sub</code>, it will be undefined.</p>
+        <div class="code-block">
+          <pre><span class="code-comment">// WRONG (v4 pattern)</span>
+<span class="code-keyword">async</span> <span class="code-function">session</span>({ session, token }) {
+  session.user.id = token.sub;  <span class="code-comment">// undefined with database sessions!</span>
+}
+
+<span class="code-comment">// CORRECT (v5 with database adapter)</span>
+<span class="code-keyword">async</span> <span class="code-function">session</span>({ session, user }) {
+  session.user.id = user.id;  <span class="code-comment">// works!</span>
+}
+</pre>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
+        <h3 class="text-lg font-bold text-red-300 mb-3">2. Forgetting the type augmentation file</h3>
+        <p class="text-gray-400 leading-relaxed mb-3">You add <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">session.user.id = user.id</code> in your callback, and it works at runtime. But TypeScript shows red squiggly lines everywhere you access <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">session.user.id</code>. Developers often suppress these with <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">// @ts-ignore</code> instead of creating the <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">next-auth.d.ts</code> declaration file. Always create the type augmentation -- it takes 30 seconds and saves hours of confusion.</p>
+      </div>
+
+      <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
+        <h3 class="text-lg font-bold text-red-300 mb-3">3. Placing middleware.ts inside the app/ directory</h3>
+        <p class="text-gray-400 leading-relaxed mb-3">Next.js middleware must be at the project root, not inside <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">app/</code> or <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">src/app/</code>. If you use a <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">src/</code> directory, place it at <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">src/middleware.ts</code>. If you do not use <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">src/</code>, place it at the project root as <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">middleware.ts</code>. A middleware file inside <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">app/middleware.ts</code> will silently be ignored.</p>
+      </div>
+
+      <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
+        <h3 class="text-lg font-bold text-red-300 mb-3">4. Missing the AUTH_SECRET environment variable</h3>
+        <p class="text-gray-400 leading-relaxed mb-3">NextAuth v5 requires <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">AUTH_SECRET</code> in production. In development, it will generate a random one if missing, but in production you will get a cryptic "[auth][error] MissingSecret" error. Always generate and set <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">AUTH_SECRET</code> before deploying. Use <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">npx auth secret</code> or <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">openssl rand -base64 32</code> to generate one.</p>
+      </div>
+
+      <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
+        <h3 class="text-lg font-bold text-red-300 mb-3">5. Not setting allowDangerousEmailAccountLinking</h3>
+        <p class="text-gray-400 leading-relaxed mb-3">A user signs up with Google, then later tries to sign in with GitHub using the same email. Without <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">allowDangerousEmailAccountLinking: true</code> on both providers, they get an "OAuthAccountNotLinked" error. This is confusing for users who do not understand why they cannot log in. Set this flag on all your OAuth providers unless you have a specific security reason not to.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-8">Frequently Asked Questions</h2>
+    <div class="space-y-6">
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <h3 class="text-lg font-bold text-white mb-3">What is the difference between NextAuth v4 and NextAuth v5?</h3>
+        <p class="text-gray-400 leading-relaxed">NextAuth v5 introduces a new universal <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">auth()</code> function that replaces <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">getServerSession()</code>, <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">getSession()</code>, and <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">useSession()</code> with a single API. It uses a root-level <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">auth.ts</code> config file instead of the <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">/api/auth/[...nextauth]</code> route handler pattern. The session callback signature changes when using database sessions: v5 passes <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">{ session, user }</code> instead of <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">{ session, token }</code>. It also adds native Edge Runtime support and built-in middleware integration for route protection.</p>
+      </div>
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <h3 class="text-lg font-bold text-white mb-3">Do I need the Prisma adapter for NextAuth v5?</h3>
+        <p class="text-gray-400 leading-relaxed">Not strictly. NextAuth v5 supports JWT-based sessions by default, which require no database adapter. However, if you want database-backed sessions (which are more secure, allow server-side session revocation, and store user data persistently), you need an adapter. The Prisma adapter is the most popular choice because it works with PostgreSQL, MySQL, SQLite, and other databases that Prisma supports. For most production SaaS apps, database sessions with the Prisma adapter are the recommended approach.</p>
+      </div>
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <h3 class="text-lg font-bold text-white mb-3">Why is user.id undefined on my NextAuth v5 session?</h3>
+        <p class="text-gray-400 leading-relaxed">This is the most common NextAuth v5 issue. By default, the session object does not include the user ID. You need to do two things: first, add a session callback in your <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">auth.ts</code> config that copies the user ID onto the session object with <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">session.user.id = user.id</code>. Second, create a <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">next-auth.d.ts</code> type declaration file that extends the Session interface to include <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">user.id</code>. Without the type augmentation, TypeScript will not recognize <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">session.user.id</code> even if you add it in the callback.</p>
+      </div>
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <h3 class="text-lg font-bold text-white mb-3">Can I use NextAuth v5 with the Next.js App Router?</h3>
+        <p class="text-gray-400 leading-relaxed">Yes. NextAuth v5 was designed specifically for the Next.js App Router. It exports an <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">auth()</code> function from your <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">auth.ts</code> config that works directly in Server Components, Server Actions, Route Handlers, and Middleware. For Client Components, you wrap your app in a <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">SessionProvider</code> and use the <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">useSession()</code> hook. The <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">auth()</code> function replaces the old <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">getServerSession()</code> pattern from v4.</p>
+      </div>
+      <div class="rounded-2xl border border-gray-800 bg-gray-900/30 p-8">
+        <h3 class="text-lg font-bold text-white mb-3">How do I protect routes with NextAuth v5 middleware?</h3>
+        <p class="text-gray-400 leading-relaxed">Create a <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">middleware.ts</code> file in your project root (not inside the <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">app/</code> directory). Export the <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">auth</code> function from your auth config as the default export. Then export a <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">config</code> object with a <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">matcher</code> array that specifies which routes to protect. For example, <code class="text-blue-300 bg-gray-800 px-1 py-0.5 rounded text-xs">matcher: ["/dashboard/:path*", "/api/protected/:path*"]</code> will require authentication for all dashboard and protected API routes. Unauthenticated users are automatically redirected to the sign-in page.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skip Setup CTA -->
+  <section class="mx-auto max-w-4xl px-6 py-12">
+    <h2 class="text-2xl font-bold text-white mb-6">Want All of This Pre-Configured?</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">This tutorial covered a lot of ground: NextAuth v5 configuration, Prisma adapter setup, type augmentation, OAuth providers, middleware protection, session management in both server and client components, and wiring auth to Stripe. If you followed along, you have a solid authentication foundation.</p>
+    <p class="text-gray-400 leading-relaxed mb-6">But authentication is just one piece. A production SaaS also needs Stripe webhooks, a billing portal, email templates, a dashboard UI, error handling, rate limiting, and a deployment pipeline. That is weeks of additional work.</p>
+    <p class="text-gray-400 leading-relaxed mb-8">If you want all of this pre-configured and tested, <a href="https://github.com/Wittlesus/launchfast-starter" class="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener">LaunchFast</a> ships with NextAuth v5, Prisma, and Stripe integration out of the box. Plus AI integration with Claude, transactional email via Resend, and a complete dashboard. All for $79.</p>
+  </section>
+
+  <!-- CTA -->
+  <section class="mx-auto max-w-7xl px-6 py-20">
+    <div class="rounded-2xl bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/20 p-12 text-center">
+      <h2 class="text-3xl font-bold text-white sm:text-4xl">Ship faster with LaunchFast</h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-gray-300">NextAuth v5 + Prisma + Stripe + AI + Email + Dashboard. Already integrated, already tested, ready to deploy. Stop wiring boilerplate and start building your product.</p>
+      <div class="mt-8 flex items-center justify-center gap-4 flex-wrap">
+        <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-white px-8 py-3 text-base font-semibold text-gray-900 hover:bg-gray-200 transition-colors">Buy LaunchFast - $79</a>
+        <a href="https://github.com/Wittlesus/launchfast-starter" class="rounded-lg border border-gray-600 px-8 py-3 text-base font-semibold text-gray-300 hover:bg-gray-800 transition-colors" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-gray-800 bg-gray-950 py-12">
+  <div class="mx-auto max-w-7xl px-6">
+    <!-- More Developer Resources -->
+    <div class="mb-10">
+      <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">More Developer Resources</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <a href="best-nextjs-boilerplate.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Best Next.js Boilerplates</a>
+        <a href="nextjs-stripe-integration.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Next.js Stripe Guide</a>
+        <a href="alternatives.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Boilerplate Comparisons</a>
+        <a href="saas-starter-kit.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">SaaS Starter Kits</a>
+        <a href="https://wittlesus.github.io/launchfast-starter/" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">LaunchFast Home</a>
+      </div>
+    </div>
+    <div class="flex flex-col items-center justify-between gap-6 sm:flex-row border-t border-gray-800 pt-8">
+      <p class="text-sm text-gray-500">&copy; 2026 LaunchFast. All rights reserved.</p>
+      <nav class="flex gap-6 flex-wrap">
+        <a href="https://wittlesus.github.io/launchfast-starter/" class="text-sm text-gray-500 hover:text-gray-300">Home</a>
+        <a href="alternatives.html" class="text-sm text-gray-500 hover:text-gray-300">Comparisons</a>
+        <a href="nextjs-stripe-integration.html" class="text-sm text-gray-500 hover:text-gray-300">Stripe Guide</a>
+        <a href="privacy.html" class="text-sm text-gray-500 hover:text-gray-300">Privacy</a>
+        <a href="terms.html" class="text-sm text-gray-500 hover:text-gray-300">Terms</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

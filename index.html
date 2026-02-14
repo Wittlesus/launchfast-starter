@@ -3,33 +3,600 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LaunchFast - Ship Your SaaS in Days</title>
-<meta name="description" content="The Next.js SaaS boilerplate with authentication, payments, and everything you need to launch fast.">
+<title>LaunchFast - Next.js 16 SaaS Boilerplate with Auth, Payments & AI</title>
+<meta name="description" content="Next.js 16 SaaS boilerplate with NextAuth v5, Stripe subscriptions, Prisma 6, and Claude AI — pre-configured and tested. One-time purchase, $79.">
+<meta name="keywords" content="Next.js boilerplate, SaaS starter kit, Next.js 16, NextAuth v5, Stripe integration, Prisma 6, Claude AI, React 19, TypeScript, Tailwind CSS, SaaS template">
+<link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/">
 <script src="https://cdn.tailwindcss.com"></script>
-<style>body{font-family:-apple-system,BlinkMacSystemFont,sans-serif}</style>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}.tech-badge{transition:transform 0.2s ease}.tech-badge:hover{transform:translateY(-2px)}</style>
+
+<!-- Product Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "LaunchFast SaaS Starter",
+  "description": "Next.js 16 SaaS boilerplate with NextAuth v5, Stripe subscriptions, Prisma 6, and Claude AI integration. Pre-configured authentication, payments, database, and AI — ship your SaaS in days.",
+  "brand": { "@type": "Brand", "name": "LaunchFast" },
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Starter",
+      "price": "79.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "url": "https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00",
+      "priceValidUntil": "2027-12-31"
+    },
+    {
+      "@type": "Offer",
+      "name": "Pro",
+      "price": "119.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "url": "https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01",
+      "priceValidUntil": "2027-12-31"
+    },
+    {
+      "@type": "Offer",
+      "name": "Complete Bundle",
+      "price": "99.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "priceValidUntil": "2027-12-31"
+    }
+  ],
+  "category": "Software",
+  "operatingSystem": "Cross-platform",
+  "applicationCategory": "DeveloperApplication"
+}
+</script>
+
+<!-- FAQPage Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What do I get after purchase?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Instant access to the full source code. Clone the repo, configure your API keys, and start building."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it a subscription?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. One-time payment, lifetime access, free updates."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I see the code before buying?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The full source is open on GitHub at github.com/Wittlesus/launchfast-starter."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the difference between Starter and Pro?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Starter is for 1 project. Pro includes unlimited projects, priority support, and early access to updates."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I want a refund?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "14-day money-back guarantee, no questions asked."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to know Next.js?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Basic React and Next.js knowledge is helpful. The codebase is well-documented with comments explaining key decisions."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- Article Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "LaunchFast - Next.js 16 SaaS Boilerplate with Auth, Payments & AI",
+  "description": "Next.js 16 SaaS boilerplate with NextAuth v5, Stripe subscriptions, Prisma 6, and Claude AI — pre-configured and tested.",
+  "author": { "@type": "Organization", "name": "LaunchFast" },
+  "publisher": { "@type": "Organization", "name": "LaunchFast" },
+  "datePublished": "2026-02-14",
+  "dateModified": "2026-02-14"
+}
+</script>
+
 </head>
 <body class="bg-white text-gray-900 antialiased">
-<header class="fixed top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm"><div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6"><a href="/" class="text-xl font-bold text-gray-900">LaunchFast</a><nav class="hidden md:flex items-center gap-8"><a href="#features" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Features</a><a href="#pricing" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Pricing</a><a href="https://github.com/Wittlesus/launchfast-starter" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Docs</a></nav><div class="flex items-center gap-3"><a href="https://github.com/Wittlesus/launchfast-starter" class="text-sm font-medium text-gray-700 hover:text-gray-900" target="_blank" rel="noopener">GitHub</a><a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">Buy Now - $79</a></div></div></header>
+
+<!-- Header -->
+<header class="fixed top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm">
+<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+<a href="/" class="text-xl font-bold text-gray-900">LaunchFast</a>
+<nav class="hidden md:flex items-center gap-8">
+<a href="#tech-stack" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Tech Stack</a>
+<a href="#features" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Features</a>
+<a href="#pricing" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
+<a href="#faq" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">FAQ</a>
+</nav>
+<div class="flex items-center gap-3">
+<a href="https://github.com/Wittlesus/launchfast-starter" class="text-sm font-medium text-gray-700 hover:text-gray-900" target="_blank" rel="noopener">GitHub</a>
+<a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">Buy Now - $79</a>
+</div>
+</div>
+</header>
+
 <main>
-<section class="relative overflow-hidden bg-white pt-24 pb-20 sm:pt-32 sm:pb-28"><div class="mx-auto max-w-7xl px-6 lg:px-8"><div class="mx-auto max-w-2xl text-center"><div class="mb-8 flex justify-center"><div class="rounded-full px-4 py-1.5 text-sm font-medium text-gray-600 ring-1 ring-gray-200">Ship your SaaS in days, not months</div></div><h1 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl">Build faster.<br><span class="text-gray-400">Launch sooner.</span></h1><p class="mt-6 text-lg leading-8 text-gray-600">The Next.js boilerplate with authentication, payments, emails, and AI built in. Stop wasting weeks on setup. Start building your product today.</p><div class="mt-10 flex items-center justify-center gap-x-4"><a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors">Buy Now - $79</a><a href="https://github.com/Wittlesus/launchfast-starter" class="rounded-lg px-6 py-3 text-sm font-semibold text-gray-900 ring-1 ring-gray-200 hover:bg-gray-50 transition-colors" target="_blank" rel="noopener">View on GitHub</a></div></div>
-<div id="features" class="mx-auto mt-20 max-w-5xl"><div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors"><div class="text-2xl mb-3">🔐</div><h3 class="text-base font-semibold text-gray-900">Authentication</h3><p class="mt-2 text-sm text-gray-600">Google &amp; GitHub OAuth, session management, protected routes &mdash; all pre-configured.</p></div>
-<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors"><div class="text-2xl mb-3">💳</div><h3 class="text-base font-semibold text-gray-900">Stripe Payments</h3><p class="mt-2 text-sm text-gray-600">Subscriptions, checkout, billing portal, webhooks &mdash; ready to accept money.</p></div>
-<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors"><div class="text-2xl mb-3">🤖</div><h3 class="text-base font-semibold text-gray-900">AI Integration</h3><p class="mt-2 text-sm text-gray-600">Anthropic Claude API wired up with rate limiting and streaming support.</p></div>
-<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors"><div class="text-2xl mb-3">📧</div><h3 class="text-base font-semibold text-gray-900">Email System</h3><p class="mt-2 text-sm text-gray-600">Transactional emails via Resend with beautiful templates included.</p></div>
-<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors"><div class="text-2xl mb-3">🗄️</div><h3 class="text-base font-semibold text-gray-900">Database &amp; ORM</h3><p class="mt-2 text-sm text-gray-600">Prisma with PostgreSQL, migrations, and type-safe queries out of the box.</p></div>
-<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors"><div class="text-2xl mb-3">📊</div><h3 class="text-base font-semibold text-gray-900">Dashboard</h3><p class="mt-2 text-sm text-gray-600">Clean, responsive dashboard with sidebar navigation and user settings.</p></div>
-</div></div></div></section>
-<section id="pricing" class="py-20 bg-gray-50"><div class="mx-auto max-w-7xl px-6 lg:px-8"><div class="mx-auto max-w-2xl text-center"><h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Simple, transparent pricing</h2><p class="mt-4 text-lg text-gray-600">One-time payment. Lifetime access. Free updates.</p></div>
-<div class="mx-auto mt-12 grid max-w-md grid-cols-1 gap-8 lg:max-w-4xl lg:grid-cols-3">
-<div class="rounded-2xl p-8 bg-white ring-1 ring-gray-200"><h3 class="text-lg font-semibold text-gray-900">Starter</h3><p class="mt-1 text-sm text-gray-500">For solo developers</p><div class="mt-6 flex items-baseline gap-1"><span class="text-4xl font-bold">$79</span><span class="text-gray-500 ml-1">one-time</span></div><a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="mt-8 w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors bg-black text-white hover:bg-gray-800 px-6 py-3 text-base no-underline">Buy Now</a><ul class="mt-8 space-y-3"><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Up to 100 requests/month</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Basic support</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Community access</span></li></ul></div>
-<div class="rounded-2xl p-8 bg-black text-white ring-2 ring-black"><h3 class="text-lg font-semibold text-white">Pro</h3><p class="mt-1 text-sm text-gray-300">For professionals</p><div class="mt-6 flex items-baseline gap-1"><span class="text-4xl font-bold">$119</span><span class="text-gray-300"> one-time</span></div><a href="https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01" class="mt-8 w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors bg-gray-100 text-gray-900 hover:bg-gray-200 px-6 py-3 text-base no-underline">Buy Now</a><ul class="mt-8 space-y-3"><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-300">Unlimited requests</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-300">Priority support</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-300">API access</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-300">Advanced analytics</span></li></ul></div>
-<div class="rounded-2xl p-8 bg-white ring-1 ring-gray-200"><h3 class="text-lg font-semibold text-gray-900">Enterprise</h3><p class="mt-1 text-sm text-gray-500">For teams</p><div class="mt-6 flex items-baseline gap-1"><span class="text-4xl font-bold">$299</span><span class="text-gray-500"> one-time</span></div><a href="https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01" class="mt-8 w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors bg-black text-white hover:bg-gray-800 px-6 py-3 text-base no-underline">Buy Now</a><ul class="mt-8 space-y-3"><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Everything in Pro</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Custom integrations</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Dedicated support</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">SLA guarantee</span></li><li class="flex items-start gap-3"><svg class="h-5 w-5 flex-shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-gray-600">Team management</span></li></ul></div>
-</div></div></section><!-- Email Signup Section -->
-<section class="py-20 bg-white"><div class="mx-auto max-w-7xl px-6 lg:px-8"><div class="mx-auto max-w-xl text-center"><h2 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Get notified about updates and new developer tools</h2><form action="https://formspree.io/f/xContactForm" method="POST" class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3"><input type="email" name="email" required placeholder="you@example.com" class="w-full sm:w-auto flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"><button type="submit" class="w-full sm:w-auto rounded-lg bg-black px-6 py-3 text-sm font-semibold text-white hover:bg-gray-800 transition-colors">Subscribe</button></form><p class="mt-4 text-xs text-gray-400">No spam. Unsubscribe anytime.</p></div></div></section>
+
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-white pt-24 pb-20 sm:pt-32 sm:pb-28">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-2xl text-center">
+<div class="mb-8 flex justify-center">
+<div class="rounded-full px-4 py-1.5 text-sm font-medium text-gray-600 ring-1 ring-gray-200">Ship your SaaS in days, not months</div>
+</div>
+<h1 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl">Build faster.<br><span class="text-gray-400">Launch sooner.</span></h1>
+<p class="mt-6 text-lg leading-8 text-gray-600">The Next.js 16 boilerplate with authentication, payments, database, and AI built in. Stop wasting weeks on setup. Start building your product today.</p>
+<div class="mt-10 flex items-center justify-center gap-x-4">
+<a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="rounded-lg bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors">Buy Now - $79</a>
+<a href="https://github.com/Wittlesus/launchfast-starter" class="rounded-lg px-6 py-3 text-sm font-semibold text-gray-900 ring-1 ring-gray-200 hover:bg-gray-50 transition-colors" target="_blank" rel="noopener">View Source Code</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- What's Inside: Tech Stack Section -->
+<section id="tech-stack" class="py-20 bg-gray-50">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-2xl text-center mb-12">
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">What's inside</h2>
+<p class="mt-4 text-lg text-gray-600">Production-ready stack with the latest versions. No outdated dependencies.</p>
+</div>
+<div class="mx-auto max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-4">
+<div class="tech-badge flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center">
+<span class="text-2xl mb-2">&#9654;</span>
+<span class="text-sm font-semibold text-gray-900">Next.js 16</span>
+<span class="text-xs text-gray-500">App Router</span>
+</div>
+<div class="tech-badge flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center">
+<span class="text-2xl mb-2">&#9883;</span>
+<span class="text-sm font-semibold text-gray-900">React 19</span>
+<span class="text-xs text-gray-500">Latest stable</span>
+</div>
+<div class="tech-badge flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center">
+<span class="text-2xl mb-2">TS</span>
+<span class="text-sm font-semibold text-gray-900">TypeScript</span>
+<span class="text-xs text-gray-500">Strict mode</span>
+</div>
+<div class="tech-badge flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center">
+<span class="text-2xl mb-2">&#127912;</span>
+<span class="text-sm font-semibold text-gray-900">Tailwind CSS v4</span>
+<span class="text-xs text-gray-500">Utility-first</span>
+</div>
+<div class="tech-badge flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center">
+<span class="text-2xl mb-2">&#128274;</span>
+<span class="text-sm font-semibold text-gray-900">NextAuth v5</span>
+<span class="text-xs text-gray-500">OAuth & sessions</span>
+</div>
+<div class="tech-badge flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center">
+<span class="text-2xl mb-2">&#9863;</span>
+<span class="text-sm font-semibold text-gray-900">Prisma 6</span>
+<span class="text-xs text-gray-500">Type-safe ORM</span>
+</div>
+<div class="tech-badge flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center">
+<span class="text-2xl mb-2">&#128179;</span>
+<span class="text-sm font-semibold text-gray-900">Stripe SDK v17</span>
+<span class="text-xs text-gray-500">Payments & subs</span>
+</div>
+<div class="tech-badge flex flex-col items-center rounded-xl border border-gray-200 bg-white p-5 text-center">
+<span class="text-2xl mb-2">&#129302;</span>
+<span class="text-sm font-semibold text-gray-900">Claude API</span>
+<span class="text-xs text-gray-500">Anthropic AI</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-white">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-2xl text-center mb-12">
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Everything you need to launch</h2>
+<p class="mt-4 text-lg text-gray-600">Pre-built, tested, and ready for production.</p>
+</div>
+<div class="mx-auto max-w-5xl grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors">
+<div class="text-2xl mb-3">&#128274;</div>
+<h3 class="text-base font-semibold text-gray-900">Authentication</h3>
+<p class="mt-2 text-sm text-gray-600">Google &amp; GitHub OAuth, session management, protected routes &mdash; all pre-configured with NextAuth v5.</p>
+</div>
+<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors">
+<div class="text-2xl mb-3">&#128179;</div>
+<h3 class="text-base font-semibold text-gray-900">Stripe Payments</h3>
+<p class="mt-2 text-sm text-gray-600">Subscriptions, checkout, billing portal, webhooks &mdash; ready to accept money from day one.</p>
+</div>
+<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors">
+<div class="text-2xl mb-3">&#129302;</div>
+<h3 class="text-base font-semibold text-gray-900">AI Integration</h3>
+<p class="mt-2 text-sm text-gray-600">Anthropic Claude API wired up with rate limiting, streaming support, and auth-gated access.</p>
+</div>
+<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors">
+<div class="text-2xl mb-3">&#128231;</div>
+<h3 class="text-base font-semibold text-gray-900">Email System</h3>
+<p class="mt-2 text-sm text-gray-600">Transactional emails via Resend with beautiful templates included.</p>
+</div>
+<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors">
+<div class="text-2xl mb-3">&#128451;</div>
+<h3 class="text-base font-semibold text-gray-900">Database &amp; ORM</h3>
+<p class="mt-2 text-sm text-gray-600">Prisma 6 with PostgreSQL, migrations, and type-safe queries out of the box.</p>
+</div>
+<div class="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors">
+<div class="text-2xl mb-3">&#128202;</div>
+<h3 class="text-base font-semibold text-gray-900">Dashboard</h3>
+<p class="mt-2 text-sm text-gray-600">Clean, responsive dashboard with sidebar navigation and user settings.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-20 bg-gray-50">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-2xl text-center mb-12">
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">How it works</h2>
+<p class="mt-4 text-lg text-gray-600">From purchase to production in three steps.</p>
+</div>
+<div class="mx-auto max-w-4xl grid grid-cols-1 gap-8 md:grid-cols-3">
+<div class="text-center">
+<div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-black text-white text-xl font-bold mb-4">1</div>
+<h3 class="text-lg font-semibold text-gray-900">Buy &amp; Download</h3>
+<p class="mt-2 text-sm text-gray-600">One-time purchase, instant access to the full source code. Clone the repo and you're ready.</p>
+</div>
+<div class="text-center">
+<div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-black text-white text-xl font-bold mb-4">2</div>
+<h3 class="text-lg font-semibold text-gray-900">Configure</h3>
+<p class="mt-2 text-sm text-gray-600">Add your API keys (Stripe, OAuth, database URL), run <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">prisma migrate</code>, and you're set.</p>
+</div>
+<div class="text-center">
+<div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-black text-white text-xl font-bold mb-4">3</div>
+<h3 class="text-lg font-semibold text-gray-900">Ship</h3>
+<p class="mt-2 text-sm text-gray-600">Start building your product features. Auth, payments, and database are already done.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Social Proof Section -->
+<section class="py-20 bg-white">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-2xl text-center mb-12">
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Built on battle-tested libraries</h2>
+<p class="mt-4 text-lg text-gray-600">No experimental packages. Every dependency is production-proven.</p>
+</div>
+<div class="mx-auto max-w-4xl grid grid-cols-1 gap-6 md:grid-cols-3">
+<div class="rounded-xl border border-gray-200 p-6 text-center">
+<div class="text-3xl font-bold text-gray-900 mb-1">10M+</div>
+<div class="text-sm text-gray-600 mb-2">weekly downloads</div>
+<div class="text-sm font-semibold text-gray-800">NextAuth.js</div>
+<div class="text-xs text-gray-500">Authentication</div>
+</div>
+<div class="rounded-xl border border-gray-200 p-6 text-center">
+<div class="text-3xl font-bold text-gray-900 mb-1">5M+</div>
+<div class="text-sm text-gray-600 mb-2">weekly downloads</div>
+<div class="text-sm font-semibold text-gray-800">Prisma</div>
+<div class="text-xs text-gray-500">Database ORM</div>
+</div>
+<div class="rounded-xl border border-gray-200 p-6 text-center">
+<div class="text-3xl font-bold text-gray-900 mb-1">Millions</div>
+<div class="text-sm text-gray-600 mb-2">of businesses trust</div>
+<div class="text-sm font-semibold text-gray-800">Stripe</div>
+<div class="text-xs text-gray-500">Payments</div>
+</div>
+</div>
+
+<div class="mx-auto max-w-3xl mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
+<div class="rounded-xl border border-gray-200 p-6">
+<div class="flex items-center gap-3 mb-3">
+<svg class="h-6 w-6 text-gray-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+<span class="text-sm font-semibold text-gray-900">Open Source</span>
+</div>
+<p class="text-sm text-gray-600">Read every line before you buy. The full source code is public on GitHub.</p>
+<a href="https://github.com/Wittlesus/launchfast-starter" class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:underline" target="_blank" rel="noopener">View Source Code &rarr;</a>
+</div>
+<div class="rounded-xl border border-gray-200 p-6">
+<div class="flex items-center gap-3 mb-3">
+<svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span class="text-sm font-semibold text-gray-900">Verified by Automated Testing</span>
+</div>
+<p class="text-sm text-gray-600">Playwright test suite confirms all pages render and all payment links work.</p>
+<div class="mt-4 flex items-center gap-4">
+<span class="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-green-200">8/8 pages pass</span>
+<span class="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-green-200">7/7 payment links verified</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="py-20 bg-gray-50">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-2xl text-center">
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Simple, transparent pricing</h2>
+<p class="mt-4 text-lg text-gray-600">One-time payment. Lifetime access. Free updates.</p>
+</div>
+
+<div class="mx-auto mt-12 grid max-w-md grid-cols-1 gap-8 lg:max-w-5xl lg:grid-cols-3">
+
+<!-- Starter Tier -->
+<div class="rounded-2xl p-8 bg-white ring-1 ring-gray-200">
+<h3 class="text-lg font-semibold text-gray-900">Starter</h3>
+<p class="mt-1 text-sm text-gray-500">For solo developers</p>
+<div class="mt-6 flex items-baseline gap-1">
+<span class="text-4xl font-bold">$79</span>
+<span class="text-gray-500 ml-1">one-time</span>
+</div>
+<a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="mt-8 w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors bg-black text-white hover:bg-gray-800 px-6 py-3 text-base no-underline">Buy Now</a>
+<ul class="mt-8 space-y-3">
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Full Next.js 16 SaaS boilerplate</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">NextAuth v5 with Google &amp; GitHub OAuth</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Stripe subscriptions, checkout, webhooks</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Prisma 6 + PostgreSQL schema</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Claude AI integration (auth-gated)</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Landing page, pricing page, dashboard</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Middleware route protection</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">1 project license</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Community support via GitHub</span>
+</li>
+</ul>
+</div>
+
+<!-- Complete Bundle (Highlighted) -->
+<div class="relative rounded-2xl p-8 bg-black text-white ring-2 ring-black">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2">
+<span class="inline-flex items-center rounded-full bg-green-500 px-4 py-1 text-xs font-bold text-white uppercase tracking-wide">Best Value</span>
+</div>
+<h3 class="text-lg font-semibold text-white">Complete Bundle</h3>
+<p class="mt-1 text-sm text-gray-300">Everything we make</p>
+<div class="mt-6 flex items-baseline gap-1">
+<span class="text-4xl font-bold">$99</span>
+<span class="text-gray-300 ml-1">one-time</span>
+</div>
+<div class="mt-2 text-xs text-green-400 font-medium">Save $82 vs buying separately</div>
+<!-- TODO: Replace this placeholder link with the actual Complete Bundle Stripe payment link when available -->
+<a href="#" onclick="alert('Bundle payment link coming soon! Email patricksereyouch@gmail.com to be notified.');return false;" class="mt-8 w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 text-base no-underline">Buy Bundle</a>
+<ul class="mt-8 space-y-3">
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-300">LaunchFast SaaS Starter</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-300">SEO Blog Engine</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-300">Indie Hacker Toolkit</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-300">PromptVault (64 AI prompts)</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-300">CursorRules Pro (8 configs)</span>
+</li>
+</ul>
+</div>
+
+<!-- Pro Tier -->
+<div class="rounded-2xl p-8 bg-white ring-1 ring-gray-200">
+<h3 class="text-lg font-semibold text-gray-900">Pro</h3>
+<p class="mt-1 text-sm text-gray-500">For professionals &amp; agencies</p>
+<div class="mt-6 flex items-baseline gap-1">
+<span class="text-4xl font-bold">$119</span>
+<span class="text-gray-500 ml-1">one-time</span>
+</div>
+<a href="https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01" class="mt-8 w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors bg-black text-white hover:bg-gray-800 px-6 py-3 text-base no-underline">Buy Now</a>
+<ul class="mt-8 space-y-3">
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Everything in Starter</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Unlimited project license</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Priority email support</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Early access to updates</span>
+</li>
+<li class="flex items-start gap-3">
+<svg class="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+<span class="text-sm text-gray-600">Pro .cursorrules configs included</span>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- FAQ Section -->
+<section id="faq" class="py-20 bg-white">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-2xl text-center mb-12">
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Frequently asked questions</h2>
+</div>
+<div class="mx-auto max-w-3xl divide-y divide-gray-200">
+
+<details class="group py-6" open>
+<summary class="flex cursor-pointer items-center justify-between text-left">
+<span class="text-base font-semibold text-gray-900">What do I get after purchase?</span>
+<svg class="h-5 w-5 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</summary>
+<p class="mt-3 text-sm text-gray-600">Instant access to the full source code. Clone the repo, configure your API keys, and start building.</p>
+</details>
+
+<details class="group py-6">
+<summary class="flex cursor-pointer items-center justify-between text-left">
+<span class="text-base font-semibold text-gray-900">Is it a subscription?</span>
+<svg class="h-5 w-5 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</summary>
+<p class="mt-3 text-sm text-gray-600">No. One-time payment, lifetime access, free updates.</p>
+</details>
+
+<details class="group py-6">
+<summary class="flex cursor-pointer items-center justify-between text-left">
+<span class="text-base font-semibold text-gray-900">Can I see the code before buying?</span>
+<svg class="h-5 w-5 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</summary>
+<p class="mt-3 text-sm text-gray-600">Yes. The full source is open on GitHub: <a href="https://github.com/Wittlesus/launchfast-starter" class="underline text-gray-900 hover:text-gray-600" target="_blank" rel="noopener">github.com/Wittlesus/launchfast-starter</a></p>
+</details>
+
+<details class="group py-6">
+<summary class="flex cursor-pointer items-center justify-between text-left">
+<span class="text-base font-semibold text-gray-900">What's the difference between Starter and Pro?</span>
+<svg class="h-5 w-5 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</summary>
+<p class="mt-3 text-sm text-gray-600">Starter is for 1 project. Pro includes unlimited projects, priority support, and early access to updates.</p>
+</details>
+
+<details class="group py-6">
+<summary class="flex cursor-pointer items-center justify-between text-left">
+<span class="text-base font-semibold text-gray-900">What if I want a refund?</span>
+<svg class="h-5 w-5 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</summary>
+<p class="mt-3 text-sm text-gray-600">14-day money-back guarantee, no questions asked.</p>
+</details>
+
+<details class="group py-6">
+<summary class="flex cursor-pointer items-center justify-between text-left">
+<span class="text-base font-semibold text-gray-900">Do I need to know Next.js?</span>
+<svg class="h-5 w-5 flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</summary>
+<p class="mt-3 text-sm text-gray-600">Basic React and Next.js knowledge is helpful. The codebase is well-documented with comments explaining key decisions.</p>
+</details>
+
+</div>
+</div>
+</section>
+
+<!-- Email Signup Section -->
+<section class="py-20 bg-gray-50">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-xl text-center">
+<h2 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Get notified about updates and new developer tools</h2>
+<form action="https://formspree.io/f/xContactForm" method="POST" class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+<input type="email" name="email" required placeholder="you@example.com" class="w-full sm:w-auto flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black">
+<button type="submit" class="w-full sm:w-auto rounded-lg bg-black px-6 py-3 text-sm font-semibold text-white hover:bg-gray-800 transition-colors">Subscribe</button>
+</form>
+<p class="mt-4 text-xs text-gray-400">No spam. Unsubscribe anytime.</p>
+</div>
+</div>
+</section>
 <!-- TODO: Replace "xContactForm" in the Formspree action URL above with your actual Formspree form ID -->
+
+<!-- Cross-Promotion: More Developer Resources -->
+<section class="py-16 bg-white border-t border-gray-200">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-2xl text-center mb-10">
+<h2 class="text-2xl font-bold tracking-tight text-gray-900">More Developer Resources</h2>
+<p class="mt-2 text-sm text-gray-600">Free tools, guides, and comparisons for indie hackers and SaaS builders.</p>
+</div>
+<div class="mx-auto max-w-4xl grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+<a href="saas-cost-calculator.html" class="group rounded-xl border border-gray-200 p-5 hover:border-gray-300 transition-colors">
+<h3 class="text-sm font-semibold text-gray-900 group-hover:underline">SaaS Cost Calculator</h3>
+<p class="mt-1 text-xs text-gray-500">Estimate your SaaS infrastructure costs before you build.</p>
+</a>
+<a href="best-nextjs-boilerplate.html" class="group rounded-xl border border-gray-200 p-5 hover:border-gray-300 transition-colors">
+<h3 class="text-sm font-semibold text-gray-900 group-hover:underline">Best Next.js Boilerplates 2026</h3>
+<p class="mt-1 text-xs text-gray-500">Side-by-side comparison of the top SaaS starter kits.</p>
+</a>
+<a href="nextjs-stripe-integration.html" class="group rounded-xl border border-gray-200 p-5 hover:border-gray-300 transition-colors">
+<h3 class="text-sm font-semibold text-gray-900 group-hover:underline">How to Add Stripe to Next.js</h3>
+<p class="mt-1 text-xs text-gray-500">Step-by-step guide with code examples.</p>
+</a>
+<a href="nextauth-v5-tutorial.html" class="group rounded-xl border border-gray-200 p-5 hover:border-gray-300 transition-colors">
+<h3 class="text-sm font-semibold text-gray-900 group-hover:underline">NextAuth v5 Tutorial</h3>
+<p class="mt-1 text-xs text-gray-500">Complete authentication setup guide.</p>
+</a>
+<a href="prisma-vs-drizzle-orm.html" class="group rounded-xl border border-gray-200 p-5 hover:border-gray-300 transition-colors">
+<h3 class="text-sm font-semibold text-gray-900 group-hover:underline">Prisma vs Drizzle Comparison</h3>
+<p class="mt-1 text-xs text-gray-500">Which ORM should you pick for your next project?</p>
+</a>
+<a href="alternatives.html" class="group rounded-xl border border-gray-200 p-5 hover:border-gray-300 transition-colors">
+<h3 class="text-sm font-semibold text-gray-900 group-hover:underline">Boilerplate Comparison</h3>
+<p class="mt-1 text-xs text-gray-500">LaunchFast vs ShipFast vs Supastarter and more.</p>
+</a>
+</div>
+</div>
+</section>
+
 </main>
-<footer class="border-t border-gray-200 bg-white py-12"><div class="mx-auto max-w-7xl px-6"><div class="flex flex-col items-center justify-between gap-6 sm:flex-row"><p class="text-sm text-gray-500">&copy; 2026 LaunchFast. All rights reserved.</p><nav class="flex gap-6"><a href="privacy.html" class="text-sm text-gray-500 hover:text-gray-700">Privacy</a><a href="terms.html" class="text-sm text-gray-500 hover:text-gray-700">Terms</a><a href="mailto:patricksereyouch@gmail.com" class="text-sm text-gray-500 hover:text-gray-700">Contact</a></nav></div></div></footer>
+
+<!-- Footer -->
+<footer class="border-t border-gray-200 bg-white py-12">
+<div class="mx-auto max-w-7xl px-6">
+<div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+<p class="text-sm text-gray-500">&copy; 2026 LaunchFast. All rights reserved.</p>
+<nav class="flex gap-6">
+<a href="privacy.html" class="text-sm text-gray-500 hover:text-gray-700">Privacy</a>
+<a href="terms.html" class="text-sm text-gray-500 hover:text-gray-700">Terms</a>
+<a href="mailto:patricksereyouch@gmail.com" class="text-sm text-gray-500 hover:text-gray-700">Contact</a>
+</nav>
+</div>
+</div>
+</footer>
+
 <!-- Floating Buy Now Banner -->
 <div id="buyBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:linear-gradient(135deg,#000 0%,#1a1a2e 100%);border-top:1px solid rgba(255,255,255,0.1);padding:12px 24px;box-shadow:0 -4px 20px rgba(0,0,0,0.3);">
 <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
@@ -47,4 +614,6 @@
 <script>
 window.addEventListener('scroll',function(){var b=document.getElementById('buyBanner');if(window.scrollY>400){b.style.display='block'}else{b.style.display='none'}},{passive:true});
 </script>
-</body></html>
+
+</body>
+</html>

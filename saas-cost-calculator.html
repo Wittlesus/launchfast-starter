@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SaaS Cost Calculator &mdash; How Much Does It Cost to Build a SaaS in 2026?</title>
+<meta name="description" content="Free interactive calculator. Estimate the true cost of building a SaaS product from scratch — development time, infrastructure costs, and total Year 1 investment.">
+<meta name="keywords" content="SaaS cost calculator, how much does it cost to build a SaaS, SaaS development cost, build vs buy SaaS, SaaS stack cost estimator, SaaS budget planner 2026">
+<link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/saas-cost-calculator.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="SaaS Cost Calculator — How Much Does It Cost to Build a SaaS in 2026?">
+<meta property="og:description" content="Free interactive calculator. Estimate the true cost of building a SaaS product from scratch — development time, infrastructure costs, and total Year 1 investment.">
+<meta property="og:url" content="https://wittlesus.github.io/launchfast-starter/saas-cost-calculator.html">
+<meta property="og:site_name" content="LaunchFast">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SaaS Cost Calculator — How Much Does It Cost to Build a SaaS in 2026?">
+<meta name="twitter:description" content="Free interactive calculator. Estimate the true cost of building a SaaS product from scratch.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much does it cost to build a SaaS from scratch?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The total Year 1 cost of building a SaaS product from scratch typically ranges from $5,000 to $50,000+ depending on your tech stack choices, developer hourly rate, and infrastructure needs. This includes 150-300+ hours of development time for core features like authentication, payments, database setup, and a landing page, plus $50-$300/month in hosting and service costs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does it take to build a SaaS product?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Building a SaaS product from scratch typically takes 150-300+ development hours for core functionality. This breaks down to: authentication (40-60 hours), payment integration (30-50 hours), database and ORM setup (10-20 hours), dashboard UI (15-30 hours), landing page (20-40 hours), and middleware/route protection (4-8 hours). Using starter kits or boilerplates can reduce this to 20-40 hours."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the monthly infrastructure costs for a SaaS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Monthly infrastructure costs for a SaaS product typically range from $0 (using free tiers) to $300+/month. Common costs include: hosting ($0-200/month on Vercel, AWS, or Railway), managed database ($5-50/month for PostgreSQL or Supabase), and authentication services ($0-25/month for Clerk or Supabase Auth). Most early-stage SaaS products can run on $20-50/month."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it cheaper to build a SaaS from scratch or use a boilerplate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Using a SaaS boilerplate or starter kit is significantly cheaper. Building from scratch at $75/hour costs $11,000-$22,000+ in development alone. A boilerplate like LaunchFast ($79 one-time) includes authentication, payments, database, AI integration, and more — saving 80-200+ hours of development time. The breakeven is typically within the first few hours of saved development work."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What tech stack should I use for my SaaS in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most popular SaaS tech stack in 2026 includes: Next.js or SvelteKit for the frontend, PostgreSQL with Prisma ORM for the database, NextAuth or Clerk for authentication, Stripe for payments, and Vercel or Railway for hosting. This stack offers a good balance of developer experience, scalability, and cost-effectiveness."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I reduce SaaS development costs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most effective ways to reduce SaaS development costs are: 1) Use a SaaS boilerplate or starter kit to skip 80+ hours of setup, 2) Start with managed services (Supabase, Clerk) instead of building from scratch, 3) Use free tiers for hosting and databases during early stages, 4) Focus on an MVP with core features only, and 5) Choose a tech stack with strong ecosystem support to reduce debugging time."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111119;
+  --bg-card: #16161f;
+  --bg-input: #1c1c28;
+  --border: #2a2a3a;
+  --border-hover: #3a3a4f;
+  --text-primary: #f0f0f5;
+  --text-secondary: #9999aa;
+  --text-muted: #666677;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-glow: rgba(99, 102, 241, 0.15);
+  --green: #22c55e;
+  --green-light: #4ade80;
+  --green-glow: rgba(34, 197, 94, 0.12);
+  --red: #ef4444;
+  --yellow: #eab308;
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* Header */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  height: 64px;
+}
+.header-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 100%;
+}
+.header-logo { font-size: 20px; font-weight: 700; color: #fff; text-decoration: none; }
+.header-nav { display: flex; align-items: center; gap: 24px; }
+.header-nav a { font-size: 14px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+.header-nav a:hover { color: #fff; }
+.header-cta {
+  display: inline-flex; align-items: center; padding: 8px 20px;
+  background: #fff; color: #000; border-radius: 8px;
+  font-size: 14px; font-weight: 600; text-decoration: none; transition: opacity 0.2s;
+}
+.header-cta:hover { opacity: 0.9; text-decoration: none; }
+
+/* Hero */
+.hero { padding: 120px 0 60px; text-align: center; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 100px;
+  border: 1px solid var(--border); color: var(--text-secondary);
+  font-size: 14px; margin-bottom: 24px;
+}
+.hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+.hero h1 .gradient {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #6366f1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p { font-size: 18px; color: var(--text-secondary); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+/* Calculator Grid */
+.calc-layout { display: grid; grid-template-columns: 1fr 380px; gap: 32px; padding-bottom: 80px; }
+
+/* Selections Panel */
+.selections-panel { display: flex; flex-direction: column; gap: 24px; }
+
+.calc-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.calc-section h3 {
+  font-size: 15px; font-weight: 600; color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.calc-section .section-desc {
+  font-size: 13px; color: var(--text-muted); margin-bottom: 16px;
+}
+
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.option-btn {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 12px 14px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--bg-input);
+  cursor: pointer; transition: all 0.2s; text-align: left;
+  position: relative; overflow: hidden;
+}
+.option-btn:hover { border-color: var(--border-hover); background: #1e1e2c; }
+.option-btn.selected {
+  border-color: var(--accent); background: var(--accent-glow);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.option-btn .opt-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.option-btn .opt-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.option-btn.selected .opt-meta { color: var(--accent-light); }
+
+/* Rate slider */
+.rate-section { padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.rate-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.rate-header h3 { font-size: 15px; font-weight: 600; }
+.rate-value { font-size: 24px; font-weight: 700; color: var(--accent-light); }
+
+input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 6px;
+  border-radius: 3px; background: var(--bg-input); outline: none;
+  border: 1px solid var(--border);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 22px; height: 22px;
+  border-radius: 50%; background: var(--accent); cursor: pointer;
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--accent); cursor: pointer; border: 2px solid var(--bg-primary);
+}
+.rate-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--text-muted); }
+
+/* Results Sidebar */
+.results-panel { position: sticky; top: 88px; align-self: start; }
+
+.results-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px;
+}
+.results-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary); }
+
+.result-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid rgba(42, 42, 58, 0.5);
+}
+.result-row:last-child { border-bottom: none; }
+.result-label { font-size: 13px; color: var(--text-secondary); }
+.result-value {
+  font-size: 15px; font-weight: 600; color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s;
+}
+.result-value.animating { color: var(--accent-light); }
+
+.result-total {
+  margin-top: 16px; padding-top: 16px; border-top: 2px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.result-total .result-label { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.result-total .result-value {
+  font-size: 28px; font-weight: 800;
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* Comparison Card */
+.comparison-card {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.02));
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: var(--radius-lg); padding: 24px;
+}
+.comparison-card .comp-header {
+  font-size: 13px; font-weight: 600; color: var(--green);
+  text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;
+}
+.comparison-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.comparison-card .comp-price {
+  font-size: 32px; font-weight: 800; color: var(--green-light);
+  margin: 8px 0;
+}
+.comparison-card .comp-price span { font-size: 14px; font-weight: 400; color: var(--text-muted); }
+.comparison-card .comp-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; }
+.comparison-card .savings-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+  background: rgba(34, 197, 94, 0.1); border-radius: 100px;
+  font-size: 13px; font-weight: 600; color: var(--green-light);
+  margin-bottom: 16px;
+}
+.comparison-card .cta-btn {
+  display: block; text-align: center; padding: 14px 24px;
+  background: var(--green); color: #000; border-radius: var(--radius);
+  font-size: 15px; font-weight: 700; text-decoration: none;
+  transition: all 0.2s; border: none; cursor: pointer; width: 100%;
+}
+.comparison-card .cta-btn:hover { background: var(--green-light); text-decoration: none; }
+
+/* FAQ */
+.faq-section { padding: 80px 0; border-top: 1px solid var(--border); }
+.faq-section h2 { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 48px; }
+
+.faq-list { max-width: 720px; margin: 0 auto; }
+
+.faq-item {
+  border-bottom: 1px solid var(--border); padding: 20px 0;
+}
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; gap: 16px;
+}
+.faq-q h3 { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.faq-q .faq-arrow {
+  flex-shrink: 0; width: 24px; height: 24px; transition: transform 0.3s;
+  color: var(--text-muted);
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a { max-height: 300px; padding-top: 12px; }
+.faq-a p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+/* Cross-Promo */
+.cross-promo { padding: 60px 0 80px; border-top: 1px solid var(--border); }
+.cross-promo h2 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 32px; }
+.promo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 720px; margin: 0 auto; }
+.promo-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 24px 16px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); transition: border-color 0.2s;
+}
+.promo-card:hover { border-color: var(--border-hover); text-decoration: none; }
+.promo-card .promo-icon { font-size: 28px; margin-bottom: 12px; }
+.promo-card .promo-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.promo-card .promo-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--border); padding: 32px 0;
+  text-align: center; font-size: 13px; color: var(--text-muted);
+}
+.site-footer a { color: var(--text-secondary); }
+.footer-links { display: flex; justify-content: center; gap: 24px; margin-top: 12px; }
+
+/* Mobile */
+@media (max-width: 860px) {
+  .calc-layout { grid-template-columns: 1fr; }
+  .results-panel { position: static; }
+  .header-nav { display: none; }
+  .options-grid { grid-template-columns: 1fr 1fr; }
+  .promo-grid { grid-template-columns: 1fr; max-width: 340px; }
+}
+@media (max-width: 520px) {
+  .hero h1 { font-size: 28px; }
+  .hero p { font-size: 16px; }
+  .options-grid { grid-template-columns: 1fr; }
+  .container { padding: 0 16px; }
+  .calc-section { padding: 18px; }
+  .results-card { padding: 18px; }
+  .comparison-card { padding: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="https://wittlesus.github.io/launchfast-starter/" class="header-logo">LaunchFast</a>
+    <nav class="header-nav">
+      <a href="https://wittlesus.github.io/launchfast-starter/">Home</a>
+      <a href="alternatives.html">Comparisons</a>
+      <a href="best-nextjs-boilerplate.html">Boilerplates</a>
+    </nav>
+    <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="header-cta">Buy Now - $79</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge"><span class="dot"></span> Free tool &mdash; no signup required</div>
+    <h1>SaaS Cost Calculator<br><span class="gradient">How Much Does It Cost to Build a SaaS in 2026?</span></h1>
+    <p>Estimate the true cost of building your SaaS product from scratch. Choose your tech stack below and get an instant breakdown of development time, infrastructure costs, and total Year 1 investment.</p>
+  </div>
+</section>
+
+<!-- Calculator -->
+<section class="container">
+  <div class="calc-layout">
+    <!-- Left: Selections -->
+    <div class="selections-panel">
+
+      <!-- Authentication -->
+      <div class="calc-section">
+        <h3>Authentication</h3>
+        <p class="section-desc">How will users sign in to your app?</p>
+        <div class="options-grid" data-category="auth">
+          <button class="option-btn selected" data-hours-min="40" data-hours-max="60" data-monthly="0" data-value="scratch">
+            <span class="opt-name">Build from Scratch</span>
+            <span class="opt-meta">40&ndash;60 hrs &middot; $0/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="8" data-hours-max="16" data-monthly="0" data-value="nextauth">
+            <span class="opt-name">NextAuth.js</span>
+            <span class="opt-meta">8&ndash;16 hrs &middot; $0/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="4" data-hours-max="8" data-monthly="25" data-value="clerk">
+            <span class="opt-name">Clerk</span>
+            <span class="opt-meta">4&ndash;8 hrs &middot; $0&ndash;25/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="6" data-hours-max="12" data-monthly="0" data-value="supabase-auth">
+            <span class="opt-name">Supabase Auth</span>
+            <span class="opt-meta">6&ndash;12 hrs &middot; $0/mo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Database -->
+      <div class="calc-section">
+        <h3>Database</h3>
+        <p class="section-desc">Where will you store your data?</p>
+        <div class="options-grid" data-category="database">
+          <button class="option-btn selected" data-hours-min="10" data-hours-max="20" data-monthly="25" data-value="postgres">
+            <span class="opt-name">PostgreSQL + ORM</span>
+            <span class="opt-meta">10&ndash;20 hrs &middot; $5&ndash;50/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="6" data-hours-max="12" data-monthly="25" data-value="supabase">
+            <span class="opt-name">Supabase</span>
+            <span class="opt-meta">6&ndash;12 hrs &middot; $0&ndash;25/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="6" data-hours-max="14" data-monthly="0" data-value="firebase">
+            <span class="opt-name">Firebase</span>
+            <span class="opt-meta">6&ndash;14 hrs &middot; $0+/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="8" data-hours-max="16" data-monthly="29" data-value="planetscale">
+            <span class="opt-name">PlanetScale</span>
+            <span class="opt-meta">8&ndash;16 hrs &middot; $0&ndash;29/mo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Payments -->
+      <div class="calc-section">
+        <h3>Payments</h3>
+        <p class="section-desc">How will you accept payments?</p>
+        <div class="options-grid" data-category="payments">
+          <button class="option-btn selected" data-hours-min="30" data-hours-max="50" data-monthly="0" data-value="stripe-scratch">
+            <span class="opt-name">Stripe from Scratch</span>
+            <span class="opt-meta">30&ndash;50 hrs &middot; $0/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="8" data-hours-max="16" data-monthly="0" data-value="stripe-lib">
+            <span class="opt-name">Stripe + Library</span>
+            <span class="opt-meta">8&ndash;16 hrs &middot; $0/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="6" data-hours-max="12" data-monthly="0" data-value="lemonsqueezy">
+            <span class="opt-name">Lemon Squeezy</span>
+            <span class="opt-meta">6&ndash;12 hrs &middot; $0/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="6" data-hours-max="12" data-monthly="0" data-value="paddle">
+            <span class="opt-name">Paddle</span>
+            <span class="opt-meta">6&ndash;12 hrs &middot; $0/mo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hosting -->
+      <div class="calc-section">
+        <h3>Hosting</h3>
+        <p class="section-desc">Where will your app be deployed?</p>
+        <div class="options-grid" data-category="hosting">
+          <button class="option-btn selected" data-hours-min="2" data-hours-max="4" data-monthly="20" data-value="vercel">
+            <span class="opt-name">Vercel</span>
+            <span class="opt-meta">2&ndash;4 hrs &middot; $0&ndash;20/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="8" data-hours-max="20" data-monthly="100" data-value="aws">
+            <span class="opt-name">AWS</span>
+            <span class="opt-meta">8&ndash;20 hrs &middot; $10&ndash;200/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="3" data-hours-max="6" data-monthly="10" data-value="railway">
+            <span class="opt-name">Railway</span>
+            <span class="opt-meta">3&ndash;6 hrs &middot; $5&ndash;20/mo</span>
+          </button>
+          <button class="option-btn" data-hours-min="3" data-hours-max="6" data-monthly="10" data-value="render">
+            <span class="opt-name">Render</span>
+            <span class="opt-meta">3&ndash;6 hrs &middot; $0&ndash;20/mo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Frontend Framework -->
+      <div class="calc-section">
+        <h3>Frontend Framework</h3>
+        <p class="section-desc">What framework will you build with?</p>
+        <div class="options-grid" data-category="framework">
+          <button class="option-btn selected" data-hours-min="0" data-hours-max="0" data-monthly="0" data-value="nextjs">
+            <span class="opt-name">Next.js</span>
+            <span class="opt-meta">Most popular &middot; SSR + API routes</span>
+          </button>
+          <button class="option-btn" data-hours-min="2" data-hours-max="4" data-monthly="0" data-value="remix">
+            <span class="opt-name">Remix</span>
+            <span class="opt-meta">Full-stack &middot; Nested routing</span>
+          </button>
+          <button class="option-btn" data-hours-min="2" data-hours-max="4" data-monthly="0" data-value="sveltekit">
+            <span class="opt-name">SvelteKit</span>
+            <span class="opt-meta">Fast &middot; Less boilerplate</span>
+          </button>
+          <button class="option-btn" data-hours-min="2" data-hours-max="4" data-monthly="0" data-value="nuxt">
+            <span class="opt-name">Nuxt</span>
+            <span class="opt-meta">Vue ecosystem &middot; Auto-imports</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="calc-section">
+        <h3>Dashboard UI</h3>
+        <p class="section-desc">Your app's main interface after login</p>
+        <div class="options-grid" data-category="dashboard">
+          <button class="option-btn selected" data-hours-min="15" data-hours-max="30" data-monthly="0" data-value="custom">
+            <span class="opt-name">Build Custom</span>
+            <span class="opt-meta">15&ndash;30 hrs &middot; Full control</span>
+          </button>
+          <button class="option-btn" data-hours-min="4" data-hours-max="10" data-monthly="0" data-value="template">
+            <span class="opt-name">Use UI Template</span>
+            <span class="opt-meta">4&ndash;10 hrs &middot; Pre-built layout</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Landing Page -->
+      <div class="calc-section">
+        <h3>Landing Page</h3>
+        <p class="section-desc">Your public-facing marketing page</p>
+        <div class="options-grid" data-category="landing">
+          <button class="option-btn selected" data-hours-min="20" data-hours-max="40" data-monthly="0" data-value="custom">
+            <span class="opt-name">Build Custom</span>
+            <span class="opt-meta">20&ndash;40 hrs &middot; Unique design</span>
+          </button>
+          <button class="option-btn" data-hours-min="2" data-hours-max="4" data-monthly="0" data-value="template">
+            <span class="opt-name">Use Template</span>
+            <span class="opt-meta">2&ndash;4 hrs &middot; Pre-designed</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Middleware -->
+      <div class="calc-section">
+        <h3>Middleware &amp; Route Protection</h3>
+        <p class="section-desc">Securing your app's routes and API endpoints</p>
+        <div class="options-grid" data-category="middleware">
+          <button class="option-btn selected" data-hours-min="4" data-hours-max="8" data-monthly="0" data-value="yes">
+            <span class="opt-name">Yes, Custom</span>
+            <span class="opt-meta">4&ndash;8 hrs &middot; Role-based access</span>
+          </button>
+          <button class="option-btn" data-hours-min="1" data-hours-max="2" data-monthly="0" data-value="basic">
+            <span class="opt-name">Basic Only</span>
+            <span class="opt-meta">1&ndash;2 hrs &middot; Simple auth check</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- AI Integration -->
+      <div class="calc-section">
+        <h3>AI Integration</h3>
+        <p class="section-desc">Add AI features powered by LLMs?</p>
+        <div class="options-grid" data-category="ai">
+          <button class="option-btn" data-hours-min="8" data-hours-max="16" data-monthly="20" data-value="yes">
+            <span class="opt-name">Yes</span>
+            <span class="opt-meta">8&ndash;16 hrs &middot; ~$20+/mo API</span>
+          </button>
+          <button class="option-btn selected" data-hours-min="0" data-hours-max="0" data-monthly="0" data-value="no">
+            <span class="opt-name">No</span>
+            <span class="opt-meta">0 hrs &middot; $0/mo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hourly Rate -->
+      <div class="rate-section">
+        <div class="rate-header">
+          <h3>Developer Hourly Rate</h3>
+          <span class="rate-value" id="rateDisplay">$75/hr</span>
+        </div>
+        <input type="range" id="rateSlider" min="25" max="200" value="75" step="5">
+        <div class="rate-labels">
+          <span>$25/hr</span>
+          <span>$100/hr</span>
+          <span>$200/hr</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Results -->
+    <div class="results-panel">
+
+      <div class="results-card">
+        <h2>Cost Breakdown</h2>
+
+        <div class="result-row">
+          <span class="result-label">Development Hours</span>
+          <span class="result-value" id="totalHours">121&ndash;216 hrs</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Development Cost</span>
+          <span class="result-value" id="devCost">$9,075&ndash;$16,200</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Monthly Infrastructure</span>
+          <span class="result-value" id="monthlyCost">$45/mo</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Year 1 Infrastructure</span>
+          <span class="result-value" id="yearInfra">$540</span>
+        </div>
+
+        <div class="result-total">
+          <span class="result-label">Total Year 1 Cost</span>
+          <span class="result-value" id="totalCost">$9,615&ndash;$16,740</span>
+        </div>
+      </div>
+
+      <!-- Individual breakdown -->
+      <div class="results-card" id="breakdownCard">
+        <h2>Hours by Component</h2>
+        <div id="breakdownRows">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- Comparison -->
+      <div class="comparison-card">
+        <div class="comp-header">Alternative</div>
+        <h3>Skip 80+ hours of setup</h3>
+        <div class="comp-price">$79 <span>one-time</span></div>
+        <div class="savings-badge" id="savingsBadge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 7l-5-5-5 5"/></svg>
+          <span id="savingsText">Save $9,000+</span>
+        </div>
+        <p class="comp-desc">LaunchFast includes auth, Stripe payments, database, AI integration, dashboard, landing page, and email &mdash; all pre-configured and ready to deploy.</p>
+        <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00" class="cta-btn">Get LaunchFast &mdash; $79</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+  <div class="container">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <h3>How much does it cost to build a SaaS from scratch?</h3>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>The total Year 1 cost of building a SaaS product from scratch typically ranges from $5,000 to $50,000+ depending on your tech stack, developer hourly rate, and infrastructure choices. This includes 150&ndash;300+ hours of development for core features like authentication, payments, database setup, and a landing page, plus $50&ndash;$300/month in hosting and service costs.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <h3>How long does it take to build a SaaS product?</h3>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>Building a SaaS from scratch typically takes 150&ndash;300+ development hours. This breaks down to: authentication (40&ndash;60 hours), payment integration (30&ndash;50 hours), database and ORM setup (10&ndash;20 hours), dashboard UI (15&ndash;30 hours), landing page (20&ndash;40 hours), and middleware (4&ndash;8 hours). Using a starter kit can reduce this to 20&ndash;40 hours total.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <h3>What are the monthly infrastructure costs for a SaaS?</h3>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>Monthly infrastructure costs typically range from $0 (free tiers) to $300+/month. Common costs include hosting ($0&ndash;200/month on Vercel, AWS, or Railway), managed database ($5&ndash;50/month for PostgreSQL or Supabase), and auth services ($0&ndash;25/month for Clerk or Supabase Auth). Most early-stage SaaS products run on $20&ndash;50/month.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <h3>Is it cheaper to use a boilerplate or build from scratch?</h3>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>Using a boilerplate is significantly cheaper. Building from scratch at $75/hour costs $11,000&ndash;$22,000+ in development alone. A starter kit like LaunchFast ($79 one-time) includes auth, payments, database, AI, and more &mdash; saving 80&ndash;200+ hours. The breakeven happens within the first few hours of saved development work.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <h3>What tech stack should I use for my SaaS in 2026?</h3>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>The most popular SaaS tech stack in 2026 includes Next.js for the frontend, PostgreSQL with Prisma ORM for the database, NextAuth or Clerk for authentication, Stripe for payments, and Vercel or Railway for hosting. This stack balances developer experience, scalability, and cost-effectiveness well.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <h3>How can I reduce SaaS development costs?</h3>
+          <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="faq-a">
+          <p>The most effective ways: 1) Use a SaaS boilerplate to skip 80+ hours of setup, 2) Start with managed services (Supabase, Clerk) instead of building from scratch, 3) Use free tiers during early stages, 4) Focus on an MVP with core features only, and 5) Choose a tech stack with strong ecosystem support to reduce debugging time.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Cross-Promotion -->
+<section class="cross-promo">
+  <div class="container">
+    <h2>More Free Developer Tools</h2>
+    <div class="promo-grid">
+      <a href="https://wittlesus.github.io/launchfast-starter/" class="promo-card">
+        <div class="promo-icon">&#9889;</div>
+        <div class="promo-title">LaunchFast Starter</div>
+        <div class="promo-desc">Ship your SaaS in days, not months</div>
+      </a>
+      <a href="alternatives.html" class="promo-card">
+        <div class="promo-icon">&#128200;</div>
+        <div class="promo-title">SaaS Alternatives</div>
+        <div class="promo-desc">Compare top SaaS boilerplates</div>
+      </a>
+      <a href="best-nextjs-boilerplate.html" class="promo-card">
+        <div class="promo-icon">&#127942;</div>
+        <div class="promo-title">Best Boilerplates</div>
+        <div class="promo-desc">7 best Next.js starters ranked</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <p>&copy; 2026 LaunchFast. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="mailto:patricksereyouch@gmail.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  // Category labels for breakdown display
+  var categoryLabels = {
+    auth: 'Authentication',
+    database: 'Database',
+    payments: 'Payments',
+    hosting: 'Hosting Setup',
+    framework: 'Framework Setup',
+    dashboard: 'Dashboard UI',
+    landing: 'Landing Page',
+    middleware: 'Route Protection',
+    ai: 'AI Integration'
+  };
+
+  // State
+  var selections = {};
+  var hourlyRate = 75;
+
+  // Initialize selections from default selected buttons
+  function initSelections() {
+    var grids = document.querySelectorAll('.options-grid');
+    for (var i = 0; i < grids.length; i++) {
+      var cat = grids[i].getAttribute('data-category');
+      var selected = grids[i].querySelector('.option-btn.selected');
+      if (selected) {
+        selections[cat] = {
+          hoursMin: parseInt(selected.getAttribute('data-hours-min')),
+          hoursMax: parseInt(selected.getAttribute('data-hours-max')),
+          monthly: parseInt(selected.getAttribute('data-monthly'))
+        };
+      }
+    }
+  }
+
+  // Bind option button clicks
+  function bindOptions() {
+    var buttons = document.querySelectorAll('.option-btn');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener('click', function() {
+        var grid = this.parentElement;
+        var cat = grid.getAttribute('data-category');
+        // Deselect siblings
+        var siblings = grid.querySelectorAll('.option-btn');
+        for (var j = 0; j < siblings.length; j++) {
+          siblings[j].classList.remove('selected');
+        }
+        // Select this
+        this.classList.add('selected');
+        // Update state
+        selections[cat] = {
+          hoursMin: parseInt(this.getAttribute('data-hours-min')),
+          hoursMax: parseInt(this.getAttribute('data-hours-max')),
+          monthly: parseInt(this.getAttribute('data-monthly'))
+        };
+        recalculate();
+      });
+    }
+  }
+
+  // Bind rate slider
+  function bindSlider() {
+    var slider = document.getElementById('rateSlider');
+    var display = document.getElementById('rateDisplay');
+    slider.addEventListener('input', function() {
+      hourlyRate = parseInt(this.value);
+      display.textContent = '$' + hourlyRate + '/hr';
+      recalculate();
+    });
+  }
+
+  // Format currency
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US');
+  }
+
+  // Animate value change
+  function animateValue(el) {
+    el.classList.add('animating');
+    clearTimeout(el._animTimeout);
+    el._animTimeout = setTimeout(function() {
+      el.classList.remove('animating');
+    }, 400);
+  }
+
+  // Recalculate everything
+  function recalculate() {
+    var totalMin = 0, totalMax = 0, totalMonthly = 0;
+    var breakdownHTML = '';
+
+    var cats = ['auth', 'database', 'payments', 'hosting', 'framework', 'dashboard', 'landing', 'middleware', 'ai'];
+    for (var i = 0; i < cats.length; i++) {
+      var cat = cats[i];
+      if (selections[cat]) {
+        var s = selections[cat];
+        totalMin += s.hoursMin;
+        totalMax += s.hoursMax;
+        totalMonthly += s.monthly;
+
+        if (s.hoursMin > 0 || s.hoursMax > 0) {
+          var hoursText = s.hoursMin === s.hoursMax
+            ? s.hoursMin + ' hrs'
+            : s.hoursMin + '–' + s.hoursMax + ' hrs';
+          breakdownHTML += '<div class="result-row">' +
+            '<span class="result-label">' + categoryLabels[cat] + '</span>' +
+            '<span class="result-value">' + hoursText + '</span>' +
+            '</div>';
+        }
+      }
+    }
+
+    var devCostMin = totalMin * hourlyRate;
+    var devCostMax = totalMax * hourlyRate;
+    var yearInfra = totalMonthly * 12;
+    var totalCostMin = devCostMin + yearInfra;
+    var totalCostMax = devCostMax + yearInfra;
+
+    // Update DOM
+    var elHours = document.getElementById('totalHours');
+    var elDevCost = document.getElementById('devCost');
+    var elMonthly = document.getElementById('monthlyCost');
+    var elYearInfra = document.getElementById('yearInfra');
+    var elTotal = document.getElementById('totalCost');
+    var elBreakdown = document.getElementById('breakdownRows');
+    var elSavings = document.getElementById('savingsText');
+
+    elHours.textContent = totalMin + '–' + totalMax + ' hrs';
+    elDevCost.textContent = fmt(devCostMin) + '–' + fmt(devCostMax);
+    elMonthly.textContent = fmt(totalMonthly) + '/mo';
+    elYearInfra.textContent = fmt(yearInfra);
+    elTotal.textContent = fmt(totalCostMin) + '–' + fmt(totalCostMax);
+    elBreakdown.innerHTML = breakdownHTML;
+
+    // Calculate savings (midpoint vs $79)
+    var midCost = Math.round((totalCostMin + totalCostMax) / 2);
+    var savings = midCost - 79;
+    if (savings > 0) {
+      elSavings.textContent = 'Save ' + fmt(savings) + '+';
+    } else {
+      elSavings.textContent = 'Get started for $79';
+    }
+
+    // Animate values
+    animateValue(elHours);
+    animateValue(elDevCost);
+    animateValue(elMonthly);
+    animateValue(elYearInfra);
+    animateValue(elTotal);
+  }
+
+  // FAQ toggle
+  window.toggleFaq = function(el) {
+    var item = el.parentElement;
+    var isOpen = item.classList.contains('open');
+    // Close all
+    var items = document.querySelectorAll('.faq-item');
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.remove('open');
+    }
+    // Toggle clicked
+    if (!isOpen) {
+      item.classList.add('open');
+    }
+  };
+
+  // Init
+  initSelections();
+  bindOptions();
+  bindSlider();
+  recalculate();
+})();
+</script>
+</body>
+</html>
