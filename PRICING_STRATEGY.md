@@ -14,7 +14,7 @@
 
 **Target buyer:** Solo developer or indie hacker building a single SaaS product who wants a proven starting point.
 
-### Pro -- $149
+### Pro -- $119
 
 - Everything in Standard
 - Unlimited project license (use LaunchFast as the foundation for every SaaS you build)
@@ -34,7 +34,7 @@
 - **First week price:** $79 (Standard) / $119 (Pro)
 - **Discount framing:** "Launch week pricing -- $20 off for the first 100 buyers" (or first 7 days, whichever comes first)
 - **Urgency mechanism:** Use a countdown or limited-quantity framing on Gumroad. Scarcity drives conversions for digital products.
-- **Post-launch:** Return to full price ($99 / $149) and never discount below launch price again. Early buyers should feel rewarded, not undercut.
+- **Post-launch:** Return to full price ($99 / $119) and never discount below launch price again. Early buyers should feel rewarded, not undercut.
 
 ### Launch Sequence
 

@@ -98,7 +98,7 @@ LaunchFast saves you 40+ hours of setup. At $99, that is less than $2.50 per hou
 
 Everything listed above. One project license. All future updates included.
 
-### Pro -- $149
+### Pro -- $119
 
 Everything in Standard, plus:
 
@@ -115,7 +115,7 @@ LaunchFast is built with Next.js 15 (App Router), TypeScript, NextAuth.js v5, St
 
 ### Can I use it for multiple projects?
 
-The Standard license ($99) covers one project. If you want to use LaunchFast for multiple projects, the Pro license ($149) gives you unlimited project usage.
+The Standard license ($99) covers one project. If you want to use LaunchFast for multiple projects, the Pro license ($119) gives you unlimited project usage.
 
 ### Do I need a Stripe account?
 
@@ -135,6 +135,6 @@ Due to the nature of digital products and source code, all sales are final. Howe
 
 Stop spending weeks on setup. Start building the product your users are waiting for.
 
-**Standard -- $99** | **Pro -- $149**
+**Standard -- $99** | **Pro -- $119**
 
 [Buy LaunchFast on Gumroad]

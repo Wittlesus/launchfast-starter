@@ -37,7 +37,7 @@ export default function Pricing() {
             Simple, transparent pricing
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            Start free. Upgrade when you need more.
+            One-time payment. Lifetime access. Free updates.
           </p>
         </div>
 
@@ -73,13 +73,13 @@ export default function Pricing() {
                 <span className="text-4xl font-bold">${plan.price}</span>
                 {plan.price > 0 && (
                   <span
-                    className={
+                    className={`ml-1 ${
                       "popular" in plan && plan.popular
                         ? "text-gray-300"
                         : "text-gray-500"
-                    }
+                    }`}
                   >
-                    /mo
+                    one-time
                   </span>
                 )}
               </div>
@@ -93,7 +93,7 @@ export default function Pricing() {
                 size="lg"
                 className="mt-8 w-full"
               >
-                {plan.price === 0 ? "Get Started" : "Subscribe"}
+                Buy Now
               </Button>
 
               <ul className="mt-8 space-y-3">
