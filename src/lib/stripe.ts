@@ -22,38 +22,32 @@ export const PLANS = [
     name: "Starter",
     description: "For solo developers",
     price: 79,
-    priceId: "",
+    priceId: process.env.STRIPE_STARTER_PRICE_ID || "",
     features: [
-      "Up to 100 requests/month",
-      "Basic support",
-      "Community access",
+      "Full Next.js 16 SaaS boilerplate",
+      "NextAuth v5 with Google & GitHub OAuth",
+      "Stripe subscriptions, checkout, webhooks",
+      "Prisma 6 + PostgreSQL schema",
+      "Claude AI integration (auth-gated)",
+      "Landing page, pricing page, dashboard",
+      "Middleware route protection",
+      "1 project license",
+      "Community support via GitHub",
     ],
   },
   {
     name: "Pro",
-    description: "For professionals",
+    description: "For professionals & agencies",
     price: 119,
-    priceId: process.env.STRIPE_PRO_PRICE_ID!,
+    priceId: process.env.STRIPE_PRO_PRICE_ID || "",
     features: [
-      "Unlimited requests",
-      "Priority support",
-      "API access",
-      "Advanced analytics",
+      "Everything in Starter",
+      "Unlimited project license",
+      "Priority email support",
+      "Early access to updates",
+      "Pro .cursorrules configs included",
     ],
     popular: true,
-  },
-  {
-    name: "Enterprise",
-    description: "For teams",
-    price: 299,
-    priceId: process.env.STRIPE_ENTERPRISE_PRICE_ID!,
-    features: [
-      "Everything in Pro",
-      "Custom integrations",
-      "Dedicated support",
-      "SLA guarantee",
-      "Team management",
-    ],
   },
 ] as const;
 
@@ -63,7 +57,7 @@ export async function createCheckoutSession(
   email: string
 ) {
   const session = await stripe.checkout.sessions.create({
-    mode: "subscription",
+    mode: "payment", // One-time payment for boilerplate access
     payment_method_types: ["card"],
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
