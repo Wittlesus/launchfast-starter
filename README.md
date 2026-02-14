@@ -420,6 +420,16 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 | `RESEND_API_KEY` | [Resend Dashboard](https://resend.com/api-keys) |
 | `EMAIL_FROM` | Your verified sender domain in Resend (e.g., `noreply@yourdomain.com`) |
 
+### Monitoring (Optional)
+
+| Variable | Where to get it |
+|---|---|
+| `NEXT_PUBLIC_SENTRY_DSN` | [Sentry Dashboard](https://sentry.io) - Create Next.js project |
+| `SENTRY_AUTH_TOKEN` | Sentry Settings → Auth Tokens (for uploading source maps) |
+
+**Logging** is built-in and works out of the box - see `src/lib/logger.ts`
+**Error tracking** with Sentry is optional - see [MONITORING.md](./MONITORING.md) for setup guide
+
 ---
 
 ## Tech Stack
@@ -434,6 +444,8 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 | Payments | Stripe |
 | AI | Anthropic Claude API |
 | Email | Resend |
+| Logging | Built-in structured logger |
+| Monitoring | Optional Sentry integration |
 | Deployment | Vercel |
 
 ---
