@@ -188,6 +188,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
         "@type": "Answer",
         "text": "Basic React and Next.js knowledge is helpful. The codebase is well-documented with comments explaining key decisions."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does setup take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Approximately 30 minutes. This includes cloning the repo (1 min), installing dependencies (2 min), configuring API keys (15 min with our step-by-step guide), running database migrations (1 min), and starting the dev server. The README includes direct links to where you get each API key (Stripe Dashboard, Google Cloud Console, etc.) with screenshots."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I'm a junior developer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "LaunchFast is beginner-friendly. You need basic React/Next.js knowledge and familiarity with the command line. The code includes inline comments explaining every integration, and the README links to official documentation for each service. If you get stuck during setup, email support@launchfast.dev and we'll help you get running."
+      }
     }
   ]
 }
@@ -697,6 +713,210 @@ Priority support
 </div>
 </div>
 </section>
+
+<!-- Setup Guide Preview Section -->
+<section class="py-20 bg-gray-50">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mx-auto max-w-3xl">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Complete Setup Guide Included</h2>
+<p class="mt-4 text-lg text-gray-600">Step-by-step instructions for every configuration. No guesswork.</p>
+<div class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white px-4 py-2 rounded-lg border border-gray-200">
+<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span>Total setup time: <strong class="text-gray-900">~30 minutes</strong></span>
+</div>
+</div>
+
+<!-- Setup Steps -->
+<div class="space-y-4">
+<!-- Step 1 -->
+<div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">1</div>
+<div class="flex-1">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Clone Repository</h3>
+<p class="text-sm text-gray-600 mb-3">Download the source code from GitHub</p>
+<div class="bg-gray-50 rounded-lg p-3 font-mono text-xs text-gray-800 border border-gray-200">
+git clone https://github.com/Wittlesus/launchfast-starter.git
+</div>
+<div class="mt-2 flex items-center gap-2 text-xs text-gray-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span>Time: ~1 minute</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Step 2 -->
+<div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">2</div>
+<div class="flex-1">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Install Dependencies</h3>
+<p class="text-sm text-gray-600 mb-3">Install all required packages with npm</p>
+<div class="bg-gray-50 rounded-lg p-3 font-mono text-xs text-gray-800 border border-gray-200">
+npm install
+</div>
+<div class="mt-2 flex items-center gap-2 text-xs text-gray-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span>Time: ~2 minutes</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Step 3 -->
+<div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">3</div>
+<div class="flex-1">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Configure API Keys</h3>
+<p class="text-sm text-gray-600 mb-3">Add your environment variables — detailed guide included in README</p>
+<div class="space-y-2 text-xs">
+<div class="flex items-start gap-2 text-gray-700">
+<svg class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span><strong>Database URL:</strong> Copy from your PostgreSQL provider (Supabase, Railway, or local)</span>
+</div>
+<div class="flex items-start gap-2 text-gray-700">
+<svg class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span><strong>Stripe Keys:</strong> Get from Stripe Dashboard → Developers → API Keys</span>
+</div>
+<div class="flex items-start gap-2 text-gray-700">
+<svg class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span><strong>OAuth Credentials:</strong> Create apps in Google Cloud Console & GitHub Settings</span>
+</div>
+<div class="flex items-start gap-2 text-gray-700">
+<svg class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span><strong>Claude API Key:</strong> Optional — from console.anthropic.com</span>
+</div>
+</div>
+<div class="mt-3 flex items-center gap-2 text-xs text-gray-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span>Time: ~15 minutes (with step-by-step links in README)</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Step 4 -->
+<div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">4</div>
+<div class="flex-1">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Run Database Migrations</h3>
+<p class="text-sm text-gray-600 mb-3">Set up your database schema with one command</p>
+<div class="bg-gray-50 rounded-lg p-3 font-mono text-xs text-gray-800 border border-gray-200">
+npx prisma migrate dev
+</div>
+<div class="mt-2 flex items-center gap-2 text-xs text-gray-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span>Time: ~1 minute</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Step 5 -->
+<div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">5</div>
+<div class="flex-1">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Start Development Server</h3>
+<p class="text-sm text-gray-600 mb-3">Launch your app locally and start building</p>
+<div class="bg-gray-50 rounded-lg p-3 font-mono text-xs text-gray-800 border border-gray-200">
+npm run dev
+</div>
+<div class="mt-2 flex items-center gap-2 text-xs text-green-600 font-medium">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span>✓ Your app is live at localhost:3000</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Step 6 (Optional) -->
+<div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm opacity-75">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-400 text-white flex items-center justify-center font-bold text-sm">6</div>
+<div class="flex-1">
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Deploy to Production <span class="text-sm font-normal text-gray-500">(Optional)</span></h3>
+<p class="text-sm text-gray-600 mb-3">Deploy to Vercel with one click — free hosting for hobby projects</p>
+<div class="mt-2 flex items-center gap-2 text-xs text-gray-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<span>Time: ~10 minutes (Vercel connects to GitHub automatically)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Skill Level Requirements -->
+<div class="mt-12 bg-white rounded-xl border border-blue-200 p-6 shadow-sm">
+<h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+What You Need to Know
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+<div>
+<h4 class="font-semibold text-gray-900 mb-2">✓ Required Knowledge:</h4>
+<ul class="space-y-1.5 text-gray-600">
+<li class="flex items-start gap-2">
+<span class="text-green-600 mt-0.5">•</span>
+<span>Basic React (components, props, hooks)</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-green-600 mt-0.5">•</span>
+<span>Familiarity with Next.js (pages/routing)</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-green-600 mt-0.5">•</span>
+<span>How to use terminal/command line</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-green-600 mt-0.5">•</span>
+<span>Basic understanding of environment variables</span>
+</li>
+</ul>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 mb-2">✓ Nice to Have (but not required):</h4>
+<ul class="space-y-1.5 text-gray-600">
+<li class="flex items-start gap-2">
+<span class="text-blue-600 mt-0.5">•</span>
+<span>Previous experience with authentication flows</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-blue-600 mt-0.5">•</span>
+<span>Knowledge of Prisma ORM or SQL</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-blue-600 mt-0.5">•</span>
+<span>Stripe integration experience</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-blue-600 mt-0.5">•</span>
+<span>TypeScript understanding</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+<p class="text-sm text-blue-900"><strong>First-time builder?</strong> The codebase includes inline comments explaining every integration. The README links to official docs for each service (Stripe, Google OAuth, etc.) with screenshots showing exactly where to find your API keys.</p>
+</div>
+</div>
+
+<!-- Support callout -->
+<div class="mt-8 text-center">
+<p class="text-sm text-gray-600 mb-3">Still have questions about setup?</p>
+<a href="mailto:support@launchfast.dev?subject=Setup%20Questions" class="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-gray-700">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+Email us — we'll walk you through it
+</a>
+</div>
+</div>
+</div>
+</section>
+
 
 <!-- Social Proof Section -->
 <section class="py-20 bg-white">
