@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PageBrain - Summarize Any Page with AI</title>
+  <meta name="description" content="Get key points, action items, and insights from any webpage in seconds. A Chrome extension powered by AI.">
+  <meta property="og:title" content="PageBrain - Summarize Any Page with AI">
+  <meta property="og:description" content="Get key points, action items, and insights from any webpage in seconds.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='url(%23g)'/><defs><linearGradient id='g' x1='0' y1='0' x2='32' y2='32'><stop stop-color='%237C3AED'/><stop offset='1' stop-color='%233B82F6'/></linearGradient></defs><text x='16' y='22' font-size='18' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>P</text></svg>">
+  <style>
+    /* ========================================
+       Reset & Base
+       ======================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0A0A0A;
+      --bg-subtle: #111111;
+      --bg-card: #161616;
+      --bg-card-hover: #1a1a1a;
+      --border: #222222;
+      --border-subtle: #1a1a1a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #666666;
+      --accent-purple: #7C3AED;
+      --accent-blue: #3B82F6;
+      --gradient: linear-gradient(135deg, #7C3AED, #3B82F6);
+      --gradient-subtle: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(59, 130, 246, 0.12));
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Oxygen, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ========================================
+       Utilities
+       ======================================== */
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .gradient-text {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-purple);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: clamp(16px, 2vw, 18px);
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .section-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    /* ========================================
+       Navigation
+       ======================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 24px;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: color 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-cta {
+      padding: 8px 20px;
+      background: var(--gradient);
+      color: white !important;
+      border-radius: var(--radius-sm);
+      font-weight: 600 !important;
+      font-size: 14px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-cta:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .nav-mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    /* ========================================
+       Hero
+       ======================================== */
+    .hero {
+      padding: 160px 24px 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(124, 58, 237, 0.08) 0%, rgba(59, 130, 246, 0.04) 40%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px 6px 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 64px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      font-family: var(--font);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-primary svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      font-family: var(--font);
+    }
+
+    .btn-secondary:hover {
+      color: var(--text-primary);
+      border-color: var(--text-tertiary);
+      background: var(--bg-card);
+    }
+
+    /* Mockup area */
+    .hero-mockup {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .mockup-window {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.03) inset;
+    }
+
+    .mockup-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mockup-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .mockup-dot:nth-child(1) { background: #ff5f57; }
+    .mockup-dot:nth-child(2) { background: #ffbd2e; }
+    .mockup-dot:nth-child(3) { background: #28c840; }
+
+    .mockup-content {
+      padding: 32px;
+    }
+
+    .mockup-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .mockup-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .mockup-app-name {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .mockup-section {
+      margin-bottom: 20px;
+    }
+
+    .mockup-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .mockup-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-tertiary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mockup-section-label .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .mockup-bullet {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .mockup-bullet::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--text-tertiary);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    .mockup-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+
+    .mockup-takeaway {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ========================================
+       How It Works
+       ======================================== */
+    .how-it-works {
+      padding: 100px 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      position: relative;
+    }
+
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: calc(16.67% + 24px);
+      right: calc(16.67% + 24px);
+      height: 2px;
+      background: var(--border);
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      position: relative;
+      z-index: 1;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .step:hover .step-number {
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 24px rgba(124, 58, 237, 0.2);
+    }
+
+    .step-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
+    /* ========================================
+       Features
+       ======================================== */
+    .features {
+      padding: 100px 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--gradient-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ========================================
+       Pricing
+       ======================================== */
+    .pricing {
+      padding: 100px 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .pricing-card:hover {
+      border-color: #333;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent-purple);
+      position: relative;
+      box-shadow: 0 0 40px rgba(124, 58, 237, 0.1);
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      background: var(--gradient);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .pricing-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .pricing-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .pricing-price {
+      margin-bottom: 32px;
+    }
+
+    .pricing-amount {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .pricing-period {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      margin-left: 4px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 32px;
+      flex: 1;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .pricing-features li::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gradient-subtle);
+      flex-shrink: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 10px;
+    }
+
+    .pricing-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      font-family: var(--font);
+      text-decoration: none;
+      display: block;
+    }
+
+    .pricing-btn-outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .pricing-btn-outline:hover {
+      border-color: var(--text-tertiary);
+      background: var(--bg-card-hover);
+    }
+
+    .pricing-btn-primary {
+      background: var(--gradient);
+      color: white;
+      border: none;
+    }
+
+    .pricing-btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(124, 58, 237, 0.3);
+    }
+
+    /* ========================================
+       FAQ
+       ======================================== */
+    .faq {
+      padding: 100px 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      text-align: left;
+      gap: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .faq-question:hover {
+      color: var(--accent-purple);
+    }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+      border-color: var(--accent-purple);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+
+    .faq-answer-inner {
+      padding-bottom: 24px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ========================================
+       CTA Banner
+       ======================================== */
+    .cta-banner {
+      padding: 100px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(124, 58, 237, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-banner h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .cta-banner p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    /* ========================================
+       Footer
+       ======================================== */
+    .footer {
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-logo-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-secondary);
+    }
+
+    /* ========================================
+       Responsive
+       ======================================== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 24px;
+        gap: 0;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links li {
+        width: 100%;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 12px 0;
+        font-size: 16px;
+      }
+
+      .nav-cta {
+        margin-top: 8px;
+        text-align: center;
+        display: block;
+        width: 100%;
+        padding: 12px 20px;
+      }
+
+      .nav-mobile-toggle {
+        display: block;
+      }
+
+      .hero {
+        padding: 120px 24px 64px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        margin-bottom: 48px;
+      }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .steps-grid::before {
+        display: none;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .mockup-content {
+        padding: 20px;
+      }
+
+      .feature-card {
+        padding: 24px;
+      }
+
+      .pricing-card {
+        padding: 28px;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* ========================================
+       Animations
+       ======================================== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       Navigation
+       ============================================ -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">P</div>
+        PageBrain
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="https://chromewebstore.google.com/detail/pagebrain" class="nav-cta">Add to Chrome</a></li>
+      </ul>
+      <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============================================
+       Hero
+       ============================================ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Free Chrome Extension
+      </div>
+      <h1>Summarize any page<br><span class="gradient-text">with AI</span></h1>
+      <p class="hero-subtitle">Get key points, action items, and insights from any webpage in seconds. Powered by Claude.</p>
+      <div class="hero-actions">
+        <a href="https://chromewebstore.google.com/detail/pagebrain" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+          Add to Chrome &mdash; It's Free
+        </a>
+        <a href="#how-it-works" class="btn-secondary">See how it works</a>
+      </div>
+
+      <!-- Mockup -->
+      <div class="hero-mockup fade-in">
+        <div class="mockup-window">
+          <div class="mockup-titlebar">
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+          </div>
+          <div class="mockup-content">
+            <div class="mockup-header">
+              <div class="mockup-logo">P</div>
+              <span class="mockup-app-name">PageBrain</span>
+            </div>
+
+            <div class="mockup-section">
+              <div class="mockup-section-label">
+                <span class="dot" style="background: var(--accent-purple);"></span>
+                Key Points
+              </div>
+              <div class="mockup-bullet">Article covers new breakthroughs in renewable energy storage</div>
+              <div class="mockup-bullet">Battery costs have dropped 40% in the past two years</div>
+              <div class="mockup-bullet">Three major companies announced grid-scale deployments</div>
+            </div>
+
+            <div class="mockup-divider"></div>
+
+            <div class="mockup-section">
+              <div class="mockup-section-label">
+                <span class="dot" style="background: var(--accent-blue);"></span>
+                Action Items
+              </div>
+              <div class="mockup-bullet">Research investment opportunities in battery technology sector</div>
+              <div class="mockup-bullet">Review your energy provider's renewable options</div>
+            </div>
+
+            <div class="mockup-divider"></div>
+
+            <div class="mockup-section">
+              <div class="mockup-section-label">
+                <span class="dot" style="background: #22c55e;"></span>
+                Main Takeaway
+              </div>
+              <p class="mockup-takeaway">Energy storage is reaching an inflection point where cost and scale make widespread renewable adoption economically viable for the first time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       How It Works
+       ============================================ -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Three steps to clarity</h2>
+        <p class="section-subtitle">No setup headaches. Install, click, and read your summary in seconds.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step fade-in">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Install the extension</h3>
+          <p class="step-desc">Add PageBrain to Chrome in one click from the Chrome Web Store. Enter your Anthropic API key.</p>
+        </div>
+
+        <div class="step fade-in">
+          <div class="step-number">2</div>
+          <h3 class="step-title">Click on any page</h3>
+          <p class="step-desc">Navigate to any webpage and click the PageBrain icon in your toolbar. Hit "Summarize This Page."</p>
+        </div>
+
+        <div class="step fade-in">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Read your summary</h3>
+          <p class="step-desc">Get a structured breakdown with key points, action items, and the main takeaway in seconds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       Features
+       ============================================ -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">Everything you need,<br>nothing you don't</h2>
+        <p class="section-subtitle">Built for speed and simplicity. No accounts, no bloat, no tracking.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 15l-2 5L9 9l11 4-5 2z"/><path d="M22 22L15 15"/></svg>
+          </div>
+          <h3 class="feature-title">One-click summaries</h3>
+          <p class="feature-desc">Click the icon, hit summarize. No copy-pasting, no switching tabs, no friction at all.</p>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+          <h3 class="feature-title">Key points extraction</h3>
+          <p class="feature-desc">AI identifies the most important facts, arguments, and information on the page.</p>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3 class="feature-title">Action items</h3>
+          <p class="feature-desc">Get practical next steps you can take based on what you just read. Never lose a to-do again.</p>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <h3 class="feature-title">Configurable length</h3>
+          <p class="feature-desc">Choose between short, medium, or detailed summaries depending on how deep you want to go.</p>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 class="feature-title">Private by design</h3>
+          <p class="feature-desc">Your API key is stored locally in your browser. No accounts, no analytics, no data collection.</p>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3 class="feature-title">Works on any page</h3>
+          <p class="feature-desc">Articles, documentation, blog posts, research papers, news - if it has text, PageBrain can summarize it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       Pricing
+       ============================================ -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="section-label">Pricing</div>
+        <h2 class="section-title">Start free, upgrade when<br>you need more</h2>
+        <p class="section-subtitle">No credit card required. Use your own API key and only pay for what you use.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card fade-in">
+          <div class="pricing-name">Free</div>
+          <div class="pricing-desc">Perfect for trying out PageBrain and casual use.</div>
+          <div class="pricing-price">
+            <span class="pricing-amount">$0</span>
+            <span class="pricing-period">/ month</span>
+          </div>
+          <ul class="pricing-features">
+            <li>5 summaries per day</li>
+            <li>All summary formats</li>
+            <li>Key points + action items</li>
+            <li>Configurable length</li>
+            <li>Your own API key</li>
+          </ul>
+          <a href="https://chromewebstore.google.com/detail/pagebrain" class="pricing-btn pricing-btn-outline">Get started free</a>
+        </div>
+
+        <div class="pricing-card featured fade-in">
+          <div class="pricing-badge">Most Popular</div>
+          <div class="pricing-name">Pro</div>
+          <div class="pricing-desc">For power users who summarize pages daily.</div>
+          <div class="pricing-price">
+            <span class="pricing-amount">$4<span style="font-size: 28px;">.99</span></span>
+            <span class="pricing-period">/ month</span>
+          </div>
+          <ul class="pricing-features">
+            <li>Unlimited summaries</li>
+            <li>All summary formats</li>
+            <li>Key points + action items</li>
+            <li>Configurable length</li>
+            <li>Your own API key</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="https://chromewebstore.google.com/detail/pagebrain" class="pricing-btn pricing-btn-primary">Get PageBrain Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FAQ
+       ============================================ -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Common questions</h2>
+      </div>
+
+      <div class="faq-list fade-in">
+        <div class="faq-item">
+          <button class="faq-question">
+            Do I need my own API key?
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Yes. PageBrain uses the Anthropic Claude API to generate summaries. You'll need an API key from <a href="https://console.anthropic.com" style="color: var(--accent-purple);">console.anthropic.com</a>. Your key is stored locally in your browser and only used to communicate directly with the Anthropic API. This means you have full control over your usage and costs.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            Is my data private?
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Absolutely. PageBrain does not collect any analytics, telemetry, or usage data. The only network request is from your browser directly to the Anthropic API when you request a summary. Your API key never leaves your browser's local storage. We have no servers and no database.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            What pages can PageBrain summarize?
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              PageBrain works on any standard webpage with text content - articles, blog posts, documentation, research papers, news sites, and more. It cannot access content behind login walls, browser internal pages (chrome://), or pages that block content scripts.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            How much does the Anthropic API cost?
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              PageBrain uses Claude Sonnet, which is very affordable. A typical page summary costs fractions of a cent. Most casual users will spend less than $1 per month on API costs. You can monitor your usage at <a href="https://console.anthropic.com" style="color: var(--accent-purple);">console.anthropic.com</a>.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            Can I customize the summary output?
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Yes. You can choose between Short, Medium, and Detailed summary lengths in the extension settings. Short gives you 3 bullet points and a one-line takeaway. Detailed gives you a thorough 10-point breakdown. Every summary includes key points, action items, and a main takeaway.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       CTA Banner
+       ============================================ -->
+  <section class="cta-banner">
+    <div class="container fade-in">
+      <h2>Stop skimming.<br><span class="gradient-text">Start understanding.</span></h2>
+      <p>Join thousands of readers who save hours every week with PageBrain.</p>
+      <a href="https://chromewebstore.google.com/detail/pagebrain" class="btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+        Add to Chrome &mdash; It's Free
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================
+       Footer
+       ============================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div class="footer-logo-icon">P</div>
+        <span class="footer-copy">PageBrain &copy; 2025. All rights reserved.</span>
+      </div>
+      <ul class="footer-links">
+        <li><a href="https://github.com/your-username/pagebrain" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:support@pagebrain.app">Contact</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       JavaScript
+       ============================================ -->
+  <script>
+    (function() {
+      'use strict';
+
+      // --- Navbar scroll effect ---
+      const nav = document.getElementById('nav');
+      let lastScroll = 0;
+
+      function handleScroll() {
+        const scrollY = window.scrollY;
+        if (scrollY > 20) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+        lastScroll = scrollY;
+      }
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      handleScroll();
+
+      // --- Mobile nav toggle ---
+      const mobileToggle = document.getElementById('mobileToggle');
+      const navLinks = document.getElementById('navLinks');
+
+      mobileToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('open');
+      });
+
+      // Close mobile nav when a link is clicked
+      navLinks.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() {
+          navLinks.classList.remove('open');
+        });
+      });
+
+      // --- FAQ accordion ---
+      document.querySelectorAll('.faq-question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const item = btn.closest('.faq-item');
+          const isOpen = item.classList.contains('open');
+
+          // Close all items
+          document.querySelectorAll('.faq-item').forEach(function(faqItem) {
+            faqItem.classList.remove('open');
+          });
+
+          // Toggle current
+          if (!isOpen) {
+            item.classList.add('open');
+          }
+        });
+      });
+
+      // --- Scroll-triggered fade-in animations ---
+      function initFadeAnimations() {
+        var elements = document.querySelectorAll('.fade-in');
+
+        if ('IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -40px 0px'
+          });
+
+          elements.forEach(function(el) {
+            observer.observe(el);
+          });
+        } else {
+          // Fallback: show everything immediately
+          elements.forEach(function(el) {
+            el.classList.add('visible');
+          });
+        }
+      }
+
+      initFadeAnimations();
+
+      // --- Smooth scroll for anchor links ---
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          var href = this.getAttribute('href');
+          if (href === '#') return;
+
+          var target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            var navHeight = nav.offsetHeight;
+            var targetPos = target.getBoundingClientRect().top + window.scrollY - navHeight;
+            window.scrollTo({
+              top: targetPos,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
