@@ -7,58 +7,286 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css)
 ![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?style=for-the-badge&logo=prisma)
 
-Stop wasting weeks wiring up authentication, payments, and email. LaunchFast gives you a production-ready Next.js SaaS boilerplate so you can focus on what matters -- building your product.
+A production-ready Next.js SaaS boilerplate. Auth, payments, AI, email -- all wired up. Here's what the actual code looks like.
 
 ---
 
-## What's Included
+## The Code
 
-- **Next.js 15 App Router with TypeScript** -- Server components, route groups, and the latest React 19 features out of the box
-- **Authentication (NextAuth.js v5)** -- Google and GitHub OAuth pre-configured with Prisma adapter, session callbacks, and protected routes
-- **Stripe Payments** -- Subscription checkout, billing portal, webhook handling, and a pricing page with Free / Pro / Enterprise tiers
-- **AI Integration (Anthropic Claude API)** -- Ready-to-use API route for Claude, with auth-gated access and streaming-ready architecture
-- **Database (Prisma ORM + PostgreSQL)** -- User, Account, Session, and VerificationToken models with Stripe fields baked in
-- **Transactional Email (Resend)** -- Welcome emails and a reusable `sendEmail` utility, ready to extend
-- **Landing Page** -- Hero section, pricing cards, header, and footer components -- everything you need to start converting visitors
-- **Dashboard** -- Auth-protected dashboard with session-aware content
-- **Middleware-Protected Routes** -- `/dashboard` and all sub-routes locked behind NextAuth middleware
-- **Tailwind CSS v4** -- Utility-first styling with PostCSS, zero config required
-- **Vercel-Ready Deployment** -- Works with `vercel deploy` out of the box, no extra configuration
+### Authentication (30 lines, fully configured)
+
+Google + GitHub OAuth with Prisma persistence. This is the entire auth config:
+
+```typescript
+// src/lib/auth.ts
+import NextAuth from "next-auth";
+import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "@/lib/prisma";
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    GitHub({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
+  ],
+  pages: {
+    signIn: "/login",
+  },
+  callbacks: {
+    session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
+  },
+});
+```
+
+Route protection? Two lines in middleware:
+
+```typescript
+// src/middleware.ts
+export { auth as middleware } from "@/lib/auth";
+
+export const config = {
+  matcher: ["/dashboard/:path*"],
+};
+```
+
+### Stripe Webhooks (production-ready)
+
+Handles checkout completion, subscription renewals, and cancellations. Signature verification, Prisma updates, all the edge cases:
+
+```typescript
+// src/app/api/stripe/webhook/route.ts
+import { headers } from "next/headers";
+import { NextResponse } from "next/server";
+import { stripe } from "@/lib/stripe";
+import { prisma } from "@/lib/prisma";
+import Stripe from "stripe";
+
+export async function POST(req: Request) {
+  const body = await req.text();
+  const headersList = await headers();
+  const signature = headersList.get("Stripe-Signature")!;
+
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
+  } catch {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+  }
+
+  switch (event.type) {
+    case "checkout.session.completed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const sub = await stripe.subscriptions.retrieve(
+        session.subscription as string
+      );
+      const subscription = sub as unknown as Stripe.Subscription;
+
+      await prisma.user.update({
+        where: { id: session.metadata!.userId },
+        data: {
+          stripeCustomerId: session.customer as string,
+          stripeSubscriptionId: subscription.id,
+          stripePriceId: subscription.items.data[0].price.id,
+          stripeCurrentPeriodEnd: new Date(
+            (subscription as unknown as Record<string, unknown>)
+              .current_period_end as number * 1000
+          ),
+        },
+      });
+      break;
+    }
+
+    case "invoice.payment_succeeded": {
+      const invoice = event.data.object as unknown as Record<string, unknown>;
+      if (!invoice.subscription) break;
+
+      const sub = await stripe.subscriptions.retrieve(
+        invoice.subscription as string
+      );
+      const subscription = sub as unknown as Stripe.Subscription;
+
+      await prisma.user.update({
+        where: { stripeSubscriptionId: subscription.id },
+        data: {
+          stripePriceId: subscription.items.data[0].price.id,
+          stripeCurrentPeriodEnd: new Date(
+            (subscription as unknown as Record<string, unknown>)
+              .current_period_end as number * 1000
+          ),
+        },
+      });
+      break;
+    }
+
+    case "customer.subscription.deleted": {
+      const subscription = event.data.object as Stripe.Subscription;
+
+      await prisma.user.update({
+        where: { stripeSubscriptionId: subscription.id },
+        data: {
+          stripeSubscriptionId: null,
+          stripePriceId: null,
+          stripeCurrentPeriodEnd: null,
+        },
+      });
+      break;
+    }
+  }
+
+  return NextResponse.json({ received: true });
+}
+```
+
+### Stripe Checkout + Billing Portal
+
+Clean helpers for creating checkout sessions and managing billing:
+
+```typescript
+// src/lib/stripe.ts (checkout helpers)
+export async function createCheckoutSession(
+  userId: string,
+  priceId: string,
+  email: string
+) {
+  const session = await stripe.checkout.sessions.create({
+    mode: "subscription",
+    payment_method_types: ["card"],
+    line_items: [{ price: priceId, quantity: 1 }],
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`,
+    customer_email: email,
+    metadata: { userId },
+  });
+
+  return session;
+}
+
+export async function createBillingPortalSession(customerId: string) {
+  const session = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+  });
+
+  return session;
+}
+```
+
+### AI Integration (Claude API, auth-gated)
+
+One API route. Session-protected. Drop in your Anthropic key and it works:
+
+```typescript
+// src/app/api/ai/route.ts
+import { NextResponse } from "next/server";
+import Anthropic from "@anthropic-ai/sdk";
+import { auth } from "@/lib/auth";
+
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY!,
+});
+
+export async function POST(req: Request) {
+  const session = await auth();
+
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { prompt, systemPrompt } = await req.json();
+
+  if (!prompt) {
+    return NextResponse.json({ error: "Prompt required" }, { status: 400 });
+  }
+
+  const message = await anthropic.messages.create({
+    model: "claude-sonnet-4-5-20250929",
+    max_tokens: 1024,
+    system: systemPrompt || "You are a helpful assistant.",
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const content = message.content[0];
+  const text = content.type === "text" ? content.text : "";
+
+  return NextResponse.json({ response: text });
+}
+```
+
+### Transactional Email (Resend)
+
+Welcome emails out of the box, plus a generic `sendEmail` for anything else:
+
+```typescript
+// src/lib/email.ts
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function sendWelcomeEmail(email: string, name: string) {
+  await resend.emails.send({
+    from: `${process.env.APP_NAME} <${process.env.EMAIL_FROM}>`,
+    to: email,
+    subject: `Welcome to ${process.env.APP_NAME}!`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1>Welcome, ${name}!</h1>
+        <p>Thanks for signing up. You're all set to start using ${process.env.APP_NAME}.</p>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard"
+           style="display: inline-block; padding: 12px 24px; background: #000;
+                  color: #fff; text-decoration: none; border-radius: 6px;">
+          Go to Dashboard
+        </a>
+      </div>
+    `,
+  });
+}
+
+export async function sendEmail({
+  to,
+  subject,
+  html,
+}: {
+  to: string;
+  subject: string;
+  html: string;
+}) {
+  return resend.emails.send({
+    from: `${process.env.APP_NAME} <${process.env.EMAIL_FROM}>`,
+    to,
+    subject,
+    html,
+  });
+}
+```
 
 ---
 
 ## Quick Start
 
-**1. Clone the repository**
-
 ```bash
-git clone https://github.com/your-username/launchfast-starter.git
+git clone https://github.com/Wittlesus/launchfast-starter.git
 cd launchfast-starter
-```
-
-**2. Install dependencies**
-
-```bash
 npm install
-```
-
-**3. Set up your environment variables**
-
-```bash
-cp .env.example .env
-```
-
-Open `.env` and fill in your API keys (see [Configuration Guide](#configuration-guide) below).
-
-**4. Set up the database**
-
-```bash
+cp .env.example .env    # fill in your API keys
 npx prisma db push
-```
-
-**5. Run the dev server**
-
-```bash
 npm run dev
 ```
 
@@ -169,38 +397,19 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 
 ---
 
-## Deployment
-
-### Deploy to Vercel
-
-The fastest way to go live:
-
-1. Push your repo to GitHub
-2. Go to [vercel.com/new](https://vercel.com/new) and import the repository
-3. Add all environment variables from your `.env` file
-4. Deploy
-
-That's it. Vercel auto-detects Next.js and handles the build.
-
-> **Important:** Update `NEXT_PUBLIC_APP_URL` to your production URL and update your OAuth callback URLs in Google/GitHub to point to your production domain.
-
----
-
 ## Tech Stack
 
-| Category | Technology | Purpose |
-|---|---|---|
-| Framework | Next.js 15 | App Router, React Server Components |
-| Language | TypeScript 5 | End-to-end type safety |
-| Styling | Tailwind CSS v4 | Utility-first CSS framework |
-| Authentication | NextAuth.js v5 | OAuth (Google, GitHub) with session management |
-| Database | PostgreSQL + Prisma 7 | Type-safe ORM with migrations |
-| Payments | Stripe | Subscriptions, checkout, billing portal |
-| AI | Anthropic Claude API | Conversational AI integration |
-| Email | Resend | Transactional emails |
-| UI Icons | Lucide React | Consistent icon set |
-| Notifications | React Hot Toast | Toast notifications |
-| Deployment | Vercel | Zero-config hosting |
+| Category | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router, RSC) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS v4 |
+| Auth | NextAuth.js v5 |
+| Database | PostgreSQL + Prisma |
+| Payments | Stripe |
+| AI | Anthropic Claude API |
+| Email | Resend |
+| Deployment | Vercel |
 
 ---
 
@@ -218,9 +427,3 @@ npm run lint      # Run ESLint
 ## License
 
 MIT License. Use it for unlimited personal and commercial projects.
-
----
-
-**Built for developers who'd rather ship than set up infrastructure.**
-
-[Get LaunchFast](https://gumroad.com) | [Documentation](https://docs.launchfast.dev) | [Twitter](https://twitter.com/launchfast)
