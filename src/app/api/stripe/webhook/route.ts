@@ -64,8 +64,7 @@ export async function POST(req: Request) {
               data: {
                 stripeCustomerId: session.customer as string,
                 // For one-time payment, grant lifetime access
-                // Store payment intent or session ID for record-keeping
-                stripePaymentIntentId: session.payment_intent as string,
+                // Payment intent ID is stored in Stripe, not needed in our DB
               },
             });
             console.log(`One-time payment completed for user: ${userId}`);
