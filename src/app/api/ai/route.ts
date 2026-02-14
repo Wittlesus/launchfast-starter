@@ -1,44 +1,15 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { auth } from "@/lib/auth";
+import {
+  aiRateLimiter,
+  getRateLimitKey,
+  inMemoryRateLimit,
+} from "@/lib/ratelimit";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
-
-// --- In-memory rate limiting (10 requests / 60 s per user) ---
-const RATE_LIMIT_MAX = 10;
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const rateLimitMap = new Map<string, number[]>();
-
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const timestamps = rateLimitMap.get(key) ?? [];
-
-  // Keep only timestamps within the current window
-  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-  rateLimitMap.set(key, recent);
-
-  if (recent.length >= RATE_LIMIT_MAX) {
-    return true;
-  }
-
-  recent.push(now);
-  return false;
-}
-
-// Periodically clean up stale entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, timestamps] of rateLimitMap) {
-    const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-    if (recent.length === 0) {
-      rateLimitMap.delete(key);
-    } else {
-      rateLimitMap.set(key, recent);
-    }
-  }
-}, 5 * 60_000);
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -47,17 +18,39 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Rate limit by user ID, falling back to IP address
-  const rateLimitKey =
-    session.user.id ??
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "unknown";
+  // Rate limiting with Upstash Redis (production) or in-memory fallback (dev)
+  const rateLimitKey = getRateLimitKey(req, session.user.id);
 
-  if (isRateLimited(rateLimitKey)) {
-    return NextResponse.json(
-      { error: "Too many requests. Please try again later." },
-      { status: 429 }
-    );
+  if (aiRateLimiter) {
+    // Production: distributed rate limiting with Upstash Redis
+    const { success, limit, remaining, reset } =
+      await aiRateLimiter.limit(rateLimitKey);
+
+    if (!success) {
+      return NextResponse.json(
+        {
+          error: "Too many requests. Please try again later.",
+          limit,
+          remaining,
+          reset: new Date(reset).toISOString(),
+        },
+        { status: 429 }
+      );
+    }
+  } else {
+    // Development fallback: in-memory rate limiting
+    const result = inMemoryRateLimit(rateLimitKey, 10);
+
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          error: "Too many requests. Please try again later.",
+          limit: result.limit,
+          remaining: result.remaining,
+        },
+        { status: 429 }
+      );
+    }
   }
 
   const { prompt, systemPrompt } = await req.json();

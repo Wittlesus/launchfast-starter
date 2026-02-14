@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
+import {
+  webhookRateLimiter,
+  getRateLimitKey,
+  inMemoryRateLimit,
+} from "@/lib/ratelimit";
 
 // In-memory cache for idempotency (production should use Redis or DB)
 const processedEvents = new Map<string, number>();
@@ -19,6 +24,27 @@ setInterval(() => {
 }, 60 * 60 * 1000); // Clean every hour
 
 export async function POST(req: Request) {
+  // Rate limiting: 100 webhook requests per 60 seconds per IP
+  const rateLimitKey = getRateLimitKey(req);
+
+  if (webhookRateLimiter) {
+    const { success } = await webhookRateLimiter.limit(rateLimitKey);
+    if (!success) {
+      return NextResponse.json(
+        { error: "Webhook rate limit exceeded" },
+        { status: 429 }
+      );
+    }
+  } else {
+    const result = inMemoryRateLimit(rateLimitKey, 100);
+    if (!result.success) {
+      return NextResponse.json(
+        { error: "Webhook rate limit exceeded" },
+        { status: 429 }
+      );
+    }
+  }
+
   const body = await req.text();
   const headersList = await headers();
   const signature = headersList.get("Stripe-Signature");
