@@ -21,7 +21,7 @@ export default function Pricing() {
             <div
               key={plan.name}
               className={`rounded-2xl p-8 ${
-                plan.popular === true === true
+                plan.popular === true
                   ? "bg-black text-white ring-2 ring-black"
                   : "bg-white ring-1 ring-gray-200"
               }`}
@@ -61,6 +61,9 @@ export default function Pricing() {
               >
                 Buy Now
               </a>
+              <p className={`mt-2 text-center text-sm ${plan.popular === true ? "text-gray-400" : "text-gray-500"}`}>
+                30-day money-back guarantee — no questions asked
+              </p>
 
               <ul className="mt-8 space-y-3">
                 {plan.features.map((feature) => (
