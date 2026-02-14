@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Next.js Hosting Costs 2026 — Vercel vs Railway vs Alternatives (Full Comparison)</title>
+<meta name="description" content="Complete cost comparison of Next.js hosting in 2026. Compare Vercel, Railway, Fly.io, AWS Amplify, Render pricing. Hidden costs, free tiers, and bandwidth limits explained.">
+<meta name="keywords" content="vercel pricing, next.js hosting cost, vercel alternatives for next.js, railway pricing, fly.io pricing, nextjs deployment cost, vercel vs railway, cheap next.js hosting">
+<link rel="canonical" href="https://wittlesus.github.io/launchfast-starter/nextjs-deployment-costs.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Next.js Hosting Costs 2026 — Vercel vs Railway vs Alternatives">
+<meta property="og:description" content="Complete cost comparison of Next.js hosting. Compare Vercel, Railway, Fly.io, AWS Amplify, and Render pricing with hidden costs revealed.">
+<meta property="og:url" content="https://wittlesus.github.io/launchfast-starter/nextjs-deployment-costs.html">
+<meta property="og:site_name" content="LaunchFast">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Next.js Hosting Costs 2026 — Vercel vs Railway vs Alternatives">
+<meta name="twitter:description" content="Complete cost comparison of Next.js hosting in 2026. Hidden costs, free tiers, and pricing explained.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much does it cost to host a Next.js app on Vercel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vercel offers a free Hobby tier for personal projects with 100GB bandwidth and 100 hours of serverless execution. The Pro plan costs $20/month per team member with 1TB bandwidth and 1,000 hours execution. Enterprise pricing is custom. Watch for bandwidth overage costs at $40/100GB and function execution costs beyond the free tier."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best Vercel alternatives for Next.js hosting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The best Vercel alternatives for Next.js hosting in 2026 are: Railway ($5/month starter, great for side projects), Fly.io (pay-as-you-go with generous free tier), AWS Amplify ($0.01/build minute, scales well), Render (free tier available, $7/month for production), and self-hosted VPS ($4-20/month on DigitalOcean or Hetzner). Railway offers the best Vercel-like experience at lower cost."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Vercel worth the cost for a startup?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vercel is worth it for well-funded startups that prioritize developer experience and need enterprise features. For bootstrapped startups or MVPs, Railway or Fly.io offer 70-80% of Vercel's DX at 1/4 the cost. The $20/user/month Vercel Pro cost adds up quickly for teams. Most early-stage startups are better served by Railway ($5-20/month) or Fly.io until they reach significant scale."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the hidden costs of hosting Next.js?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hidden Next.js hosting costs include: bandwidth overage fees ($40-400 per 100GB on Vercel), serverless function execution time charges (beyond free tier limits), build minutes for CI/CD, cold start delays on cheaper tiers, database hosting (not included in most plans), CDN egress fees, and increased costs as you scale team members. Always calculate total cost including bandwidth, execution time, and team size—not just base subscription."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I host Next.js for free in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, you can host Next.js for free on Vercel Hobby tier (100GB bandwidth, personal projects only), Render free tier (limited resources, cold starts), Fly.io free tier (3 VMs with 256MB RAM), or Railway's trial credits. However, free tiers have strict limits and aren't suitable for production apps with real traffic. Budget $5-20/month minimum for a serious project to avoid bandwidth caps and cold starts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much bandwidth does a Next.js app use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A typical Next.js app uses 500KB-2MB per page load depending on images, fonts, and JavaScript bundles. With image optimization and proper caching, expect 200-500KB per visit. For 10,000 monthly visitors averaging 3 pages each, that's roughly 6-30GB/month bandwidth. Always use image optimization (next/image) and proper caching headers to minimize bandwidth costs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use serverless or traditional hosting for Next.js?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use serverless (Vercel, Railway serverless) for: variable traffic, infrequent requests, rapid scaling needs, and developer convenience. Use traditional VPS/container hosting (Fly.io, Railway containers, self-hosted) for: consistent traffic, cost optimization at scale, full control, and avoiding cold starts. For most early-stage SaaS apps, Railway's container hosting offers the best balance of simplicity and cost."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111119;
+  --bg-card: #16161f;
+  --bg-input: #1c1c28;
+  --border: #2a2a3a;
+  --border-hover: #3a3a4f;
+  --text-primary: #f0f0f5;
+  --text-secondary: #9999aa;
+  --text-muted: #666677;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-glow: rgba(99, 102, 241, 0.15);
+  --green: #22c55e;
+  --green-light: #4ade80;
+  --green-glow: rgba(34, 197, 94, 0.12);
+  --yellow: #eab308;
+  --red: #ef4444;
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* Header */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  height: 64px;
+}
+.header-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 100%;
+}
+.header-logo { font-size: 20px; font-weight: 700; color: #fff; text-decoration: none; }
+.header-nav { display: flex; align-items: center; gap: 24px; }
+.header-nav a { font-size: 14px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+.header-nav a:hover { color: #fff; }
+.header-cta {
+  display: inline-flex; align-items: center; padding: 8px 20px;
+  background: #fff; color: #000; border-radius: 8px;
+  font-size: 14px; font-weight: 600; text-decoration: none; transition: opacity 0.2s;
+}
+.header-cta:hover { opacity: 0.9; text-decoration: none; }
+
+/* Hero */
+.hero { padding: 120px 0 60px; text-align: center; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 100px;
+  border: 1px solid var(--border); color: var(--text-secondary);
+  font-size: 14px; margin-bottom: 24px;
+}
+.hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+.hero h1 .gradient {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #6366f1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p { font-size: 18px; color: var(--text-secondary); max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+/* Content */
+.content { padding-bottom: 80px; }
+
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.section h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.section p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+/* Comparison Table */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 24px 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead {
+  background: var(--bg-input);
+  border-bottom: 2px solid var(--border);
+}
+
+th {
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: var(--bg-input);
+}
+
+.provider-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.highlight {
+  color: var(--green-light);
+  font-weight: 600;
+}
+
+.warning {
+  color: var(--yellow);
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--accent-glow);
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
+}
+
+.badge.green {
+  background: var(--green-glow);
+  color: var(--green-light);
+  border-color: var(--green);
+}
+
+/* Cost Cards */
+.cost-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin: 24px 0;
+}
+
+.cost-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.cost-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.cost-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* Recommendation Boxes */
+.rec-box {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.rec-box h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent-light);
+  margin-bottom: 8px;
+}
+
+.rec-box p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.rec-box strong {
+  color: var(--text-primary);
+}
+
+/* List Styling */
+ul {
+  list-style: none;
+  margin: 16px 0;
+}
+
+ul li {
+  padding-left: 24px;
+  position: relative;
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+ul li::before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* CTA Card */
+.cta-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  text-align: center;
+  margin: 40px 0;
+}
+
+.cta-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.cta-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 40px;
+  background: #fff;
+  color: #000;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+  text-decoration: none;
+}
+
+/* Related Resources */
+.related-resources {
+  margin: 60px 0;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+}
+.related-resources h2 {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32px;
+  color: var(--text-primary);
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.related-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: block;
+}
+.related-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.related-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.related-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Email Capture Banner */
+#emailCaptureBanner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 24px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#emailCaptureBanner.show { transform: translateY(0); }
+.email-banner-content {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.email-banner-text {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.email-banner-title {
+  font-size: 16px; font-weight: 700; color: #fff;
+}
+.email-banner-desc {
+  font-size: 13px; color: rgba(255, 255, 255, 0.85);
+}
+.email-banner-form {
+  display: flex; align-items: center; gap: 8px;
+}
+.email-banner-input {
+  padding: 10px 16px; border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff; font-size: 14px;
+  min-width: 260px;
+  backdrop-filter: blur(10px);
+}
+.email-banner-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.email-banner-input:focus {
+  outline: none; border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+}
+.email-banner-submit {
+  padding: 10px 24px; border-radius: 8px;
+  background: #fff; color: #4f46e5;
+  font-size: 14px; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.email-banner-submit:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+.email-banner-close {
+  background: none; border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer; padding: 4px 8px;
+  font-size: 24px; line-height: 1;
+  transition: color 0.2s;
+}
+.email-banner-close:hover {
+  color: #fff;
+}
+.email-banner-success {
+  display: none; color: #fff; font-size: 14px; font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hero { padding: 100px 0 40px; }
+  .hero h1 { font-size: 32px; }
+  .section { padding: 24px; }
+  .cost-grid { grid-template-columns: 1fr; }
+  .header-nav { display: none; }
+  table { font-size: 13px; }
+  th, td { padding: 10px 8px; }
+  .email-banner-content { flex-direction: column; align-items: stretch; }
+  .email-banner-form { flex-direction: column; width: 100%; }
+  .email-banner-input { min-width: auto; width: 100%; }
+  .email-banner-submit { width: 100%; }
+}
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 28px; }
+  .hero p { font-size: 16px; }
+  .container { padding: 0 16px; }
+  .section h2 { font-size: 24px; }
+  .cta-card { padding: 24px; }
+  .cta-title { font-size: 22px; }
+  #emailCaptureBanner { padding: 12px 16px; }
+  .email-banner-title { font-size: 15px; }
+  .email-banner-desc { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="header-logo">LaunchFast</a>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="saas-cost-calculator.html">Calculator</a>
+      <a href="tech-stack-quiz.html">Quiz</a>
+    </nav>
+    <a href="https://buy.stripe.com/test_6oE5mq3NK0QP4PS7ss" class="header-cta">Get LaunchFast $79</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Updated February 2026
+    </div>
+    <h1>The Real Cost of Hosting Your <span class="gradient">Next.js App</span> in 2026</h1>
+    <p>Vercel, Railway, Fly.io, AWS Amplify, Render, and self-hosted compared. Free tiers, hidden costs, and bandwidth limits explained.</p>
+  </div>
+</section>
+
+<!-- Content -->
+<div class="container content">
+
+  <!-- Pricing Comparison Table -->
+  <section class="section">
+    <h2>Next.js Hosting Provider Comparison</h2>
+    <p>Here's how the major Next.js hosting platforms compare on pricing, features, and limitations as of February 2026:</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Free Tier</th>
+            <th>Hobby/Starter</th>
+            <th>Pro/Team</th>
+            <th>Bandwidth Limit</th>
+            <th>Cold Starts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="provider-name">Vercel</td>
+            <td><span class="highlight">100GB/month</span><br>100hrs execution<br>Personal only</td>
+            <td>$20/user/month<br>1TB bandwidth<br>1,000hrs execution</td>
+            <td>Custom pricing<br>Enterprise features<br>SLA included</td>
+            <td class="warning">$40 per 100GB overage</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td class="provider-name">Railway <span class="badge green">Best Value</span></td>
+            <td>$5 free credits/month<br>No credit card</td>
+            <td>$5/month<br>Pay per usage<br>~$10-20 typical</td>
+            <td>$20+/month<br>Team features<br>Priority support</td>
+            <td>No strict limits<br>Pay per GB</td>
+            <td>Optional</td>
+          </tr>
+          <tr>
+            <td class="provider-name">Fly.io</td>
+            <td><span class="highlight">3 VMs (256MB)</span><br>160GB bandwidth<br>Generous limits</td>
+            <td>~$5-15/month<br>Pay as you go<br>2GB RAM typical</td>
+            <td>$20-100/month<br>Scales with usage<br>Multi-region</td>
+            <td>$0.02/GB after free tier</td>
+            <td>Optional</td>
+          </tr>
+          <tr>
+            <td class="provider-name">AWS Amplify</td>
+            <td>12 months free tier<br>15GB bandwidth<br>1,000 build mins</td>
+            <td>$0.01/build min<br>$0.15/GB served<br>Variable cost</td>
+            <td>Enterprise support<br>Custom pricing<br>AWS ecosystem</td>
+            <td>$0.15/GB</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td class="provider-name">Render</td>
+            <td><span class="highlight">Free tier</span><br>Spin down inactive<br>100GB bandwidth</td>
+            <td>$7/month<br>Always-on<br>512MB RAM</td>
+            <td>$25/month<br>4GB RAM<br>Priority support</td>
+            <td>100GB included<br>Then $0.10/GB</td>
+            <td>Yes (free tier)</td>
+          </tr>
+          <tr>
+            <td class="provider-name">Self-Hosted VPS</td>
+            <td>N/A</td>
+            <td>$4-6/month<br>DigitalOcean/Hetzner<br>1-2GB RAM</td>
+            <td>$12-20/month<br>4-8GB RAM<br>Full control</td>
+            <td>1-20TB included<br>Rarely an issue</td>
+            <td>No</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Hidden Costs -->
+  <section class="section">
+    <h2>Hidden Costs That Catch You by Surprise</h2>
+    <p>The advertised price is just the beginning. Here are the costs that sneak up on you:</p>
+
+    <div class="cost-grid">
+      <div class="cost-card">
+        <h4>💸 Bandwidth Overage Fees</h4>
+        <p>Vercel charges $40 per 100GB after your limit. A viral landing page or poorly optimized images can cost hundreds overnight. Always use next/image and monitor your bandwidth.</p>
+      </div>
+
+      <div class="cost-card">
+        <h4>⚡ Serverless Function Execution</h4>
+        <p>Each API route invocation counts toward your execution time limit. Heavy compute or slow external APIs can drain your quota. Vercel charges $2 per 100 additional hours.</p>
+      </div>
+
+      <div class="cost-card">
+        <h4>🔨 Build Minutes</h4>
+        <p>Large Next.js projects with slow CI/CD can burn through build minutes. Vercel Pro includes 6,000 mins/month, but overage costs $40 per 500 extra minutes.</p>
+      </div>
+
+      <div class="cost-card">
+        <h4>👥 Per-Seat Pricing</h4>
+        <p>Vercel's $20/month is PER USER. A 5-person team pays $100/month minimum. Railway and Fly.io charge by usage, not seats—huge savings for small teams.</p>
+      </div>
+
+      <div class="cost-card">
+        <h4>🗄️ Database Costs (Separate)</h4>
+        <p>No provider includes database hosting in base pricing. Budget $5-25/month for PostgreSQL on Supabase, Neon, or Railway. Vercel Storage (KV/Postgres) adds $20-100/month.</p>
+      </div>
+
+      <div class="cost-card">
+        <h4>🐢 Cold Starts on Free Tiers</h4>
+        <p>Render's free tier and some serverless configs have 30-second cold starts. This kills user experience and conversion rates. Always-on costs $7-20/month but is essential for production.</p>
+      </div>
+    </div>
+
+    <h3>Example: Real-World Monthly Cost</h3>
+    <p><strong>Scenario:</strong> 3-person team, 50K visitors/month, moderate API usage, PostgreSQL database</p>
+    <ul>
+      <li><strong>Vercel Pro:</strong> $60/month (3 users) + $10 database + $20 Vercel Postgres = <span class="warning">$90/month</span></li>
+      <li><strong>Railway:</strong> $15/month (usage) + $5 database = <span class="highlight">$20/month</span></li>
+      <li><strong>Fly.io:</strong> $12/month (VMs) + $5 database = <span class="highlight">$17/month</span></li>
+      <li><strong>Self-hosted VPS:</strong> $12/month VPS (app + database) = <span class="highlight">$12/month</span></li>
+    </ul>
+    <p>Railway and Fly.io offer <strong>70-80% cost savings</strong> compared to Vercel for small teams.</p>
+  </section>
+
+  <!-- Recommendations by Stage -->
+  <section class="section">
+    <h2>Our Recommendation by Stage</h2>
+
+    <div class="rec-box">
+      <h4>🚀 Side Project / Learning</h4>
+      <p><strong>Best choice:</strong> Vercel Free Tier or Railway ($5 trial credits)</p>
+      <p>Why: Zero cost to start, deploy in seconds, no DevOps needed. Vercel's free tier is perfect for personal projects. Railway's $5 free monthly credits let you test production-like deployments.</p>
+      <p><strong>Watch out for:</strong> Bandwidth limits (100GB on Vercel). Switch to paid if you get real traffic.</p>
+    </div>
+
+    <div class="rec-box">
+      <h4>💡 MVP / Bootstrapped Startup</h4>
+      <p><strong>Best choice:</strong> Railway ($10-20/month) or Fly.io ($10-15/month)</p>
+      <p>Why: Professional infrastructure at 1/4 the cost of Vercel. Railway offers Vercel-like DX with GitHub integration and zero cold starts. Fly.io gives you more control and global edge deployment.</p>
+      <p><strong>Upgrade when:</strong> You hit $10K+ MRR or need enterprise features (SSO, SLA).</p>
+    </div>
+
+    <div class="rec-box">
+      <h4>📈 Scaling Startup (Funded)</h4>
+      <p><strong>Best choice:</strong> Vercel Pro ($20-100/month) or AWS Amplify</p>
+      <p>Why: Vercel's DX is unmatched for teams moving fast. Enterprise features like preview deployments, team collaboration, and analytics are worth the premium when you're well-funded. AWS Amplify scales infinitely.</p>
+      <p><strong>Consider:</strong> Self-hosted on AWS/GCP for ultimate cost optimization at very high scale (1M+ visitors/month).</p>
+    </div>
+
+    <div class="rec-box">
+      <h4>⚙️ Cost-Optimized / Technical Team</h4>
+      <p><strong>Best choice:</strong> Self-hosted VPS ($12-20/month) or Fly.io</p>
+      <p>Why: Full control, predictable costs, no usage-based surprises. A $12/month Hetzner VPS can handle 100K+ visitors with proper optimization. Fly.io offers the best balance of control and managed infrastructure.</p>
+      <p><strong>Trade-off:</strong> You manage Docker, CI/CD, and monitoring yourself. Worth it for technical founders.</p>
+    </div>
+
+    <h3>Quick Decision Matrix</h3>
+    <ul>
+      <li><strong>Need fastest setup + unlimited money?</strong> → Vercel</li>
+      <li><strong>Want Vercel DX at 1/4 cost?</strong> → Railway</li>
+      <li><strong>Need global edge deployment?</strong> → Fly.io or Cloudflare Pages</li>
+      <li><strong>Already on AWS ecosystem?</strong> → AWS Amplify</li>
+      <li><strong>Maximum cost savings + technical team?</strong> → Self-hosted VPS</li>
+    </ul>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-card">
+    <h2 class="cta-title">Whatever You Choose, Start Building Faster with LaunchFast</h2>
+    <p class="cta-description">
+      LaunchFast is pre-configured for Vercel, Railway, Fly.io, and self-hosted deployments. One-click deploy to any platform — authentication, payments, database, and AI features included.
+    </p>
+    <a href="https://buy.stripe.com/test_6oE5mq3NK0QP4PS7ss" class="cta-btn">
+      Get LaunchFast for $79 →
+    </a>
+  </div>
+
+</div>
+
+<!-- Related Resources -->
+<section class="related-resources">
+  <div class="container">
+    <h2>Related Resources</h2>
+    <div class="related-grid">
+      <a href="tech-stack-quiz.html" class="related-card">
+        <div class="related-card-title">Tech Stack Quiz</div>
+        <div class="related-card-desc">Answer 7 questions to get your ideal Next.js tech stack recommendation</div>
+      </a>
+      <a href="best-nextjs-boilerplate.html" class="related-card">
+        <div class="related-card-title">Best Next.js Boilerplates</div>
+        <div class="related-card-desc">Compare the top Next.js SaaS boilerplates and starter kits in 2026</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Email Capture Banner -->
+<div id="emailCaptureBanner">
+  <div class="email-banner-content">
+    <div class="email-banner-text">
+      <div class="email-banner-title">🚀 Get our free SaaS Launch Checklist (47 steps)</div>
+      <div class="email-banner-desc">Everything you need to launch your SaaS — from idea to first customer</div>
+    </div>
+    <form class="email-banner-form" id="emailCaptureForm">
+      <input type="email" name="email" class="email-banner-input" placeholder="your@email.com" required>
+      <button type="submit" class="email-banner-submit">Get Checklist</button>
+    </form>
+    <div class="email-banner-success" id="emailSuccess">✓ Check your email!</div>
+    <button class="email-banner-close" id="closeBanner" aria-label="Close">&times;</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var STORAGE_KEY = 'emailBannerDismissed';
+  var FORMSPREE_URL = 'https://formspree.io/f/PLACEHOLDER';
+  var SCROLL_THRESHOLD = 0.5;
+  var TIME_DELAY = 30000;
+
+  var banner = document.getElementById('emailCaptureBanner');
+  var form = document.getElementById('emailCaptureForm');
+  var closeBtn = document.getElementById('closeBanner');
+  var successMsg = document.getElementById('emailSuccess');
+
+  var shown = false;
+  var dismissed = false;
+  var timeoutId = null;
+
+  if (localStorage.getItem(STORAGE_KEY)) {
+    return;
+  }
+
+  function showBanner() {
+    if (shown || dismissed) return;
+    shown = true;
+    banner.classList.add('show');
+  }
+
+  function hideBanner() {
+    banner.classList.remove('show');
+    dismissed = true;
+    localStorage.setItem(STORAGE_KEY, 'true');
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+
+  timeoutId = setTimeout(function() {
+    showBanner();
+  }, TIME_DELAY);
+
+  function checkScroll() {
+    if (shown || dismissed) return;
+    var scrollPercent = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+    if (scrollPercent >= SCROLL_THRESHOLD) {
+      showBanner();
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }
+
+  window.addEventListener('scroll', checkScroll, { passive: true });
+
+  closeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    hideBanner();
+  });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var formData = new FormData(form);
+
+    fetch(FORMSPREE_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(response) {
+      if (response.ok) {
+        form.style.display = 'none';
+        successMsg.style.display = 'block';
+        setTimeout(function() {
+          hideBanner();
+        }, 3000);
+      } else {
+        alert('Oops! There was a problem. Please try again.');
+      }
+    })
+    .catch(function() {
+      alert('Oops! There was a problem. Please try again.');
+    });
+  });
+})();
+</script>
+
+<!-- Analytics: Update GoatCounter URL after signup at goatcounter.com -->
+<script data-goatcounter="https://launchfast-stats.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+</body>
+</html>
