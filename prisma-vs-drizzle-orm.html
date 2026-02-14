@@ -291,14 +291,14 @@
 <span class="code-comment">// Create a user</span>
 <span class="code-keyword">const</span> user = <span class="code-keyword">await</span> prisma.user.<span class="code-function">create</span>({
   data: {
-    email: <span class="code-string">'alice@example.com'</span>,
+    email: <span class="code-string">'alice@acme.dev'</span>,
     name: <span class="code-string">'Alice'</span>,
   },
 });
 
 <span class="code-comment">// Find user with their posts (eager loading)</span>
 <span class="code-keyword">const</span> userWithPosts = <span class="code-keyword">await</span> prisma.user.<span class="code-function">findUnique</span>({
-  where: { email: <span class="code-string">'alice@example.com'</span> },
+  where: { email: <span class="code-string">'alice@acme.dev'</span> },
   include: { posts: <span class="code-keyword">true</span> },
 });
 
@@ -410,14 +410,14 @@
 <span class="code-comment">// Create a user</span>
 <span class="code-keyword">const</span> [user] = <span class="code-keyword">await</span> db.<span class="code-function">insert</span>(users)
   .<span class="code-function">values</span>({
-    email: <span class="code-string">'alice@example.com'</span>,
+    email: <span class="code-string">'alice@acme.dev'</span>,
     name: <span class="code-string">'Alice'</span>,
   })
   .<span class="code-function">returning</span>();
 
 <span class="code-comment">// Find user with their posts (relational query API)</span>
 <span class="code-keyword">const</span> userWithPosts = <span class="code-keyword">await</span> db.query.users.<span class="code-function">findFirst</span>({
-  where: <span class="code-function">eq</span>(users.email, <span class="code-string">'alice@example.com'</span>),
+  where: <span class="code-function">eq</span>(users.email, <span class="code-string">'alice@acme.dev'</span>),
   with: { posts: <span class="code-keyword">true</span> },
 });
 
@@ -525,14 +525,14 @@
 
 <span class="code-comment">// Create a user</span>
 <span class="code-keyword">const</span> user = userRepo.<span class="code-function">create</span>({
-  email: <span class="code-string">'alice@example.com'</span>,
+  email: <span class="code-string">'alice@acme.dev'</span>,
   name: <span class="code-string">'Alice'</span>,
 });
 <span class="code-keyword">await</span> userRepo.<span class="code-function">save</span>(user);
 
 <span class="code-comment">// Find user with their posts</span>
 <span class="code-keyword">const</span> userWithPosts = <span class="code-keyword">await</span> userRepo.<span class="code-function">findOne</span>({
-  where: { email: <span class="code-string">'alice@example.com'</span> },
+  where: { email: <span class="code-string">'alice@acme.dev'</span> },
   relations: { posts: <span class="code-keyword">true</span> },
 });
 
