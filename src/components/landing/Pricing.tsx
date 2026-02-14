@@ -21,21 +21,21 @@ export default function Pricing() {
             <div
               key={plan.name}
               className={`rounded-2xl p-8 ${
-                plan.popular
+                plan.popular === true === true
                   ? "bg-black text-white ring-2 ring-black"
                   : "bg-white ring-1 ring-gray-200"
               }`}
             >
               <h3
                 className={`text-lg font-semibold ${
-                  plan.popular ? "text-white" : "text-gray-900"
+                  plan.popular === true ? "text-white" : "text-gray-900"
                 }`}
               >
                 {plan.name}
               </h3>
               <p
                 className={`mt-1 text-sm ${
-                  plan.popular ? "text-gray-300" : "text-gray-500"
+                  plan.popular === true ? "text-gray-300" : "text-gray-500"
                 }`}
               >
                 {plan.description}
@@ -44,7 +44,7 @@ export default function Pricing() {
                 <span className="text-4xl font-bold">${plan.price}</span>
                 <span
                   className={`ml-1 ${
-                    plan.popular ? "text-gray-300" : "text-gray-500"
+                    plan.popular === true ? "text-gray-300" : "text-gray-500"
                   }`}
                 >
                   one-time
@@ -54,7 +54,7 @@ export default function Pricing() {
               <a
                 href={plan.paymentLink}
                 className={`mt-8 w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors px-6 py-3 text-base no-underline ${
-                  plan.popular
+                  plan.popular === true
                     ? "bg-white text-gray-900 hover:bg-gray-100"
                     : "bg-black text-white hover:bg-gray-800"
                 }`}
@@ -67,12 +67,12 @@ export default function Pricing() {
                   <li key={feature} className="flex items-start gap-3">
                     <Check
                       className={`h-5 w-5 flex-shrink-0 ${
-                        plan.popular ? "text-green-400" : "text-green-600"
+                        plan.popular === true ? "text-green-400" : "text-green-600"
                       }`}
                     />
                     <span
                       className={`text-sm ${
-                        plan.popular ? "text-gray-300" : "text-gray-600"
+                        plan.popular === true ? "text-gray-300" : "text-gray-600"
                       }`}
                     >
                       {feature}

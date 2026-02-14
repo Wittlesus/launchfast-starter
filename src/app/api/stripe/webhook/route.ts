@@ -4,6 +4,20 @@ import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
 
+// In-memory cache for idempotency (production should use Redis or DB)
+const processedEvents = new Map<string, number>();
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+// Clean up old entries periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [eventId, timestamp] of processedEvents.entries()) {
+    if (now - timestamp > CACHE_TTL_MS) {
+      processedEvents.delete(eventId);
+    }
+  }
+}, 60 * 60 * 1000); // Clean every hour
+
 export async function POST(req: Request) {
   const body = await req.text();
   const headersList = await headers();
@@ -38,6 +52,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
+  // Idempotency check - prevent duplicate processing
+  if (processedEvents.has(event.id)) {
+    console.log(`Event ${event.id} already processed, skipping`);
+    return NextResponse.json({ received: true, cached: true });
+  }
+
   // Process webhook events with proper error handling
   try {
     switch (event.type) {
@@ -56,17 +76,24 @@ export async function POST(req: Request) {
           );
         }
 
-        // For one-time payments (mode: 'payment'), not subscriptions
+        // For one-time payments only (this boilerplate doesn't use subscriptions)
         if (session.mode === "payment") {
           try {
-            await prisma.user.update({
-              where: { id: userId },
-              data: {
-                stripeCustomerId: session.customer as string,
-                // For one-time payment, grant lifetime access
-                // Payment intent ID is stored in Stripe, not needed in our DB
-              },
+            // Use Prisma transaction for atomic operation
+            await prisma.$transaction(async (tx) => {
+              // Update user with customer ID
+              await tx.user.update({
+                where: { id: userId },
+                data: {
+                  stripeCustomerId: session.customer as string,
+                  // For one-time payment, user gets lifetime access
+                  // Payment details are stored in Stripe, not our DB
+                },
+              });
             });
+
+            // Mark event as processed AFTER successful completion
+            processedEvents.set(event.id, Date.now());
             console.log(`One-time payment completed for user: ${userId}`);
           } catch (dbError) {
             console.error(
@@ -80,104 +107,14 @@ export async function POST(req: Request) {
             );
           }
         }
-        // For subscription payments (if we ever add them back)
-        else if (session.mode === "subscription" && session.subscription) {
-          try {
-            const subscription = await stripe.subscriptions.retrieve(
-              session.subscription as string
-            );
-
-            await prisma.user.update({
-              where: { id: userId },
-              data: {
-                stripeCustomerId: session.customer as string,
-                stripeSubscriptionId: subscription.id,
-                stripePriceId: subscription.items.data[0].price.id,
-                stripeCurrentPeriodEnd: new Date(
-                  subscription.current_period_end * 1000
-                ),
-              },
-            });
-            console.log(`Subscription created for user: ${userId}`);
-          } catch (error) {
-            console.error(
-              "Error processing subscription checkout:",
-              error instanceof Error ? error.message : "Unknown error"
-            );
-            return NextResponse.json(
-              { error: "Subscription processing failed" },
-              { status: 500 }
-            );
-          }
-        }
-        break;
-      }
-
-      case "invoice.payment_succeeded": {
-        const invoice = event.data.object as Stripe.Invoice;
-        if (!invoice.subscription) break;
-
-        try {
-          const subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription as string
-          );
-
-          await prisma.user.update({
-            where: { stripeSubscriptionId: subscription.id },
-            data: {
-              stripePriceId: subscription.items.data[0].price.id,
-              stripeCurrentPeriodEnd: new Date(
-                subscription.current_period_end * 1000
-              ),
-            },
-          });
-          console.log(
-            `Subscription renewed: ${subscription.id}`
-          );
-        } catch (error) {
-          console.error(
-            "Error processing invoice payment:",
-            error instanceof Error ? error.message : "Unknown error"
-          );
-          return NextResponse.json(
-            { error: "Invoice processing failed" },
-            { status: 500 }
-          );
-        }
-        break;
-      }
-
-      case "customer.subscription.deleted": {
-        const subscription = event.data.object as Stripe.Subscription;
-
-        try {
-          await prisma.user.update({
-            where: { stripeSubscriptionId: subscription.id },
-            data: {
-              stripeSubscriptionId: null,
-              stripePriceId: null,
-              stripeCurrentPeriodEnd: null,
-            },
-          });
-          console.log(
-            `Subscription cancelled: ${subscription.id}`
-          );
-        } catch (error) {
-          console.error(
-            "Error processing subscription deletion:",
-            error instanceof Error ? error.message : "Unknown error"
-          );
-          return NextResponse.json(
-            { error: "Subscription deletion failed" },
-            { status: 500 }
-          );
-        }
         break;
       }
 
       default:
         // Unknown event type - log but don't fail
         console.log(`Unhandled event type: ${event.type}`);
+        // Still mark as processed to avoid repeated logging
+        processedEvents.set(event.id, Date.now());
     }
   } catch (error) {
     // Catch-all for any unexpected errors

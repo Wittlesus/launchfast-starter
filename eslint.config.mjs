@@ -12,7 +12,26 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "delivery/**", // Legacy delivery folder uses CommonJS
   ]),
+  {
+    rules: {
+      // Warn on console statements, but allow console.error/warn for critical server-side logging
+      "no-console": [
+        "warn",
+        {
+          allow: ["error", "warn"],
+        },
+      ],
+    },
+  },
+  {
+    // Allow console in API routes (server-side code where logging is acceptable)
+    files: ["**/app/api/**/*.ts", "**/app/api/**/*.js"],
+    rules: {
+      "no-console": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;
