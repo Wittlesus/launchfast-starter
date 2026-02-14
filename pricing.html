@@ -10,6 +10,13 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.product-link{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.product-link:hover{text-decoration-style:solid}
+.modal{display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5)}
+.modal.active{display:flex;align-items:center;justify-content:center}
+.modal-content{background-color:white;padding:2rem;border-radius:1rem;max-width:600px;margin:1rem;max-height:80vh;overflow-y:auto}
+.close{float:right;font-size:28px;font-weight:bold;cursor:pointer;color:#666}
+.close:hover{color:#000}
 </style>
 </head>
 <body class="bg-white">
@@ -111,19 +118,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
 </li>
 <li class="flex items-start gap-3">
 <svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-<span class="text-sm text-gray-300">SEO Blog Engine</span>
+<span class="text-sm text-gray-300"><span class="product-link" onclick="openModal('seo-blog')">SEO Blog Engine</span> <span class="text-xs text-gray-400">(What's this?)</span></span>
 </li>
 <li class="flex items-start gap-3">
 <svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-<span class="text-sm text-gray-300">Indie Hacker Toolkit</span>
+<span class="text-sm text-gray-300"><span class="product-link" onclick="openModal('indie-toolkit')">Indie Hacker Toolkit</span> <span class="text-xs text-gray-400">(What's this?)</span></span>
 </li>
 <li class="flex items-start gap-3">
 <svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-<span class="text-sm text-gray-300">PromptVault (64 AI prompts)</span>
+<span class="text-sm text-gray-300"><span class="product-link" onclick="openModal('prompt-vault')">PromptVault (64 AI prompts)</span> <span class="text-xs text-gray-400">(What's this?)</span></span>
 </li>
 <li class="flex items-start gap-3">
 <svg class="h-5 w-5 flex-shrink-0 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-<span class="text-sm text-gray-300">CursorRules Pro (8 configs)</span>
+<span class="text-sm text-gray-300"><span class="product-link" onclick="openModal('cursor-rules')">CursorRules Pro (8 configs)</span> <span class="text-xs text-gray-400">(What's this?)</span></span>
 </li>
 </ul>
 </div>
