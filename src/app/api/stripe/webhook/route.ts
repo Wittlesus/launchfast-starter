@@ -121,16 +121,11 @@ export async function POST(req: Request) {
             }
 
             // Use Prisma transaction for atomic operation
-            await prisma.$transaction(async (tx: typeof prisma) => {
-              // Update user with customer ID
-              await tx.user.update({
-                where: { id: userId },
-                data: {
-                  stripeCustomerId: customerId,
-                  // For one-time payment, user gets lifetime access
-                  // Payment details are stored in Stripe, not our DB
-                },
-              });
+            await prisma.user.update({
+              where: { id: userId },
+              data: {
+                stripeCustomerId: customerId,
+              },
             });
 
             // Mark event as processed AFTER successful completion
