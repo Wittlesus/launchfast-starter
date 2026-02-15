@@ -218,7 +218,7 @@ launchfast-starter/
 Everything you need to launch an AI-powered SaaS.
 
 <p align="center">
-  <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00"><img src="https://img.shields.io/badge/BUY%20STANDARD-$79-black?style=for-the-badge&logo=stripe&logoColor=white" alt="Buy Standard $79"></a>
+  <a href="https://buy.stripe.com/7sYcN4aD3gO60wQ4xk08g07"><img src="https://img.shields.io/badge/BUY%20STANDARD-$59%20(was%20$79)-black?style=for-the-badge&logo=stripe&logoColor=white" alt="Buy Standard $59 (was $79)"></a>
 </p>
 
 ### Pro -- $119
@@ -226,7 +226,7 @@ Everything you need to launch an AI-powered SaaS.
 Standard + priority support and advanced examples.
 
 <p align="center">
-  <a href="https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01"><img src="https://img.shields.io/badge/BUY%20PRO-$119-black?style=for-the-badge&logo=stripe&logoColor=white" alt="Buy Pro $119"></a>
+  <a href="https://buy.stripe.com/aFabJ07qR41kdjC8NA08g08"><img src="https://img.shields.io/badge/BUY%20PRO-$89%20(was%20$119)-black?style=for-the-badge&logo=stripe&logoColor=white" alt="Buy Pro $89 (was $119)"></a>
 </p>
 
 **What you get:**
