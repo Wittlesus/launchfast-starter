@@ -610,11 +610,47 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 ## Scripts
 
 ```bash
-npm run dev       # Start development server
-npm run build     # Create production build
-npm run start     # Start production server
-npm run lint      # Run ESLint
+npm run dev          # Start development server
+npm run build        # Create production build
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run test         # Run E2E tests
+npm run test:ui      # Run tests in interactive UI mode
+npm run test:headed  # Run tests with visible browser
+npm run test:report  # View test results report
 ```
+
+---
+
+## Testing
+
+LaunchFast includes a **comprehensive Playwright E2E test suite** with 80+ tests covering:
+
+- **Landing Page**: Hero, pricing section, navigation, footer, SEO meta tags
+- **Authentication**: Login/signup flows, OAuth providers (Google & GitHub)
+- **Dashboard**: Access control, protected routes, AI Assistant UI, billing
+- **Pricing**: All tiers display correctly, Stripe checkout links validated
+- **Navigation**: Cross-page navigation, header/footer consistency
+- **Responsive Design**: Mobile (iPhone), tablet (iPad), desktop viewports
+- **Legal Pages**: Privacy policy, terms of service content verification
+- **SEO & Performance**: Meta tags, Open Graph, page load times, accessibility
+
+### Quick Start
+
+```bash
+# Run all tests
+npm test
+
+# Interactive UI mode (recommended)
+npm run test:ui
+
+# Run specific test file
+npx playwright test tests/e2e/pricing.spec.ts
+```
+
+See [TESTING.md](./TESTING.md) for complete documentation on running, debugging, and extending tests.
+
+**Why this matters**: Competitors like Makerkit and Nextless.js include full test coverage. LaunchFast now does too. Buyers see "includes E2E tests" and think "production-grade, not a weekend project."
 
 ---
 
