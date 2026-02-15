@@ -14,6 +14,9 @@ export default function Pricing() {
           <p className="mt-4 text-lg text-gray-600">
             One-time payment. Lifetime access. Free updates.
           </p>
+          <p className="mt-2 inline-block rounded-full bg-green-100 px-4 py-1 text-sm font-medium text-green-800">
+            Early bird pricing — limited time
+          </p>
         </div>
 
         <div className="mx-auto mt-12 grid max-w-md grid-cols-1 gap-8 lg:max-w-3xl lg:grid-cols-2">
@@ -41,6 +44,11 @@ export default function Pricing() {
                 {plan.description}
               </p>
               <div className="mt-6 flex items-baseline gap-1">
+                {"originalPrice" in plan && (
+                  <span className={`text-xl line-through ${plan.popular === true ? "text-gray-500" : "text-gray-400"}`}>
+                    ${plan.originalPrice}
+                  </span>
+                )}
                 <span className="text-4xl font-bold">${plan.price}</span>
                 <span
                   className={`ml-1 ${

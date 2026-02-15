@@ -11,9 +11,9 @@
 <p align="center">Stop building AI infrastructure from scratch. Ship your AI-powered SaaS this weekend.</p>
 
 <p align="center">
-  <a href="https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00"><img src="https://img.shields.io/badge/Buy%20Standard-$79-black?style=for-the-badge&logo=stripe&logoColor=white" alt="Buy Standard $79"></a>
+  <a href="https://buy.stripe.com/7sYcN4aD3gO60wQ4xk08g07"><img src="https://img.shields.io/badge/Buy%20Standard-$59%20(was%20$79)-black?style=for-the-badge&logo=stripe&logoColor=white" alt="Buy Standard $59 (was $79)"></a>
   &nbsp;&nbsp;
-  <a href="https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01"><img src="https://img.shields.io/badge/Buy%20Pro-$119-black?style=for-the-badge&logo=stripe&logoColor=white" alt="Buy Pro $119"></a>
+  <a href="https://buy.stripe.com/aFabJ07qR41kdjC8NA08g08"><img src="https://img.shields.io/badge/Buy%20Pro-$89%20(was%20$119)-black?style=for-the-badge&logo=stripe&logoColor=white" alt="Buy Pro $89 (was $119)"></a>
 </p>
 
 <p align="center"><em>One-time purchase. Not a subscription. Lifetime updates included.</em></p>

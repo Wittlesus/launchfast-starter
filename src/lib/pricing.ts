@@ -2,8 +2,9 @@ export const PRICING_PLANS = [
   {
     name: "Starter",
     description: "Personal use, single project",
-    price: 79,
-    paymentLink: "https://buy.stripe.com/dRm14mfXngO6a7qbZM08g00",
+    price: 59,
+    originalPrice: 79,
+    paymentLink: "https://buy.stripe.com/7sYcN4aD3gO60wQ4xk08g07",
     popular: false,
     features: [
       "Full Next.js 16 SaaS boilerplate",
@@ -20,8 +21,9 @@ export const PRICING_PLANS = [
   {
     name: "Pro",
     description: "Commercial use, unlimited projects",
-    price: 119,
-    paymentLink: "https://buy.stripe.com/5kQ4gy26x8hAa7q4xk08g01",
+    price: 89,
+    originalPrice: 119,
+    paymentLink: "https://buy.stripe.com/aFabJ07qR41kdjC8NA08g08",
     popular: true,
     features: [
       "Everything in Starter",
