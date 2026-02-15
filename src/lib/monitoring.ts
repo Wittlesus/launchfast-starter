@@ -14,8 +14,9 @@ export function initSentry() {
   if (!process.env.NEXT_PUBLIC_SENTRY_DSN) return;
 
   // Dynamically import Sentry to avoid bundling if not configured
+  // @ts-ignore - Sentry package is optional
   import('@sentry/nextjs')
-    .then((Sentry) => {
+    .then((Sentry: any) => {
       Sentry.init({
         dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
         environment: process.env.NODE_ENV,
@@ -37,7 +38,7 @@ export function initSentry() {
         replaysSessionSampleRate: 0.1,
         replaysOnErrorSampleRate: 1.0,
 
-        beforeSend(event) {
+        beforeSend(event: any) {
           // Don't send events from localhost
           if (event.request?.url?.includes('localhost')) {
             return null;

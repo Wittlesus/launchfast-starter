@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   if (aiRateLimiter) {
     // Production: distributed rate limiting with Upstash Redis
     const { success, limit, remaining, reset } =
-      await aiRateLimiter.limit(rateLimitKey);
+      await (aiRateLimiter as { limit: (key: string) => Promise<{ success: boolean; limit: number; remaining: number; reset: number }> }).limit(rateLimitKey);
 
     if (!success) {
       return NextResponse.json(

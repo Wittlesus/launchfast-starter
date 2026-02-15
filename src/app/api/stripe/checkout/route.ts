@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   const rateLimitKey = getRateLimitKey(req, session.user.id);
 
   if (checkoutRateLimiter) {
-    const { success } = await checkoutRateLimiter.limit(rateLimitKey);
+    const { success } = await (checkoutRateLimiter as { limit: (key: string) => Promise<{ success: boolean }> }).limit(rateLimitKey);
     if (!success) {
       return NextResponse.json(
         { error: "Too many checkout attempts. Please try again later." },

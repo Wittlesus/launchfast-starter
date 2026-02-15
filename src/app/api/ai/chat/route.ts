@@ -26,9 +26,11 @@ export async function POST(req: Request) {
   // Rate limiting with Upstash Redis (production) or in-memory fallback (dev)
   const rateLimitKey = getRateLimitKey(req, session.user.id);
 
+  // Note: aiRateLimiter is null by default (in-memory mode)
+  // To enable Redis-backed rate limiting, install @upstash/ratelimit and @upstash/redis
   if (aiRateLimiter) {
     const { success, limit, remaining, reset } =
-      await aiRateLimiter.limit(rateLimitKey);
+      await (aiRateLimiter as { limit: (key: string) => Promise<{ success: boolean; limit: number; remaining: number; reset: number }> }).limit(rateLimitKey);
 
     if (!success) {
       return NextResponse.json(
@@ -42,6 +44,7 @@ export async function POST(req: Request) {
       );
     }
   } else {
+    // In-memory rate limiting (dev mode)
     const result = inMemoryRateLimit(rateLimitKey, 10);
     if (!result.success) {
       return NextResponse.json(
@@ -184,13 +187,13 @@ export async function POST(req: Request) {
     }
 
     // Build conversation history for Claude
-    const conversationHistory = conversation.messages.map((msg) => ({
+    const conversationHistory = conversation.messages.map((msg: { role: string; content: string }) => ({
       role: msg.role as "user" | "assistant",
       content: msg.content,
     }));
 
     // Add current message if not already added
-    if (!conversationHistory.find((m) => m.content === message)) {
+    if (!conversationHistory.find((m: { content: string }) => m.content === message)) {
       conversationHistory.push({
         role: "user" as const,
         content: message,

@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   const rateLimitKey = getRateLimitKey(req, session.user.id);
 
   if (portalRateLimiter) {
-    const { success } = await portalRateLimiter.limit(rateLimitKey);
+    const { success } = await (portalRateLimiter as { limit: (key: string) => Promise<{ success: boolean }> }).limit(rateLimitKey);
     if (!success) {
       return NextResponse.json(
         { error: "Too many portal requests. Please try again later." },

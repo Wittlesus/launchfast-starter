@@ -28,7 +28,7 @@ export async function POST(req: Request) {
   const rateLimitKey = getRateLimitKey(req);
 
   if (webhookRateLimiter) {
-    const { success } = await webhookRateLimiter.limit(rateLimitKey);
+    const { success } = await (webhookRateLimiter as { limit: (key: string) => Promise<{ success: boolean }> }).limit(rateLimitKey);
     if (!success) {
       return NextResponse.json(
         { error: "Webhook rate limit exceeded" },
@@ -121,7 +121,7 @@ export async function POST(req: Request) {
             }
 
             // Use Prisma transaction for atomic operation
-            await prisma.$transaction(async (tx) => {
+            await prisma.$transaction(async (tx: typeof prisma) => {
               // Update user with customer ID
               await tx.user.update({
                 where: { id: userId },

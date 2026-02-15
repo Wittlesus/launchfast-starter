@@ -1,76 +1,20 @@
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
-
 /**
- * Production-ready rate limiting using Upstash Redis
+ * In-memory rate limiting (development mode)
  *
- * Fallback strategy:
- * - If UPSTASH_REDIS_REST_URL is not set, uses in-memory rate limiting (dev mode)
- * - Production deployments MUST set UPSTASH_REDIS_REST_URL for distributed rate limiting
+ * For production with distributed rate limiting:
+ * 1. Install: npm install @upstash/ratelimit @upstash/redis
+ * 2. Uncomment and configure Upstash Redis client below
+ * 3. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in .env
  *
  * Free tier: 10,000 commands/day on Upstash
  */
 
-// Initialize Redis client (only if credentials are provided)
-const redis =
-  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-    ? new Redis({
-        url: process.env.UPSTASH_REDIS_REST_URL,
-        token: process.env.UPSTASH_REDIS_REST_TOKEN,
-      })
-    : null;
-
-/**
- * AI endpoint rate limiter - 10 requests per 60 seconds per user
- * Prevents abuse of expensive Anthropic API calls
- */
-export const aiRateLimiter = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(10, "60 s"),
-      analytics: true,
-      prefix: "ratelimit:ai",
-    })
-  : null;
-
-/**
- * Stripe checkout rate limiter - 5 requests per 60 seconds per user
- * Prevents spam creation of checkout sessions
- */
-export const checkoutRateLimiter = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(5, "60 s"),
-      analytics: true,
-      prefix: "ratelimit:checkout",
-    })
-  : null;
-
-/**
- * Stripe portal rate limiter - 3 requests per 60 seconds per user
- * Prevents abuse of billing portal session creation
- */
-export const portalRateLimiter = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(3, "60 s"),
-      analytics: true,
-      prefix: "ratelimit:portal",
-    })
-  : null;
-
-/**
- * Webhook rate limiter - 100 requests per 60 seconds per IP
- * Prevents webhook flooding attacks (Stripe verifies signatures separately)
- */
-export const webhookRateLimiter = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(100, "60 s"),
-      analytics: true,
-      prefix: "ratelimit:webhook",
-    })
-  : null;
+// Placeholder - Upstash Redis rate limiters not configured
+// To enable production rate limiting, install @upstash/ratelimit and @upstash/redis
+export const aiRateLimiter = null;
+export const checkoutRateLimiter = null;
+export const portalRateLimiter = null;
+export const webhookRateLimiter = null;
 
 /**
  * Helper function to extract rate limit key from request
