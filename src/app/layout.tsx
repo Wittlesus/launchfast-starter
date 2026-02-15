@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "LaunchFast - Ship Your SaaS in Days",
   description:
     "The Next.js SaaS boilerplate with authentication, payments, and everything you need to launch fast.",
+  other: {
+    "saashub-verification": "k6uhqom0r2dx",
+  },
 };
 
 export default function RootLayout({
