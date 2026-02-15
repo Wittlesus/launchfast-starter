@@ -7,18 +7,18 @@ export default function Hero() {
         <div className="mx-auto max-w-2xl text-center">
           <div className="mb-8 flex justify-center">
             <div className="rounded-full px-4 py-1.5 text-sm font-medium text-gray-600 ring-1 ring-gray-200">
-              Next.js 16 SaaS Boilerplate
+              The AI-First Next.js Starter
             </div>
           </div>
           <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl">
-            Authentication, Payments & AI.
+            The AI-First SaaS Starter.
             <br />
-            <span className="text-gray-400">Pre-built. Just $79.</span>
+            <span className="text-gray-400">Next.js + Claude. $79.</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Production-ready Next.js 16 starter with NextAuth, Stripe, Prisma,
-            and Claude AI already configured. Skip 3 weeks of boilerplate setup.
-            Start shipping features today.
+            The only Next.js boilerplate with production-ready AI chat built-in.
+            Free alternatives give you auth + payments. LaunchFast adds streaming AI,
+            rate limiting, and token tracking — saving you 2-3 weeks of AI infrastructure work.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-4">
             <Link
@@ -86,9 +86,9 @@ export default function Hero() {
                 icon: "💳",
               },
               {
-                title: "AI Integration",
+                title: "AI Chat (Production-Ready)",
                 description:
-                  "Anthropic Claude API wired up with rate limiting and streaming support.",
+                  "Claude API with streaming, rate limiting, input validation — what free boilerplates don't have.",
                 icon: "🤖",
               },
               {
