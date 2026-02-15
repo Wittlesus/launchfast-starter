@@ -20,10 +20,10 @@ interface DashboardContentProps {
 }
 
 const navItems = [
-  { label: "Dashboard", icon: BarChart3, active: true },
-  { label: "AI Assistant", icon: Bot, active: false },
-  { label: "Billing", icon: CreditCard, active: false },
-  { label: "Settings", icon: Settings, active: false },
+  { label: "Dashboard", icon: BarChart3, active: true, href: "/dashboard" },
+  { label: "AI Chat", icon: Bot, active: false, href: "/dashboard/ai-chat" },
+  { label: "Billing", icon: CreditCard, active: false, href: "/dashboard" },
+  { label: "Settings", icon: Settings, active: false, href: "/dashboard" },
 ];
 
 export default function DashboardContent({ user }: DashboardContentProps) {
@@ -76,19 +76,23 @@ export default function DashboardContent({ user }: DashboardContentProps) {
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-1">
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                item.active
-                  ? "bg-gray-100 text-gray-900"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              }`}
-            >
-              <item.icon className="h-5 w-5" />
-              {item.label}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const ItemIcon = item.icon;
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  item.active
+                    ? "bg-gray-100 text-gray-900"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <ItemIcon className="h-5 w-5" />
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="border-t border-gray-200 p-3">

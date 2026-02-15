@@ -15,11 +15,14 @@ Free alternatives like next-forge give you auth + payments + database. **LaunchF
 
 **The AI difference.** While other boilerplates stop at authentication and payments, LaunchFast is the only one that ships with:
 
-- **Streaming AI chat** with Anthropic's Claude API (already wired up)
+- **Production-ready AI chat interface** at `/dashboard/ai-chat` with full conversation history
+- **Streaming responses** with Server-Sent Events (SSE) - see messages as they're generated
+- **Conversation persistence** - All chats saved to PostgreSQL with full message history
+- **6 AI personas** - Pre-built system prompts (Code Expert, Creative Writer, Business Advisor, etc.)
+- **Tier-based rate limiting** - 50 messages/day free, 1000/day for paid subscribers
+- **Token usage tracking** - Display tokens used per message and total usage
 - **Per-user rate limiting** (10 req/min dev, Redis-backed in prod)
-- **Input validation** (4000 char prompt limit, systemPrompt support)
 - **Session-protected endpoints** (NextAuth integration out of the box)
-- **Token tracking foundation** (ready to add usage billing)
 
 If you're building a SaaS with AI features, you're choosing between:
 1. Starting from scratch and spending 2-3 weeks on AI infrastructure
@@ -54,14 +57,49 @@ If you're building a SaaS with AI features, you're choosing between:
 | **Auth** | ✅ NextAuth v5 | ✅ Auth.js | ✅ Supabase | ✅ Supabase |
 | **Payments** | ✅ Stripe | ✅ Stripe | ✅ Stripe | ✅ Stripe |
 | **Database** | ✅ Prisma 6 | ✅ Drizzle | ✅ Supabase | ✅ Supabase |
-| **Streaming AI Chat** | ✅ Claude SDK | ❌ | ❌ | ❌ |
+| **AI Chat Interface** | ✅ Full UI + history | ❌ | ❌ | ❌ |
+| **Streaming AI Chat** | ✅ SSE with Claude | ❌ | ❌ | ❌ |
+| **Conversation History** | ✅ PostgreSQL storage | ❌ | ❌ | ❌ |
+| **AI Personas** | ✅ 6 built-in | ❌ | ❌ | ❌ |
+| **Tier-based AI Limits** | ✅ 50/1000 msgs/day | ❌ | ❌ | ❌ |
+| **Token Usage Tracking** | ✅ Per message + total | ❌ | ❌ | ❌ |
 | **Rate Limiting (AI)** | ✅ Per-user, Redis-backed | ❌ | ❌ | ❌ |
-| **AI Input Validation** | ✅ 4000 char limit | ❌ | ❌ | ❌ |
-| **systemPrompt Support** | ✅ Multi-persona ready | ❌ | ❌ | ❌ |
-| **Token Tracking Foundation** | ✅ Ready to add | ❌ | ❌ | ❌ |
 | **Open Source** | ✅ Full source on GitHub | ✅ | ❌ | ❌ |
 
 **Bottom line:** If you're building a generic SaaS without AI, use next-forge (it's free). If you're building an AI-powered product, LaunchFast saves you 2-3 weeks of AI infrastructure work for $79.
+
+## The AI Chat Feature
+
+LaunchFast includes a **production-ready AI chat system** at `/dashboard/ai-chat` that would take you 2-3 weeks to build from scratch:
+
+### What You Get
+
+1. **Full Chat Interface** - Modern UI with conversation list, message history, and real-time streaming
+2. **Conversation Persistence** - All chats saved to PostgreSQL with automatic title generation
+3. **Streaming Responses** - Server-Sent Events (SSE) for real-time message streaming like ChatGPT
+4. **6 AI Personas** - Pre-built system prompts:
+   - General Assistant (helpful and versatile)
+   - Code Expert (programming help)
+   - Creative Writer (stories and content)
+   - Business Advisor (strategy and analysis)
+   - Patient Teacher (learning concepts)
+   - Research Assistant (deep analysis)
+5. **Tier-Based Limiting** - Free users: 50 messages/day, Paid users: 1,000 messages/day
+6. **Token Tracking** - Display tokens used per message and total usage for cost monitoring
+7. **Usage Dashboard** - Visual progress bars and upgrade prompts
+8. **Database Schema** - Conversation and Message models with proper indexes and cascade deletes
+
+### How It Works
+
+- Navigate to `/dashboard/ai-chat` (requires login)
+- Start a new chat or resume a previous conversation
+- Select an AI persona or use the default assistant
+- Send messages and see responses stream in real-time
+- All conversations auto-save with searchable history
+- Delete conversations with one click
+- Track your daily usage and token consumption
+
+See [AI_CHAT_FEATURE.md](./AI_CHAT_FEATURE.md) for complete technical documentation.
 
 ## Pricing
 
@@ -76,6 +114,7 @@ If you're building a SaaS with AI features, you're choosing between:
 What you get:
 - Complete Next.js 16 source code with TypeScript
 - **Production-ready Claude AI integration** (streaming, rate limiting, input validation)
+- **Comprehensive E2E test suite** (80+ Playwright tests - landing, auth, dashboard, pricing, responsive, SEO)
 - NextAuth v5 (Google + GitHub OAuth)
 - Stripe integration (checkout, portal, webhooks)
 - Prisma 6 + PostgreSQL setup
