@@ -97,9 +97,9 @@ export default function TermsPage() {
 
           <h2>Refund Policy</h2>
           <p>
-            We offer a <strong>14-day money-back guarantee</strong>, no questions
+            We offer a <strong>30-day money-back guarantee</strong>, no questions
             asked. If you&rsquo;re not satisfied for any reason, email us within
-            14 days of purchase with your order number and we&rsquo;ll process a
+            30 days of purchase with your order number and we&rsquo;ll process a
             full refund.
           </p>
           <p>

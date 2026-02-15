@@ -142,7 +142,7 @@ export default function PrivacyPage() {
           <ul>
             <li>Provide you with product updates</li>
             <li>
-              Handle refund requests (within our 14-day refund window)
+              Handle refund requests (within our 30-day refund window)
             </li>
             <li>Comply with legal and tax obligations</li>
           </ul>

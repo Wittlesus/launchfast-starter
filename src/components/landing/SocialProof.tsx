@@ -43,7 +43,7 @@ export default function SocialProof() {
                 one-time, not a subscription
               </p>
               <p className="text-sm text-gray-600">
-                Pay once, own it forever. No monthly fees, no vendor lock-in. 14-day money-back guarantee.
+                Pay once, own it forever. No monthly fees, no vendor lock-in. 30-day money-back guarantee.
               </p>
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function SocialProof() {
               />
             </svg>
             <span className="text-sm font-semibold text-green-900">
-              14-day money-back guarantee, no questions asked
+              30-day money-back guarantee, no questions asked
             </span>
           </div>
         </div>
