@@ -13,7 +13,7 @@ export default function Hero() {
           <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl">
             The AI-First SaaS Starter.
             <br />
-            <span className="text-gray-400">Next.js + Claude. $79.</span>
+            <span className="text-gray-400">Next.js + Claude. <s className="text-gray-300">$79</s> $59.</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             The only Next.js boilerplate with production-ready AI chat built-in.
@@ -25,7 +25,7 @@ export default function Hero() {
               href="/pricing"
               className="rounded-lg bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-colors"
             >
-              Buy Now - $79
+              Buy Now - $59
             </Link>
             <Link
               href="https://github.com/Wittlesus/launchfast-starter#readme"

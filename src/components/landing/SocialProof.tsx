@@ -38,7 +38,7 @@ export default function SocialProof() {
             </div>
 
             <div className="rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors bg-gradient-to-br from-white to-gray-50">
-              <div className="text-2xl mb-3">$79</div>
+              <div className="text-2xl mb-3"><s className="text-gray-400">$79</s> $59</div>
               <p className="text-sm font-semibold text-gray-900 mb-2">
                 one-time, not a subscription
               </p>

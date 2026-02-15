@@ -39,13 +39,13 @@ export default function TermsPage() {
           <p>We offer two license tiers:</p>
           <ul>
             <li>
-              <strong>Standard License ($79):</strong> A personal use license for{" "}
+              <strong>Standard License ($59):</strong> A personal use license for{" "}
               <strong>1 developer</strong>. You may use the code in unlimited
               personal and commercial projects. You may not share the source code
               with other developers.
             </li>
             <li>
-              <strong>Pro License ($119):</strong> A team license for{" "}
+              <strong>Pro License ($89):</strong> A team license for{" "}
               <strong>up to 5 developers</strong> within the same organization.
               All licensed developers may use the code in unlimited personal and
               commercial projects.
